@@ -30,6 +30,7 @@ module Raylib
   class Sound < FFI::Struct; end
   class Texture2D < FFI::Struct; end
   Texture = Texture2D # Texture type, same as Texture2D
+  class Touch; end
   class Vector2 < FFI::Struct; end
   class Vector3 < FFI::Struct; end
   class Vector4 < FFI::Struct; end

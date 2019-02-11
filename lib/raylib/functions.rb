@@ -42,15 +42,15 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :EndTextureMode, [], :void                              # RenderTexture2D#end_texture_mode
 
   # Screen-space-related functions
-  attach_function :GetMouseRay, [Vector2.by_value, Camera.by_value], Ray.by_value           # Mouse#get_ray
-  attach_function :GetWorldToScreen, [Vector3.by_value, Camera.by_value], Vector2.by_value  # TODO: Returns the screen space position for a 3d world space position
+  attach_function :GetMouseRay, [Vector2.by_value, Camera.by_value], Ray.by_value           # Camera3D#ray
+  attach_function :GetWorldToScreen, [Vector3.by_value, Camera.by_value], Vector2.by_value  # Camera3D#world_to_screen
   attach_function :GetCameraMatrix, [Camera.by_value], Matrix.by_value                      # Camera3D#matrix
 
   # Timming-related functions
-  attach_function :SetTargetFPS, [:int], :void                            # Raylib#fps=
-  attach_function :GetFPS, [], :int                                       # Raylib#fps
-  attach_function :GetFrameTime, [], :float                               # Raylib#frame_time
-  attach_function :GetTime, [], :double                                   # Raylib#time
+  attach_function :SetTargetFPS, [:int], :void                            # Window#target_fps=
+  attach_function :GetFPS, [], :int                                       # Window#fps
+  attach_function :GetFrameTime, [], :float                               # Window#time_since_frame
+  attach_function :GetTime, [], :double                                   # Window#time_since_init
 
   # Color-related functions
   attach_function :ColorToInt, [Color.by_value], :int                     # Color#to_i
@@ -119,23 +119,23 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :GetMouseWheelMove, [], :int                            # Mouse#wheel_move
 
   # Input-related functions: touch
-  attach_function :GetTouchX, [], :int                                    # TODO: Returns touch position X for touch point 0 (relative to screen size)
-  attach_function :GetTouchY, [], :int                                    # TODO: Returns touch position Y for touch point 0 (relative to screen size)
-  attach_function :GetTouchPosition, %i[int], Vector2.by_value            # TODO: Returns touch position XY for a touch point index (relative to screen size)
+  attach_function :GetTouchX, [], :int                                    # Touch#x
+  attach_function :GetTouchY, [], :int                                    # Touch#y
+  attach_function :GetTouchPosition, %i[int], Vector2.by_value            # Touch#position
 
   #------------------------------------------------------------------------------------
   # Gestures and Touch Handling Functions (Module: gestures)
   #------------------------------------------------------------------------------------
 
-  attach_function :SetGesturesEnabled, %i[uint], :void                    # TODO: Enable a set of gestures using flags
-  attach_function :IsGestureDetected, %i[int], :bool                      # TODO: Check if a gesture have been detected
-  attach_function :GetGestureDetected, [], :int                           # TODO: Get latest detected gesture
-  attach_function :GetTouchPointsCount, [], :int                          # TODO: Get touch points count
-  attach_function :GetGestureHoldDuration, [], :float                     # TODO: Get gesture hold time in milliseconds
-  attach_function :GetGestureDragVector, [], Vector2                      # TODO: Get gesture drag vector
-  attach_function :GetGestureDragAngle, [], :float                        # TODO: Get gesture drag angle
-  attach_function :GetGesturePinchVector, [], Vector2                     # TODO: Get gesture pinch delta
-  attach_function :GetGesturePinchAngle, [], :float                       # TODO: Get gesture pinch angle
+  attach_function :SetGesturesEnabled, %i[uint], :void                    # Touch#gestures=
+  attach_function :IsGestureDetected, %i[int], :bool                      # Touch#is_gesture?
+  attach_function :GetGestureDetected, [], :int                           # Touch#gesture
+  attach_function :GetTouchPointsCount, [], :int                          # Touch#points_count
+  attach_function :GetGestureHoldDuration, [], :float                     # Touch#hold_duration
+  attach_function :GetGestureDragVector, [], Vector2                      # Touch#drag_vector
+  attach_function :GetGestureDragAngle, [], :float                        # Touch#drag_angle
+  attach_function :GetGesturePinchVector, [], Vector2                     # Touch#pinch_vector
+  attach_function :GetGesturePinchAngle, [], :float                       # Touch#pinch_angle
 
   #------------------------------------------------------------------------------------
   # Camera System Functions (Module: camera)
@@ -213,6 +213,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :UpdateTexture, [Texture2D.by_value, :pointer], :void         # Texture2D#update
 
   # Image manipulation functions
+  # Ruby note: All functions in Raylib::Image type.
   attach_function :ImageCopy, [Image.by_value], Image.by_value
   attach_function :ImageToPOT, [Image.ptr, Color.by_value], :void
   attach_function :ImageFormat, [Image.ptr, :int], :void
@@ -244,14 +245,14 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :ImageColorReplace, [Image.ptr, Color.by_value, Color.by_value], :void
 
   # Image generation functions
-  attach_function :GenImageColor, [:int, :int, Color], Image.by_value                           # TODO: Generate image: plain color
-  attach_function :GenImageGradientV, [:int, :int, Color, Color], Image.by_value                # TODO: Generate image: vertical gradient
-  attach_function :GenImageGradientH, [:int, :int, Color, Color], Image.by_value                # TODO: Generate image: horizontal gradient
-  attach_function :GenImageGradientRadial, [:int, :int, :float, Color, Color], Image.by_value   # TODO: Generate image: radial gradient
-  attach_function :GenImageChecked, [:int, :int, :int, :int, Color, Color], Image.by_value      # TODO: Generate image: checked
-  attach_function :GenImageWhiteNoise, %i[int int float], Image.by_value                        # TODO: Generate image: white noise
-  attach_function :GenImagePerlinNoise, %i[int int int int float], Image.by_value               # TODO: Generate image: perlin noise
-  attach_function :GenImageCellular, %i[int int int], Image.by_value                            # TODO: Generate image: cellular algorithm. Bigger tileSize means bigger cells
+  attach_function :GenImageColor, [:int, :int, Color], Image.by_value                           # Image#gen_color
+  attach_function :GenImageGradientV, [:int, :int, Color, Color], Image.by_value                # Image#gen_gradient_v
+  attach_function :GenImageGradientH, [:int, :int, Color, Color], Image.by_value                # Image#gen_gradient_h
+  attach_function :GenImageGradientRadial, [:int, :int, :float, Color, Color], Image.by_value   # Image#gen_gradient_radial
+  attach_function :GenImageChecked, [:int, :int, :int, :int, Color, Color], Image.by_value      # Image#gen_checked
+  attach_function :GenImageWhiteNoise, %i[int int float], Image.by_value                        # Image#gen_white_noise
+  attach_function :GenImagePerlinNoise, %i[int int int int float], Image.by_value               # Image#gen_perlin_noise
+  attach_function :GenImageCellular, %i[int int int], Image.by_value                            # Image#gen_cellular
 
   # Texture2D configuration functions
   attach_function :GenTextureMipmaps, [Texture2D.ptr], :void                                    # Texture2D#gen_mipmaps
@@ -271,45 +272,45 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   #------------------------------------------------------------------------------------
 
   # Font loading/unloading functions
-  attach_function :GetFontDefault, %i[void], Font.by_value                                    # TODO: Get the default Font
-  attach_function :LoadFont, %i[string], Font.by_value                                        # TODO: Load font from file into GPU memory (VRAM)
-  attach_function :LoadFontEx, %i[string int int pointer], Font.by_value                      # TODO: Load font from file with extended parameters
-  attach_function :LoadFontData, %i[string int pointer int bool], :pointer                    # TODO: Load font data for further use
-  attach_function :GenImageFontAtlas, %i[pointer int int int int], Image.by_value             # TODO: Generate image font atlas using chars info
-  attach_function :UnloadFont, [Font.by_value], :void                                         # TODO: Unload Font from GPU memory (VRAM)
+  attach_function :GetFontDefault, [], Font.by_value                                          # Font#default
+  attach_function :LoadFont, %i[string], Font.by_value                                        # Font#load
+  attach_function :LoadFontEx, %i[string int int pointer], Font.by_value                      # Font#load_ex
+  attach_function :LoadFontData, %i[string int pointer int bool], :pointer                    # Font#load_data
+  attach_function :GenImageFontAtlas, %i[pointer int int int int], Image.by_value             # Font#gen_image_atlas
+  attach_function :UnloadFont, [Font.by_value], :void                                         # Font#unload
 
   # Text drawing functions
-  attach_function :DrawFPS, %i[int int], :void                                                # TODO: Shows current FPS
-  attach_function :DrawText, [:string, :int, :int, :int, Color.by_value], :void               # TODO: Draw text (using default font)
-  attach_function :MeasureText, %i[string int], :int                                          # TODO: Draw text using font and additional parameters
+  attach_function :DrawFPS, %i[int int], :void                                                          # Draw#fps
+  attach_function :DrawText, [:string, :int, :int, :int, Color.by_value], :void                         # Draw#text
+  attach_function :DrawTextEx, [Font, :string, Vector2.by_value, :float, :float, Color.by_value], :void # Draw#text_ex
 
   # Text misc. functions
-  attach_function :MeasureText, %i[string int], :int                                          # TODO: Measure string width for default font
-  attach_function :MeasureTextEx, [Font.by_value, :string, :float, :float], Vector2.by_value  # TODO: Measure string size for Font
-  attach_function :FormatText, %i[string varargs], :string                                    # TODO: Formatting of text with variables to 'embed'
-  attach_function :SubText, %i[string int int], :string                                       # TODO: Get a piece of a text string
-  attach_function :GetGlyphIndex, [Font.by_value, :int], :int                                 # TODO: Get index position for a unicode character on font
+  attach_function :MeasureText, %i[string int], :int                                          # Font#measure_text
+  attach_function :MeasureTextEx, [Font.by_value, :string, :float, :float], Vector2.by_value  # Font#measure_text_ex
+  attach_function :FormatText, %i[string varargs], :string                                    # Font#format_text
+  attach_function :SubText, %i[string int int], :string                                       # Font#sub_text
+  attach_function :GetGlyphIndex, [Font.by_value, :int], :int                                 # Font#glyph_index
 
   #------------------------------------------------------------------------------------
   # Basic 3d Shapes Drawing Functions (Module: models)
   #------------------------------------------------------------------------------------
 
   # Basic geometric 3D shapes drawing functions
-  attach_function :DrawLine3D, [Vector3.by_value, Vector3.by_value, Color.by_value], :void                                # TODO: Draw a line in 3D world space
-  attach_function :DrawCircle3D, [Vector3.by_value, :float, Vector3.by_value, :float, Color.by_value], :void              # TODO: Draw a circle in 3D world space
-  attach_function :DrawCube, [Vector3.by_value, :float, :float, :float, Color.by_value], :void                            # TODO: Draw cube
-  attach_function :DrawCubeV, [Vector3.by_value, Vector3.by_value, Color.by_value], :void                                 # TODO: Draw cube (Vector version)
-  attach_function :DrawCubeWires, [Vector3.by_value, :float, :float, :float, Color.by_value], :void                       # TODO: Draw cube wires
-  attach_function :DrawCubeTexture, [Texture2D.by_value, Vector3.by_value, :float, :float, :float, Color.by_value], :void # TODO: Draw cube textured
-  attach_function :DrawSphere, [Vector3.by_value, :float, Color.by_value], :void                                          # TODO: Draw sphere
-  attach_function :DrawSphereEx, [Vector3.by_value, :float, :int, :int, Color.by_value], :void                            # TODO: Draw sphere with extended parameters
-  attach_function :DrawSphereWires, [Vector3.by_value, :float, :int, :int, Color.by_value], :void                         # TODO: Draw sphere wires
-  attach_function :DrawCylinder, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void                  # TODO: Draw a cylinder/cone
-  attach_function :DrawCylinderWires, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void             # TODO: Draw a cylinder/cone wires
-  attach_function :DrawPlane, [Vector3.by_value, Vector2.by_value, Color.by_value], :void                                 # TODO: Draw a plane XZ
-  attach_function :DrawRay, [Ray.by_value, Color.by_value], :void                                                         # TODO: Draw a ray line
-  attach_function :DrawGrid, %i[int float], :void                                                                         # TODO: Draw a grid (centered at (0, 0, 0))
-  attach_function :DrawGizmo, [Vector3.by_value], :void                                                                   # TODO: Draw simple gizmo
+  attach_function :DrawLine3D, [Vector3.by_value, Vector3.by_value, Color.by_value], :void                                # Draw#line_3d
+  attach_function :DrawCircle3D, [Vector3.by_value, :float, Vector3.by_value, :float, Color.by_value], :void              # Draw#circle_3d
+  attach_function :DrawCube, [Vector3.by_value, :float, :float, :float, Color.by_value], :void                            # Draw#cube
+  attach_function :DrawCubeV, [Vector3.by_value, Vector3.by_value, Color.by_value], :void                                 # Draw#cube_v
+  attach_function :DrawCubeWires, [Vector3.by_value, :float, :float, :float, Color.by_value], :void                       # Draw#cube_wires
+  attach_function :DrawCubeTexture, [Texture2D.by_value, Vector3.by_value, :float, :float, :float, Color.by_value], :void # Draw#cube_texture
+  attach_function :DrawSphere, [Vector3.by_value, :float, Color.by_value], :void                                          # Draw#sphere
+  attach_function :DrawSphereEx, [Vector3.by_value, :float, :int, :int, Color.by_value], :void                            # Draw#sphere_ex
+  attach_function :DrawSphereWires, [Vector3.by_value, :float, :int, :int, Color.by_value], :void                         # Draw#sphere_wires
+  attach_function :DrawCylinder, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void                  # Draw#cylinder
+  attach_function :DrawCylinderWires, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void             # Draw#cylinder_wires
+  attach_function :DrawPlane, [Vector3.by_value, Vector2.by_value, Color.by_value], :void                                 # Draw#plane
+  attach_function :DrawRay, [Ray.by_value, Color.by_value], :void                                                         # Draw#ray
+  attach_function :DrawGrid, %i[int float], :void                                                                         # Draw#grid
+  attach_function :DrawGizmo, [Vector3.by_value], :void                                                                   # Draw#gizmo
   # DrawTorus(), DrawTeapot() could be useful?
 
   #------------------------------------------------------------------------------------
@@ -317,55 +318,55 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   #------------------------------------------------------------------------------------
 
   # Model loading/unloading functions
-  attach_function :LoadModel, %i[string], Model.by_value                    # TODO: Load model from files (mesh and material)
-  attach_function :LoadModelFromMesh, [Mesh.by_value], Model.by_value       # TODO: Load model from generated mesh
-  attach_function :UnloadModel, [Model.by_value], :void                     # TODO: Unload model from memory (RAM and/or VRAM)
+  attach_function :LoadModel, %i[string], Model.by_value                    # Model#load
+  attach_function :LoadModelFromMesh, [Mesh.by_value], Model.by_value       # Mesh#to_model
+  attach_function :UnloadModel, [Model.by_value], :void                     # Model#unload
 
   # Mesh loading/unloading functions
-  attach_function :LoadMesh, [:string], Mesh                                # TODO: Load mesh from file
-  attach_function :UnloadMesh, [Mesh.ptr], :void                            # TODO: Unload mesh from memory (RAM and/or VRAM)
-  attach_function :ExportMesh, [:string, Mesh.by_value], :void              # TODO: Export mesh as an OBJ file
+  attach_function :LoadMesh, [:string], Mesh                                # Mesh#load
+  attach_function :UnloadMesh, [Mesh.ptr], :void                            # Mesh#unload
+  attach_function :ExportMesh, [:string, Mesh.by_value], :void              # Mesh#export
 
   # Mesh manipulation functions
-  attach_function :MeshBoundingBox, [Mesh.by_value], BoundingBox.by_value   # TODO: Compute mesh bounding box limits
-  attach_function :MeshTangents, [Mesh.ptr], :void                          # TODO: Compute mesh tangents
-  attach_function :MeshBinormals, [Mesh.ptr], :void                         # TODO: Compute mesh binormals
+  attach_function :MeshBoundingBox, [Mesh.by_value], BoundingBox.by_value   # Mesh#
+  attach_function :MeshTangents, [Mesh.ptr], :void                          # Mesh#
+  attach_function :MeshBinormals, [Mesh.ptr], :void                         # Mesh#
 
   # Mesh generation functions
-  attach_function :GenMeshPlane, %i[float float int int], Mesh.by_value                   # TODO: Generate plane mesh (with subdivisions)
-  attach_function :GenMeshCube, %i[float float float], Mesh.by_value                      # TODO: Generate cuboid mesh
-  attach_function :GenMeshSphere, %i[float int int], Mesh.by_value                        # TODO: Generate sphere mesh (standard sphere)
-  attach_function :GenMeshHemiSphere, %i[float int int], Mesh.by_value                    # TODO: Generate half-sphere mesh (no bottom cap)
-  attach_function :GenMeshCylinder, %i[float float int], Mesh.by_value                    # TODO: Generate cylinder mesh
-  attach_function :GenMeshTorus, %i[float float int int], Mesh.by_value                   # TODO: Generate torus mesh
-  attach_function :GenMeshKnot, %i[float float int int], Mesh.by_value                    # TODO: Generate trefoil knot mesh
-  attach_function :GenMeshHeightmap, [Image.by_value, Vector3.by_value], Mesh.by_value    # TODO: Generate heightmap mesh from image data
-  attach_function :GenMeshCubicmap, [Image.by_value, Vector3.by_value], Mesh.by_value     # TODO: Generate cubes-based map mesh from image data
+  attach_function :GenMeshPlane, %i[float float int int], Mesh.by_value                   # Mesh#gen_plane
+  attach_function :GenMeshCube, %i[float float float], Mesh.by_value                      # Mesh#gen_cube
+  attach_function :GenMeshSphere, %i[float int int], Mesh.by_value                        # Mesh#gen_sphere
+  attach_function :GenMeshHemiSphere, %i[float int int], Mesh.by_value                    # Mesh#gen_hemisphere
+  attach_function :GenMeshCylinder, %i[float float int], Mesh.by_value                    # Mesh#gen_cylinder
+  attach_function :GenMeshTorus, %i[float float int int], Mesh.by_value                   # Mesh#gen_torus
+  attach_function :GenMeshKnot, %i[float float int int], Mesh.by_value                    # Mesh#gen_knot
+  attach_function :GenMeshHeightmap, [Image.by_value, Vector3.by_value], Mesh.by_value    # Mesh#gen_heightmap
+  attach_function :GenMeshCubicmap, [Image.by_value, Vector3.by_value], Mesh.by_value     # Mesh#gen_cubicmap
 
   # Material loading/unloading functions
-  attach_function :LoadMaterial, %i[string], Material.by_value                            # TODO: Load material from file
-  attach_function :LoadMaterialDefault, %i[void], Material.by_value                       # TODO: Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
-  attach_function :UnloadMaterial, [Material.by_value], :void                             # TODO: Unload material from GPU memory (VRAM)
+  attach_function :LoadMaterial, %i[string], Material.by_value                            # Material#load
+  attach_function :LoadMaterialDefault, [], Material.by_value                             # Material#load_default
+  attach_function :UnloadMaterial, [Material.by_value], :void                             # Material#unload
 
   # Model drawing functions
-  attach_function :DrawModel, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                                   # TODO: Draw a model (with texture if set)
-  attach_function :DrawModelEx, [Model.by_value, Vector3.by_value, Vector3.by_value, :float, Vector3.by_value, Color.by_value], :void             # TODO: Draw a model with extended parameters
-  attach_function :DrawModelWires, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                              # TODO: Draw a model wires (with texture if set)
-  attach_function :DrawModelWiresEx, [Model.by_value, Vector3.by_value, Vector3.by_value, :float, Vector3.by_value, Color.by_value], :void        # TODO: Draw a model wires (with texture if set) with extended parameters
-  attach_function :DrawBoundingBox, [BoundingBox.by_value, Color.by_value], :void                                                                 # TODO: Draw bounding box (wires)
-  attach_function :DrawBillboard, [Camera.by_value, Texture2D.by_value, Vector3.by_value, :float, Color.by_value], :void                          # TODO: Draw a billboard texture
-  attach_function :DrawBillboardRec, [Camera.by_value, Texture2D.by_value, Rectangle.by_value, Vector3.by_value, :float, Color.by_value], :void   # TODO: Draw a billboard texture defined by sourceRec
+  attach_function :DrawModel, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                                   # Model#draw
+  attach_function :DrawModelEx, [Model.by_value, Vector3.by_value, Vector3.by_value, :float, Vector3.by_value, Color.by_value], :void             # Model#draw_ex
+  attach_function :DrawModelWires, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                              # Model#draw_wires
+  attach_function :DrawModelWiresEx, [Model.by_value, Vector3.by_value, Vector3.by_value, :float, Vector3.by_value, Color.by_value], :void        # Model#draw_wires_ex
+  attach_function :DrawBoundingBox, [BoundingBox.by_value, Color.by_value], :void                                                                 # BoundingBox#draw
+  attach_function :DrawBillboard, [Camera.by_value, Texture2D.by_value, Vector3.by_value, :float, Color.by_value], :void                          # Draw#billboard
+  attach_function :DrawBillboardRec, [Camera.by_value, Texture2D.by_value, Rectangle.by_value, Vector3.by_value, :float, Color.by_value], :void   # Draw#billboard_rec
 
   # Collision detection functions
-  attach_function :CheckCollisionSpheres, [Vector3.by_value, :float, Vector3.by_value, :float], :bool                                   # TODO: Detect collision between two spheres
-  attach_function :CheckCollisionBoxes, [BoundingBox.by_value, BoundingBox.by_value], :bool                                             # TODO: Detect collision between two bounding boxes
-  attach_function :CheckCollisionBoxSphere, [BoundingBox.by_value, Vector3.by_value, :float], :bool                                     # TODO: Detect collision between box and sphere
-  attach_function :CheckCollisionRaySphere, [Ray.by_value, Vector3.by_value, :float], :bool                                             # TODO: Detect collision between ray and sphere
-  attach_function :CheckCollisionRaySphereEx, [Ray.by_value, Vector3.by_value, :float, Vector3.ptr], :bool                              # TODO: Detect collision between ray and sphere, returns collision point
-  attach_function :CheckCollisionRayBox, [Ray.by_value, BoundingBox.by_value], :bool                                                    # TODO: Detect collision between ray and box
-  attach_function :GetCollisionRayModel, [Ray.by_value, Model.ptr], RayHitInfo.by_value                                                 # TODO: Get collision info between ray and model
-  attach_function :GetCollisionRayTriangle, [Ray.by_value, Vector3.by_value, Vector3.by_value, Vector3.by_value], RayHitInfo.by_value   # TODO: Get collision info between ray and triangle
-  attach_function :GetCollisionRayGround, [Ray.by_value, :float], RayHitInfo.by_value                                                   # TODO: Get collision info between ray and ground plane (Y-normal plane)
+  attach_function :CheckCollisionSpheres, [Vector3.by_value, :float, Vector3.by_value, :float], :bool                                   # Collision#check_spheres
+  attach_function :CheckCollisionBoxes, [BoundingBox.by_value, BoundingBox.by_value], :bool                                             # Collision#check_boxes
+  attach_function :CheckCollisionBoxSphere, [BoundingBox.by_value, Vector3.by_value, :float], :bool                                     # Collision#check_box_sphere
+  attach_function :CheckCollisionRaySphere, [Ray.by_value, Vector3.by_value, :float], :bool                                             # Collision#check_ray_sphere
+  attach_function :CheckCollisionRaySphereEx, [Ray.by_value, Vector3.by_value, :float, Vector3.ptr], :bool                              # Collision#check_ray_sphere_ex
+  attach_function :CheckCollisionRayBox, [Ray.by_value, BoundingBox.by_value], :bool                                                    # Collision#check_ray_box
+  attach_function :GetCollisionRayModel, [Ray.by_value, Model.ptr], RayHitInfo.by_value                                                 # Collision#check_ray_model
+  attach_function :GetCollisionRayTriangle, [Ray.by_value, Vector3.by_value, Vector3.by_value, Vector3.by_value], RayHitInfo.by_value   # Collision#check_ray_triangle
+  attach_function :GetCollisionRayGround, [Ray.by_value, :float], RayHitInfo.by_value                                                   # Collision#check_ray_ground
 
   #------------------------------------------------------------------------------------
   # Shaders System Functions (Module: rlgl)
@@ -373,46 +374,46 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   #------------------------------------------------------------------------------------
 
   # Shader loading/unloading functions
-  attach_function :LoadText, [:string], :string                                                           # TODO: Load chars array from text file
-  attach_function :LoadShader, %i[string string], Shader.by_value                                         # TODO: Load shader from files and bind default locations
-  attach_function :LoadShaderCode, %i[string string], Shader.by_value                                     # TODO: Load shader from code strings and bind default locations
-  attach_function :UnloadShader, [Shader.by_value], :void                                                 # TODO: Unload shader from GPU memory (VRAM)
+  attach_function :LoadText, [:string], :string                                                           # Raylib#load_text
+  attach_function :LoadShader, %i[string string], Shader.by_value                                         # Shader#load
+  attach_function :LoadShaderCode, %i[string string], Shader.by_value                                     # Shader#load_code
+  attach_function :UnloadShader, [Shader.by_value], :void                                                 # Shader#unload
 
-  attach_function :GetShaderDefault, [], Shader.by_value                                                  # TODO: Get default shader
-  attach_function :GetTextureDefault, [], Texture2D.by_value                                              # TODO: Get default texture
+  attach_function :GetShaderDefault, [], Shader.by_value                                                  # Shader#default
+  attach_function :GetTextureDefault, [], Texture2D.by_value                                              # Texture2D#default
 
   # Shader configuration functions
-  attach_function :GetShaderLocation, [Shader.by_value, :string], :int                                    # TODO: Get shader uniform location
-  attach_function :SetShaderValue, [Shader.by_value, :int, :pointer, :int], :void                         # TODO: Set shader uniform value (float)
-  attach_function :SetShaderValuei, [Shader.by_value, :int, :pointer, :int], :void                        # TODO: Set shader uniform value (int)
-  attach_function :SetShaderValueMatrix, [Shader.by_value, :int, Matrix.by_value], :void                  # TODO: Set shader uniform value (matrix 4x4)
-  attach_function :SetMatrixProjection, [Matrix.by_value], :void                                          # TODO: Set a custom projection matrix (replaces internal projection matrix)
-  attach_function :SetMatrixModelview, [Matrix.by_value], :void                                           # TODO: Set a custom modelview matrix (replaces internal modelview matrix)
-  attach_function :GetMatrixModelview, [], Matrix.by_value                                                # TODO: Get internal modelview matrix
+  attach_function :GetShaderLocation, [Shader.by_value, :string], :int                                    # Shader#location
+  attach_function :SetShaderValue, [Shader.by_value, :int, :pointer, :int], :void                         # Shader#set_value
+  attach_function :SetShaderValuei, [Shader.by_value, :int, :pointer, :int], :void                        # Shader#set_valuei
+  attach_function :SetShaderValueMatrix, [Shader.by_value, :int, Matrix.by_value], :void                  # Shader#set_value_matrix
+  attach_function :SetMatrixProjection, [Matrix.by_value], :void                                          # Shader#matrix_projection=
+  attach_function :SetMatrixModelview, [Matrix.by_value], :void                                           # Shader#matrix_modelview=
+  attach_function :GetMatrixModelview, [], Matrix.by_value                                                # Shader#matrix_modelview
 
   # Texture maps generation (PBR)
   # NOTE: Required shaders should be provided
-  attach_function :GenTextureCubemap, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value     # TODO: Generate cubemap texture from HDR texture
-  attach_function :GenTextureIrradiance, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value  # TODO: Generate irradiance texture using cubemap data
-  attach_function :GenTexturePrefilter, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value   # TODO: Generate prefilter texture using cubemap data
-  attach_function :GenTextureBRDF, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value        # TODO: Generate BRDF texture using cubemap data
+  attach_function :GenTextureCubemap, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value     # Shader#gen_texture_cubemap
+  attach_function :GenTextureIrradiance, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value  # Shader#gen_texture_irradiance
+  attach_function :GenTexturePrefilter, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value   # Shader#gen_texture_prefilter
+  attach_function :GenTextureBRDF, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value        # Shader#gen_texture_brdf
 
   # Shading begin/end functions
-  attach_function :BeginShaderMode, [Shader.by_value], :void                                              # TODO: Begin custom shader drawing
-  attach_function :EndShaderMode, [], :void                                                               # TODO: End custom shader drawing (use default shader)
-  attach_function :BeginBlendMode, %i[int], :void                                                         # TODO: Begin blending mode (alpha, additive, multiplied)
-  attach_function :EndBlendMode, [], :void                                                                # TODO: End blending mode (reset to default: alpha blending)
+  attach_function :BeginShaderMode, [Shader.by_value], :void                                              # Shader#begin_shader_mode
+  attach_function :EndShaderMode, [], :void                                                               # Shader#end_shader_mode
+  attach_function :BeginBlendMode, %i[int], :void                                                         # Draw#begin_blend_mode
+  attach_function :EndBlendMode, [], :void                                                                # Draw#end_blend_mode
 
   # VR control functions
-  attach_function :GetVrDeviceInfo, %i[int], VrDeviceInfo.by_value                                        # TODO: Get VR device information for some standard devices
-  attach_function :InitVrSimulator, [VrDeviceInfo.by_value], :void                                        # TODO: Init VR simulator for selected device parameters
-  attach_function :CloseVrSimulator, [], :void                                                            # TODO: Close VR simulator for current device
-  attach_function :IsVrSimulatorReady, [], :bool                                                          # TODO: Detect if VR simulator is ready
-  attach_function :SetVrDistortionShader, [Shader.by_value], :void                                        # TODO: Set VR distortion shader for stereoscopic rendering
-  attach_function :UpdateVrTracking, [Camera.ptr], :void                                                  # TODO: Update VR tracking (position and orientation) and camera
-  attach_function :ToggleVrMode, [], :void                                                                # TODO: Enable/Disable VR experience
-  attach_function :BeginVrDrawing, [], :void                                                              # TODO: Begin VR simulator stereo rendering
-  attach_function :EndVrDrawing, [], :void                                                                # TODO: End VR simulator stereo rendering
+  attach_function :GetVrDeviceInfo, %i[int], VrDeviceInfo.by_value                                        # VrDeviceInfo#device_info
+  attach_function :InitVrSimulator, [VrDeviceInfo.by_value], :void                                        # VrDeviceInfo#init_vr_simulator
+  attach_function :CloseVrSimulator, [], :void                                                            # VrDeviceInfo#close_vr_simulator
+  attach_function :IsVrSimulatorReady, [], :bool                                                          # VrDeviceInfo#is_vr_simulator_ready?
+  attach_function :SetVrDistortionShader, [Shader.by_value], :void                                        # VrDeviceInfo#vr_distortion_shader=
+  attach_function :UpdateVrTracking, [Camera.ptr], :void                                                  # VrDeviceInfo#vr_tracking=
+  attach_function :ToggleVrMode, [], :void                                                                # VrDeviceInfo#toggle_vr_mode
+  attach_function :BeginVrDrawing, [], :void                                                              # VrDeviceInfo#begin_vr_drawing
+  attach_function :EndVrDrawing, [], :void                                                                # VrDeviceInfo#end_vr_drawing
 
   #------------------------------------------------------------------------------------
   # Audio Loading and Playing Functions (Module: audio)

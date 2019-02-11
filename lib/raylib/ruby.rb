@@ -457,6 +457,7 @@ module Raylib
   end
 
   class VrDeviceInfo
+    # VR control functions
     ray_alias_static :GetVrDeviceInfo,        :device_info              # Get VR device information for some standard devices
     ray_alias_object :InitVrSimulator,        :init_vr_simulator        # Init VR simulator for selected device parameters
     ray_alias_static :CloseVrSimulator,       :close_vr_simulator       # Close VR simulator for current device

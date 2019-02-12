@@ -6,7 +6,7 @@ module Raylib
 
   class Camera2D
     # Initialize 2D mode with custom camera (2D)
-    def begin_mode32
+    def begin_mode2d
       Raylib.BeginMode2D self
       return unless block_given?
 
@@ -150,8 +150,6 @@ module Raylib
     ray_alias_static :DrawCircleLines,          :circle_lines           # Draw circle outline
     ray_alias_static :DrawRectangle,            :rectangle              # Draw a color-filled rectangle
     ray_alias_static :DrawRectangleV,           :rectangle_v            # Draw a color-filled rectangle (Vector version)
-    ray_alias_static :DrawRectangleRec,         :rectangle_rec          # Draw a color-filled rectangle
-    ray_alias_static :DrawRectanglePro,         :rectangle_pro          # Draw a color-filled rectangle with pro parameters
     ray_alias_static :DrawRectangleGradientV,   :rectangle_gradient_v   # Draw a vertical-gradient-filled rectangle
     ray_alias_static :DrawRectangleGradientH,   :rectangle_gradient_h   # Draw a horizontal-gradient-filled rectangle
     ray_alias_static :DrawRectangleGradientEx,  :rectangle_gradient_ex  # Draw a gradient-filled rectangle with custom vertex colors
@@ -355,6 +353,12 @@ module Raylib
     ray_alias_static :SetMousePosition,       :position=            # Set mouse position XY
     ray_alias_static :SetMouseScale,          :scale=               # Set mouse scaling
     ray_alias_static :GetMouseWheelMove,      :wheel_move           # Returns mouse wheel movement Y
+  end
+
+  class Rectangle
+    # Basic shapes drawing functions
+    ray_alias_object :DrawRectangleRec,         :draw               # Draw a color-filled rectangle
+    ray_alias_object :DrawRectanglePro,         :draw_pro           # Draw a color-filled rectangle with pro parameters
   end
 
   class RenderTexture2D

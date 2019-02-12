@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'raylib/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'raylib-ruby'
+  spec.name          = 'raylib'
   spec.version       = Raylib::VERSION
   spec.authors       = ['Aldrin Martoq']
   spec.email         = ['contacto@a0.cl']
@@ -34,10 +34,10 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_development_dependency 'bundler', '~> 1.16'
+  spec.add_development_dependency 'pry'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'pry'
 
   spec.add_runtime_dependency 'ffi'
 end

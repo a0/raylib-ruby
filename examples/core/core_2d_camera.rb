@@ -1,8 +1,21 @@
+# /*******************************************************************************************
+# *
+# *   raylib [core] example - 2d camera
+# *
+# *   This example has been created using raylib 1.5 (www.raylib.com)
+# *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+# *
+# *   Copyright (c) 2016 Ramon Santamaria (@raysan5)
+# *
+# ********************************************************************************************/
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq)
+
 require 'raylib'
 require 'ostruct'
 
 MAX_BUILDINGS = 100
 
+# Initialization
 screen_w = 800
 screen_h = 450
 
@@ -20,37 +33,49 @@ buildings = Array.new(MAX_BUILDINGS) do
   OpenStruct.new rec: rec, col: col
 end
 
-camera = RayCamera2D.new RayVector2.new(0, 0), RayVector2.new(player.x + 20, player.y + 20), 0.0, 1.0
+camera = RayCamera2D.new  RayVector2.new(0, 0),
+                          RayVector2.new(player.x + 20, player.y + 20),
+                          0.0,
+                          1.0
+
 RayWindow.target_fps = 60
 
-until RayWindow.should_close?
+# Main game loop
+until RayWindow.should_close? # Detect window close button or ESC key
+
+  # Update
   if RayKey.is_down? RayKey::RIGHT
-    player.x += 2
-    camera.offset.x -= 2
+    player.x += 2             # Player movement
+    camera.offset.x -= 2      # Camera displacement with player movement
   elsif RayKey.is_down? RayKey::LEFT
-    player.x -= 2
-    camera.offset.x += 2
+    player.x -= 2             # Player movement
+    camera.offset.x += 2      # Camera displacement with player movement
   end
 
-  # follow player
+  # Camera target follows player
   camera.target.x = player.x + 20
   camera.target.y = player.y + 20
 
+  # Camera rotation controls
   camera.rotation -= 1 if RayKey.is_down? RayKey::A
   camera.rotation += 1 if RayKey.is_down? RayKey::S
 
+  # Limit camera rotation to 80 degrees (-40 to 40)
   camera.rotation = 40 if camera.rotation > 40
   camera.rotation = -40 if camera.rotation < -40
 
+  # Camera zoom controls
   camera.zoom += RayMouse.wheel_move * 0.05
   camera.zoom = 3.0 if camera.zoom > 3.0
   camera.zoom = 0.1 if camera.zoom < 0.1
 
+  # Camera reset (zoom and rotation)
   if RayKey.is_pressed? RayKey::R
     camera.zoom = 1.0
     camera.rotation = 0.0
   end
 
+  # Draw
   RayDraw.begin_drawing do
     RayDraw.clear_background RayColor::WHITE
 
@@ -85,4 +110,5 @@ until RayWindow.should_close?
   end
 end
 
-RayWindow.close
+# De-Initialization
+RayWindow.close # Close window and OpenGL context

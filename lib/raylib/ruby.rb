@@ -179,7 +179,6 @@ module Raylib
     ray_alias_static :DrawCylinder,             :cylinder               # Draw a cylinder/cone
     ray_alias_static :DrawCylinderWires,        :cylinder_wires         # Draw a cylinder/cone wires
     ray_alias_static :DrawPlane,                :plane                  # Draw a plane XZ
-    ray_alias_static :DrawRay,                  :ray                    # Draw a ray line
     ray_alias_static :DrawGrid,                 :grid                   # Draw a grid (centered at (0, 0, 0))
     ray_alias_static :DrawGizmo,                :gizmo                  # Draw simple gizmo
 
@@ -212,6 +211,7 @@ module Raylib
     # Text misc. functions
     ray_alias_static :MeasureText,              :measure_text         # Measure string width for default font
     ray_alias_object :MeasureTextEx,            :measure_text         # Measure string size for Font
+    # FIXME: SEEMS NOT TO BE WORKING, use native ruby format() instead
     ray_alias_static :FormatText,               :format_text          # Formatting of text with variables to 'embed'
     ray_alias_static :SubText,                  :sub_text             # Get a piece of a text string
     ray_alias_object :GetGlyphIndex,            :glyph_index          # Get index position for a unicode character on font
@@ -353,6 +353,10 @@ module Raylib
     ray_alias_static :SetMousePosition,       :position=            # Set mouse position XY
     ray_alias_static :SetMouseScale,          :scale=               # Set mouse scaling
     ray_alias_static :GetMouseWheelMove,      :wheel_move           # Returns mouse wheel movement Y
+  end
+
+  class Ray
+    ray_alias_object :DrawRay,                  :draw               # Draw a ray line
   end
 
   class Rectangle

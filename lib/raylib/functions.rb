@@ -113,8 +113,8 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :IsMouseButtonUp, [:int], :bool                         # Mouse#is_button_up?
   attach_function :GetMouseX, [], :int                                    # Mouse#x
   attach_function :GetMouseY, [], :int                                    # Mouse#y
-  attach_function :GetMousePosition, [], Vector2                          # Mouse#position
-  attach_function :SetMousePosition, [Vector2], :void                     # Mouse#position=
+  attach_function :GetMousePosition, [], Vector2.by_value                 # Mouse#position
+  attach_function :SetMousePosition, [Vector2.by_value], :void            # Mouse#position=
   attach_function :SetMouseScale, [:float], :void                         # Mouse#scale=
   attach_function :GetMouseWheelMove, [], :int                            # Mouse#wheel_move
 
@@ -132,9 +132,9 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :GetGestureDetected, [], :int                           # Touch#gesture
   attach_function :GetTouchPointsCount, [], :int                          # Touch#points_count
   attach_function :GetGestureHoldDuration, [], :float                     # Touch#hold_duration
-  attach_function :GetGestureDragVector, [], Vector2                      # Touch#drag_vector
+  attach_function :GetGestureDragVector, [], Vector2.by_value             # Touch#drag_vector
   attach_function :GetGestureDragAngle, [], :float                        # Touch#drag_angle
-  attach_function :GetGesturePinchVector, [], Vector2                     # Touch#pinch_vector
+  attach_function :GetGesturePinchVector, [], Vector2.by_value            # Touch#pinch_vector
   attach_function :GetGesturePinchAngle, [], :float                       # Touch#pinch_angle
 
   #------------------------------------------------------------------------------------
@@ -308,7 +308,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :DrawCylinder, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void                  # Draw#cylinder
   attach_function :DrawCylinderWires, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void             # Draw#cylinder_wires
   attach_function :DrawPlane, [Vector3.by_value, Vector2.by_value, Color.by_value], :void                                 # Draw#plane
-  attach_function :DrawRay, [Ray.by_value, Color.by_value], :void                                                         # Draw#ray
+  attach_function :DrawRay, [Ray.by_value, Color.by_value], :void                                                         # Ray#draw
   attach_function :DrawGrid, %i[int float], :void                                                                         # Draw#grid
   attach_function :DrawGizmo, [Vector3.by_value], :void                                                                   # Draw#gizmo
   # DrawTorus(), DrawTeapot() could be useful?

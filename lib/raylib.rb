@@ -1,5 +1,4 @@
 require 'ffi'
-require 'pry'
 
 require_relative 'raylib/helpers'
 require_relative 'raylib/types'

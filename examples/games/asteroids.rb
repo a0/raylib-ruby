@@ -1,6 +1,5 @@
 require 'raylib'
 require 'ostruct'
-require 'pry'
 
 PLAYER_BASE_SIZE    = 20.0
 PLAYER_SPEED        = 6.0

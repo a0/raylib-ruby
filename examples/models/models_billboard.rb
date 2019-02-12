@@ -1,5 +1,4 @@
 require 'raylib'
-require 'pry'
 
 screen_w = 800
 screen_h = 450

@@ -1,5 +1,4 @@
-require_relative '../../lib/raylib'
-require 'pry'
+require 'raylib'
 
 def draw_angle_gauge(angle_gauge, x, y, angle, title, color)
   src_rec = RayRectangle.new 0, 0, angle_gauge.width, angle_gauge.height

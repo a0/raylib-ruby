@@ -1,11 +1,12 @@
 require 'raylib'
+require 'ostruct'
 
 MAX_COLUMNS = 20
 
 screen_w = 800
 screen_h = 450
 
-RayWindow.init screen_w, screen_h, 'raylib [core] example - 3d camera first person'
+RayWindow.init screen_w, screen_h, 'ruby raylib [core] example - 3d camera first person'
 
 camera = RayCamera.new  RayVector3.new(4.0, 2.0, 4.0),
                         RayVector3.new(0.0, 1.8, 0.0),

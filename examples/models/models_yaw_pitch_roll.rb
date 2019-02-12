@@ -16,7 +16,7 @@ end
 screen_w = 800
 screen_h = 450
 
-RayWindow.init screen_w, screen_h, 'raylib [models] example - plane rotations (yaw, pitch, roll)'
+RayWindow.init screen_w, screen_h, 'ruby raylib [models] example - plane rotations (yaw, pitch, roll)'
 
 tex_angle = RayTexture2D.load 'resources/angle_gauge.png'
 tex_backg = RayTexture2D.load 'resources/background.png'

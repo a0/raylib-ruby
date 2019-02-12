@@ -1,11 +1,12 @@
 require 'raylib'
+require 'ostruct'
 
 MAX_BUILDINGS = 100
 
 screen_w = 800
 screen_h = 450
 
-RayWindow.init screen_w, screen_h, 'raylib [core] example - 2d camera'
+RayWindow.init screen_w, screen_h, 'ruby raylib [core] example - 2d camera'
 
 player = RayRectangle.new 400, 280, 40, 40
 spacing = 0

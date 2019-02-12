@@ -3,7 +3,7 @@ require 'raylib'
 screen_w = 800
 screen_h = 450
 
-RayWindow.init screen_w, screen_h, 'raylib [models] example - drawing billboards'
+RayWindow.init screen_w, screen_h, 'ruby raylib [models] example - drawing billboards'
 
 camera = RayCamera.new  RayVector3.new(5.0, 4.0, 5.0),
                         RayVector3.new(0.0, 2.0, 0.0),

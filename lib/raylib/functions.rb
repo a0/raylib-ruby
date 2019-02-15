@@ -241,7 +241,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :ImageColorInvert, [Image.ptr], :void
   attach_function :ImageColorGrayscale, [Image.ptr], :void
   attach_function :ImageColorContrast, [Image.ptr, :float], :void
-  attach_function :ImageColorBrightness, [Image.ptr, :float], :void
+  attach_function :ImageColorBrightness, [Image.ptr, :int], :void
   attach_function :ImageColorReplace, [Image.ptr, Color.by_value, Color.by_value], :void
 
   # Image generation functions

@@ -15,7 +15,7 @@ bill_tex = RayTexture2D.load 'resources/billboard.png'
 bill_pos = RayVector3.new 0.0, 2.0, 0.0
 
 camera.mode = RayCamera::MODE_ORBITAL
-Raylib.target_fps = 60
+RayWindow.target_fps = 60
 
 until RayWindow.should_close?
   RayDraw.begin_drawing do

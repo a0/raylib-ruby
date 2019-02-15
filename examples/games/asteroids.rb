@@ -315,24 +315,24 @@ class Game
 
   def draw_paused
     text = 'PAUSED!'
-    RayDraw.text text, screen_w / 2 - RayDraw.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, RayColor::GRAY
+    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, RayColor::GRAY
   end
 
   def draw_victory
     text = 'VICTORY!'
-    RayDraw.text text, screen_w / 2 - RayDraw.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, RayColor::GRAY
+    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, RayColor::GRAY
   end
 
   def draw_over
     text = 'GAME OVER - PRESS [ENTER] TO PLAY AGAIN'
-    RayDraw.text text, screen_w / 2 - RayDraw.measure_text(text, 20) / 2, screen_h / 2 - 50, 20, RayColor::GRAY
+    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 20) / 2, screen_h / 2 - 50, 20, RayColor::GRAY
   end
 
   def unload_game; end
 
   def main
     RayWindow.init screen_w, screen_h, 'sample game: asteroids'
-    Raylib.target_fps = 60
+    RayWindow.target_fps = 60
 
     until RayWindow.should_close?
       update

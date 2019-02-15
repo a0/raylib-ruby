@@ -245,14 +245,14 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :ImageColorReplace, [Image.ptr, Color.by_value, Color.by_value], :void
 
   # Image generation functions
-  attach_function :GenImageColor, [:int, :int, Color], Image.by_value                           # Image#gen_color
-  attach_function :GenImageGradientV, [:int, :int, Color, Color], Image.by_value                # Image#gen_gradient_v
-  attach_function :GenImageGradientH, [:int, :int, Color, Color], Image.by_value                # Image#gen_gradient_h
-  attach_function :GenImageGradientRadial, [:int, :int, :float, Color, Color], Image.by_value   # Image#gen_gradient_radial
-  attach_function :GenImageChecked, [:int, :int, :int, :int, Color, Color], Image.by_value      # Image#gen_checked
-  attach_function :GenImageWhiteNoise, %i[int int float], Image.by_value                        # Image#gen_white_noise
-  attach_function :GenImagePerlinNoise, %i[int int int int float], Image.by_value               # Image#gen_perlin_noise
-  attach_function :GenImageCellular, %i[int int int], Image.by_value                            # Image#gen_cellular
+  attach_function :GenImageColor, [:int, :int, Color.by_value], Image.by_value                                    # Image#gen_color.by_value
+  attach_function :GenImageGradientV, [:int, :int, Color.by_value, Color.by_value], Image.by_value                # Image#gen_gradient_v
+  attach_function :GenImageGradientH, [:int, :int, Color.by_value, Color.by_value], Image.by_value                # Image#gen_gradient_h
+  attach_function :GenImageGradientRadial, [:int, :int, :float, Color.by_value, Color.by_value], Image.by_value   # Image#gen_gradient_radial
+  attach_function :GenImageChecked, [:int, :int, :int, :int, Color.by_value, Color.by_value], Image.by_value      # Image#gen_checked
+  attach_function :GenImageWhiteNoise, %i[int int float], Image.by_value                                          # Image#gen_white_noise
+  attach_function :GenImagePerlinNoise, %i[int int int int float], Image.by_value                                 # Image#gen_perlin_noise
+  attach_function :GenImageCellular, %i[int int int], Image.by_value                                              # Image#gen_cellular
 
   # Texture2D configuration functions
   attach_function :GenTextureMipmaps, [Texture2D.ptr], :void                                    # Texture2D#gen_mipmaps

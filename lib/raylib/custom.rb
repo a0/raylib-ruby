@@ -20,6 +20,7 @@ require_relative 'custom/shader'
 require_relative 'custom/texture2d'
 require_relative 'custom/touch'
 require_relative 'custom/vr_device_info'
+require_relative 'custom/window'
 
 module Raylib
   # Misc. functions

@@ -1,8 +1,20 @@
 # Raylib
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/raylib`. To experiment with that code, run `bin/console` for an interactive prompt.
+This is a more ruby-like interface for the great [raylib](https://www.raylib.com) library.
 
-TODO: Delete this and the text above, and describe your gem
+## Compile raylib
+
+Raspbian:
+
+```bash
+$ sudo apt install build-essential git cmake cmake-curses-ui
+$ sudo apt install libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev
+$ git clone https://github.com/raysan5/raylib.git raylib
+$ cd raylib/src/
+# comment SUPPORT_BUSY_WAIT_LOOP in config.h
+$ make -j 4 PLATFORM=PLATFORM_DESKTOP GRAPHICS=GRAPHICS_API_OPENGL_21 RAYLIB_LIBTYPE=SHARED
+$ sudo make -j 4 PLATFORM=PLATFORM_DESKTOP GRAPHICS=GRAPHICS_API_OPENGL_21 RAYLIB_LIBTYPE=SHARED install
+```
 
 ## Installation
 
@@ -22,7 +34,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Please see the ported [examples](https://github.com/a0/raylib-ruby/tree/master/examples) for usage.
 
 ## Development
 

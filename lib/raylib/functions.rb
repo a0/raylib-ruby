@@ -282,7 +282,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   # Text drawing functions
   attach_function :DrawFPS, %i[int int], :void                                                          # Draw#fps
   attach_function :DrawText, [:string, :int, :int, :int, Color.by_value], :void                         # Draw#text
-  attach_function :DrawTextEx, [Font, :string, Vector2.by_value, :float, :float, Color.by_value], :void # Draw#text_ex
+  attach_function :DrawTextEx, [Font.by_value, :string, Vector2.by_value, :float, :float, Color.by_value], :void # Draw#text_ex
 
   # Text misc. functions
   attach_function :MeasureText, %i[string int], :int                                          # Font#measure_text

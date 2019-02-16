@@ -22,8 +22,8 @@ RayWindow.init screen_w, screen_h, 'ruby raylib [textures] example - image loadi
 
 # NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
 
-image = RayImage.load 'resources/raylib_logo.png'  # Loaded in CPU memory (RAM)
-texture = image.to_texture2d                    # Image converted to texture, GPU memory (VRAM)
+image = RayImage.load 'resources/raylib_logo.png' # Loaded in CPU memory (RAM)
+texture = image.to_texture2d                      # Image converted to texture, GPU memory (VRAM)
 
 # Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 image.unload

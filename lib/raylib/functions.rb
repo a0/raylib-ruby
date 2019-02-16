@@ -196,7 +196,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
 
   # Image/Texture2D data loading/unloading/saving functions
   attach_function :LoadImage, [:string], Image.by_value                         # Image#load
-  attach_function :LoadImageEx, [Color.by_value, :int, :int], Image.by_value    # Image#load_ex
+  attach_function :LoadImageEx, %i[pointer int int], Image.by_value             # Image#load_ex
   attach_function :LoadImagePro, %i[pointer int int int], Image.by_value        # Image#load_pro
   attach_function :LoadImageRaw, %i[string int int int int], Image.by_value     # Image#load_raw
   attach_function :ExportImage, [:string, Image.by_value], :void                # Image#export

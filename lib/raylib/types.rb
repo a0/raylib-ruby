@@ -1,4 +1,5 @@
 module Raylib
+  class AudioDevice; end
   class AudioStream < FFI::Struct; end
   class BoundingBox < FFI::Struct; end
   class Camera2D < FFI::Struct; end
@@ -40,6 +41,7 @@ module Raylib
   class Window; end
 end
 
+RayAudioDevice = Raylib::AudioDevice
 RayAudioStream = Raylib::AudioStream
 RayBoundingBox = Raylib::BoundingBox
 RayCamera2D = Raylib::Camera2D

@@ -420,58 +420,58 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   #------------------------------------------------------------------------------------
 
   # Audio device management functions
-  attach_function :InitAudioDevice, [], :void                                         # TODO: Initialize audio device and context
-  attach_function :CloseAudioDevice, [], :void                                        # TODO: Close the audio device and context
-  attach_function :IsAudioDeviceReady, [], :bool                                      # TODO: Check if audio device has been initialized successfully
-  attach_function :SetMasterVolume, [:float], :void                                   # TODO: Set master volume (listener)
+  attach_function :InitAudioDevice, [], :void                                         # AudioDevice#init
+  attach_function :CloseAudioDevice, [], :void                                        # AudioDevice#close
+  attach_function :IsAudioDeviceReady, [], :bool                                      # AudioDevice#is_ready?
+  attach_function :SetMasterVolume, [:float], :void                                   # AudioDevice#master_volume=
 
   # Wave/Sound loading/unloading functions
-  attach_function :LoadWave, %i[string], Wave.by_value                                # TODO: Load wave data from file
-  attach_function :LoadWaveEx, %i[pointer int int int int], Wave.by_value             # TODO: Load wave data from raw array data
-  attach_function :LoadSound, [:string], Sound.by_value                               # TODO: Load sound from file
-  attach_function :LoadSoundFromWave, [Wave.by_value], Sound.by_value                 # TODO: Load sound from wave data
-  attach_function :UpdateSound, [Sound.by_value, :pointer, :int], :void               # TODO: Update sound buffer with new data
-  attach_function :UnloadWave, [Wave.by_value], :void                                 # TODO: Unload wave data
-  attach_function :UnloadSound, [Sound.by_value], :void                               # TODO: Unload sound
+  attach_function :LoadWave, %i[string], Wave.by_value                                # Wave#load
+  attach_function :LoadWaveEx, %i[pointer int int int int], Wave.by_value             # Wave#load_ex
+  attach_function :LoadSound, [:string], Sound.by_value                               # Sound#load
+  attach_function :LoadSoundFromWave, [Wave.by_value], Sound.by_value                 # Wave#to_sound
+  attach_function :UpdateSound, [Sound.by_value, :pointer, :int], :void               # Sound#update
+  attach_function :UnloadWave, [Wave.by_value], :void                                 # Wave#unload
+  attach_function :UnloadSound, [Sound.by_value], :void                               # Sound#unload
 
   # Wave/Sound management functions
-  attach_function :PlaySound, [Sound.by_value], :void                                 # TODO: Play a sound
-  attach_function :PauseSound, [Sound.by_value], :void                                # TODO: Pause a sound
-  attach_function :ResumeSound, [Sound.by_value], :void                               # TODO: Resume a paused sound
-  attach_function :StopSound, [Sound.by_value], :void                                 # TODO: Stop playing a sound
-  attach_function :IsSoundPlaying, [Sound.by_value], :bool                            # TODO: Check if a sound is currently playing
-  attach_function :SetSoundVolume, [Sound.by_value, :float], :void                    # TODO: Set volume for a sound (1.0 is max level)
-  attach_function :SetSoundPitch, [Sound.by_value, :float], :void                     # TODO: Set pitch for a sound (1.0 is base level)
-  attach_function :WaveFormat, [Wave.ptr, :int, :int, :int], :void                    # TODO: Convert wave data to desired format
-  attach_function :WaveCopy, [Wave.by_value], Wave.by_value                           # TODO: Copy a wave to a new wave
-  attach_function :WaveCrop, [Wave.ptr, :int, :int], :void                            # TODO: Crop a wave to defined samples range
-  attach_function :GetWaveData, [Wave.by_value], :pointer                             # TODO: Get samples data from wave as a floats array
+  attach_function :PlaySound, [Sound.by_value], :void                                 # Sound#play
+  attach_function :PauseSound, [Sound.by_value], :void                                # Sound#pause
+  attach_function :ResumeSound, [Sound.by_value], :void                               # Sound#resume
+  attach_function :StopSound, [Sound.by_value], :void                                 # Sound#stop
+  attach_function :IsSoundPlaying, [Sound.by_value], :bool                            # Sound#is_playing?
+  attach_function :SetSoundVolume, [Sound.by_value, :float], :void                    # Sound#volume=
+  attach_function :SetSoundPitch, [Sound.by_value, :float], :void                     # Sound#pitch=
+  attach_function :WaveFormat, [Wave.ptr, :int, :int, :int], :void                    # Wave#format!
+  attach_function :WaveCopy, [Wave.by_value], Wave.by_value                           # Wave#copy
+  attach_function :WaveCrop, [Wave.ptr, :int, :int], :void                            # Wave#crop!
+  attach_function :GetWaveData, [Wave.by_value], :pointer                             # Wave#to_data
 
   # Music management functions
-  attach_function :LoadMusicStream, [:string], Music.by_value                         # TODO: Load music stream from file
-  attach_function :UnloadMusicStream, [Music.by_value], :void                         # TODO: Unload music stream
-  attach_function :PlayMusicStream, [Music.by_value], :void                           # TODO: Start music playing
-  attach_function :UpdateMusicStream, [Music.by_value], :void                         # TODO: Updates buffers for music streaming
-  attach_function :StopMusicStream, [Music.by_value], :void                           # TODO: Stop music playing
-  attach_function :PauseMusicStream, [Music.by_value], :void                          # TODO: Pause music playing
-  attach_function :ResumeMusicStream, [Music.by_value], :void                         # TODO: Resume playing paused music
-  attach_function :IsMusicPlaying, [Music.by_value], :bool                            # TODO: Check if music is playing
-  attach_function :SetMusicVolume, [Music.by_value, :float], :void                    # TODO: Set volume for music (1.0 is max level)
-  attach_function :SetMusicPitch, [Music.by_value, :float], :void                     # TODO: Set pitch for a music (1.0 is base level)
-  attach_function :SetMusicLoopCount, [Music.by_value, :int], :void                   # TODO: Set music loop count (loop repeats)
-  attach_function :GetMusicTimeLength, [Music.by_value], :float                       # TODO: Get music time length (in seconds)
-  attach_function :GetMusicTimePlayed, [Music.by_value], :float                       # TODO: Get current music time played (in seconds)
+  attach_function :LoadMusicStream, [:string], Music.ptr                              # Music#load
+  attach_function :UnloadMusicStream, [Music.ptr], :void                              # Music#unload
+  attach_function :PlayMusicStream, [Music.ptr], :void                                # Music#play
+  attach_function :UpdateMusicStream, [Music.ptr], :void                              # Music#update
+  attach_function :StopMusicStream, [Music.ptr], :void                                # Music#stop
+  attach_function :PauseMusicStream, [Music.ptr], :void                               # Music#pause
+  attach_function :ResumeMusicStream, [Music.ptr], :void                              # Music#resume
+  attach_function :IsMusicPlaying, [Music.ptr], :bool                                 # Music#is_playing?
+  attach_function :SetMusicVolume, [Music.ptr, :float], :void                         # Music#volume=
+  attach_function :SetMusicPitch, [Music.ptr, :float], :void                          # Music#pitch=
+  attach_function :SetMusicLoopCount, [Music.ptr, :int], :void                        # Music#loop_count=
+  attach_function :GetMusicTimeLength, [Music.ptr], :float                            # Music#time_length
+  attach_function :GetMusicTimePlayed, [Music.ptr], :float                            # Music#time_played
 
   # AudioStream management functions
-  attach_function :InitAudioStream, %i[uint uint uint], AudioStream.by_value          # TODO: Init audio stream (to stream raw audio pcm data)
-  attach_function :UpdateAudioStream, [AudioStream.by_value, :pointer, :int], :void   # TODO: Update audio stream buffers with data
-  attach_function :CloseAudioStream, [AudioStream.by_value], :void                    # TODO: Close audio stream and free memory
-  attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # TODO: Check if any audio stream buffers requires refill
-  attach_function :PlayAudioStream, [AudioStream.by_value], :void                     # TODO: Play audio stream
-  attach_function :PauseAudioStream, [AudioStream.by_value], :void                    # TODO: Pause audio stream
-  attach_function :ResumeAudioStream, [AudioStream.by_value], :void                   # TODO: Resume audio stream
-  attach_function :IsAudioStreamPlaying, [AudioStream.by_value], :bool                # TODO: Check if audio stream is playing
-  attach_function :StopAudioStream, [AudioStream.by_value], :void                     # TODO: Stop audio stream
-  attach_function :SetAudioStreamVolume, [AudioStream.by_value, :float], :void        # TODO: Set volume for audio stream (1.0 is max level)
-  attach_function :SetAudioStreamPitch, [AudioStream.by_value, :float], :void         # TODO: Set pitch for audio stream (1.0 is base level)
+  attach_function :InitAudioStream, %i[uint uint uint], AudioStream.by_value          # AudioStream#create
+  attach_function :UpdateAudioStream, [AudioStream.by_value, :pointer, :int], :void   # AudioStream#update
+  attach_function :CloseAudioStream, [AudioStream.by_value], :void                    # AudioStream#close
+  attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # AudioStream#is_buffer_processed?
+  attach_function :PlayAudioStream, [AudioStream.by_value], :void                     # AudioStream#play
+  attach_function :PauseAudioStream, [AudioStream.by_value], :void                    # AudioStream#pause
+  attach_function :ResumeAudioStream, [AudioStream.by_value], :void                   # AudioStream#resume
+  attach_function :IsAudioStreamPlaying, [AudioStream.by_value], :bool                # AudioStream#is_playing?
+  attach_function :StopAudioStream, [AudioStream.by_value], :void                     # AudioStream#stop
+  attach_function :SetAudioStreamVolume, [AudioStream.by_value, :float], :void        # AudioStream#volume=
+  attach_function :SetAudioStreamPitch, [AudioStream.by_value, :float], :void         # AudioStream#pitch=
 end

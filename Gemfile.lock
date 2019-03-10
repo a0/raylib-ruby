@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    raylib (0.1.0)
+    raylib (0.2.0)
       ffi
 
 GEM

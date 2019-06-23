@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+path = File.realpath File.join(__dir__, '../lib/raylib/version.rb')
+load path
+
+current = Raylib::VERSION
+numbers = current.split('.').map(&:to_i)
+length = numbers.count
+
+versions = length.times.map do |index|
+  version = numbers.dup
+  version[index] += 2
+  index += 1
+  (index...length).each do |i|
+    version[i] = 0
+  end
+  version.join '.'
+end.reverse
+
+text = versions.each_with_index.map do |version, index|
+  "#{index + 1}. #{version}"
+end.join("\n")
+
+puts <<~FIN
+
+  Version file: #{path}
+
+  Current version: #{current}. Choose next version:
+  #{text}
+
+FIN
+
+print 'Choose? [1]'
+option = gets.strip
+
+index = option == '' ? 0 : option.to_i - 1
+version = versions[index]
+raise "Invalid option #{option}" unless version
+
+`ruby -p -i -e 'gsub /#{current}/,"#{version}"' #{path}`
+puts `bundle; git add #{path} Gemfile.lock; git commit -m "Version #{version}."; git tag v#{version}`
+
+puts <<~FIN
+
+  Press enter to git push or CTRL+C to cancel
+
+FIN
+
+print 'git push origin master --tags'
+gets
+puts `git push origin master --tags`

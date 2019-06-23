@@ -65,6 +65,6 @@ until RayWindow.should_close? # Detect window close button or ESC key
 end
 
 # De-Initialization
-music.unload             # Unload music stream buffers from RAM
+music.unload          # Unload music stream buffers from RAM
 RayAudioDevice.close  # Close audio device (music streaming is automatically stopped)
 RayWindow.close       # Close window and OpenGL context

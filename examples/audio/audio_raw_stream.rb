@@ -28,6 +28,7 @@ RayAudioDevice.init # Initialize audio device
 # Init raw audio stream (sample rate: 22050, sample size: 16bit-short, channels: 1-mono)
 stream = RayAudioStream.create 22_050, 16, 1
 
+# Generate samples data from sine wave
 data = FFI::MemoryPointer.new :int16, MAX_SAMPLES
 (0...MAX_SAMPLES).each do |i|
   data[i].write :int16, (Math.sin((2 * Raylib::PI * i / 2) * Raylib::DEG2RAD) * 32_000).to_i
@@ -45,22 +46,29 @@ RayWindow.target_fps = 30 # Set our game to run at 30 frames-per-second
 # Main game loop
 until RayWindow.should_close? # Detect window close button or ESC key
   # Update
-  # music.update # Update music buffer with new stream data
+
+  # Refill audio stream if required
+  # NOTE: Every update we check if stream data has been already consumed and we update
+  # buffer with new data from the generated samples, we upload data at a rate (MAX_SAMPLES_PER_UPDATE),
+  # but notice that at some point we update < MAX_SAMPLES_PER_UPDATE data...
+  if stream.is_buffer_processed?
+    num_samples = 0
+    puts "ok #{samples_left}"
+
+    num_samples = samples_left >= MAX_SAMPLES_PER_UPDATE ? MAX_SAMPLES_PER_UPDATE : samples_left
+
+    stream.update data + 2 * (total_samples - samples_left), num_samples
+    samples_left -= num_samples
+
+    if samples_left <= 0
+      samples_left = total_samples
+      puts 'done'
+    end
+  end
 
   # Draw
   RayDraw.begin_drawing do
     RayDraw.clear_background RayColor::WHITE
-
-    if stream.is_buffer_processed?
-      puts "ok #{samples_left}"
-
-      num_samples = samples_left >= MAX_SAMPLES_PER_UPDATE ? MAX_SAMPLES_PER_UPDATE : samples_left
-
-      stream.update data + (total_samples - samples_left), num_samples
-
-      samples_left -= num_samples
-      samples_left = total_samples if samples_left <= 0
-    end
 
     RayDraw.text 'SINE WAVE SHOULD BE PLAYING!', 240, 140, 20, RayColor::LIGHTGRAY
 
@@ -76,5 +84,6 @@ end
 
 # De-Initialization
 data.free             # Unload sine wave data (NOTE: Not required, FFI::MemoryPointer automatically does this for us)
+stream.close          # Close raw audio stream and delete buffers from RAM
 RayAudioDevice.close  # Close audio device (music streaming is automatically stopped)
 RayWindow.close       # Close window and OpenGL context

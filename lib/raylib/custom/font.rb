@@ -11,9 +11,6 @@ module Raylib
     # Text misc. functions
     ray_alias_static :MeasureText,              :measure_text         # Measure string width for default font
     ray_alias_object :MeasureTextEx,            :measure_text         # Measure string size for Font
-    # FIXME: SEEMS NOT TO BE WORKING, use native ruby format() instead
-    ray_alias_static :FormatText,               :format_text          # Formatting of text with variables to 'embed'
-    ray_alias_static :SubText,                  :sub_text             # Get a piece of a text string
     ray_alias_object :GetGlyphIndex,            :glyph_index          # Get index position for a unicode character on font
   end
 end

@@ -34,8 +34,6 @@ module Raylib
     ray_alias_static :DrawTriangle,             :triangle               # Draw a color-filled triangle
     ray_alias_static :DrawTriangleLines,        :triangle_lines         # Draw triangle outline
     ray_alias_static :DrawPoly,                 :poly                   # Draw a regular polygon (Vector version)
-    ray_alias_static :DrawPolyEx,               :poly_ex                # Draw a closed polygon defined by points
-    ray_alias_static :DrawPolyExLines,          :poly_ex_lines          # Draw polygon lines
 
     # Text drawing functions
     ray_alias_static :DrawFPS,                  :fps                    # Shows current FPS

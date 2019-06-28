@@ -1,3 +1,15 @@
+# /*******************************************************************************************
+# *
+# *   raylib [models] example - Drawing billboards
+# *
+# *   This example has been created using raylib 1.3 (www.raylib.com)
+# *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+# *
+# *   Copyright (c) 2015 Ramon Santamaria (@raysan5)
+# *
+# ********************************************************************************************/
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq)
+
 require 'raylib'
 
 screen_w = 800
@@ -18,14 +30,14 @@ camera.mode = RayCamera::MODE_ORBITAL
 RayWindow.target_fps = 60
 
 until RayWindow.should_close?
+  camera.update
+
   RayDraw.begin_drawing do
     RayDraw.clear_background RayColor::WHITE
 
-    camera.update
-
     camera.begin_mode3d do
-      RayDraw.billboard camera, bill_tex, bill_pos, 2.0, RayColor::WHITE
       RayDraw.grid 10, 1.0
+      RayDraw.billboard camera, bill_tex, bill_pos, 2.0, RayColor::WHITE
     end
 
     RayDraw.fps 10, 10

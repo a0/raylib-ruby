@@ -45,7 +45,7 @@ circles = Array.new MAX_CIRCLES do
   CircleWave.new alpha: alpha, radius: radius, position: position, speed: speed, color: color
 end
 
-xm = RayMusic.load 'resources/mini1111.xm'
+xm = RayMusic.load 'resources/chiptun1.mod'
 xm.play
 
 time_played = 0.0
@@ -98,7 +98,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
 
     # Draw time bar
     RayDraw.rectangle 20, screen_h - 20 - 12, screen_w - 40, 12, RayColor::LIGHTGRAY
-    RayDraw.rectangle 20, screen_h - 20 - 12, time_played, 12, RayColor::MAROON
+    RayDraw.rectangle 20, screen_h - 20 - 12, time_played, 12, RayColor::MAROON unless time_played.nan?
     RayDraw.rectangle_lines 20, screen_h - 20 - 12, screen_w - 40, 12, RayColor::GRAY
   end
 end

@@ -60,9 +60,10 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :Fade, [Color.by_value, :float], Color.by_value         # Color#fade
 
   # Misc. functions
-  attach_function :ShowLogo, [], :void                                    # Raylib#show_logo
   attach_function :SetConfigFlags, %i[uchar], :void                       # Raylib#config_flags=
-  attach_function :SetTraceLog, %i[uchar], :void                          # Raylib#trace_log=
+  attach_function :SetTraceLogLevel, %i[int], :void                       # Raylib#trace_log_level=
+  attach_function :SetTraceLogExit, %i[int], :void                        # Raylib#trace_log_exit=
+  attach_function :SetTraceLogCallback, %i[int], :void                        # Raylib#trace_log_exit=
   attach_function :TraceLog, %i[int string varargs], :void                # Raylib#trace_log
   attach_function :TakeScreenshot, %i[string], :void                      # Raylib#take_screenshot
   attach_function :GetRandomValue, %i[int int], :int                      # Raylib#random_value
@@ -177,8 +178,6 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :DrawTriangle, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void
   attach_function :DrawTriangleLines, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void
   attach_function :DrawPoly, [Vector2.by_value, :int, :float, :float, Color.by_value], :void
-  attach_function :DrawPolyEx, [Vector2.ptr, :int, Color.by_value], :void
-  attach_function :DrawPolyExLines, [Vector2.ptr, :int, Color.by_value], :void
 
   # Basic shapes collision detection functions
   # Ruby note: All functions in Raylib::Collision type.
@@ -287,9 +286,10 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   # Text misc. functions
   attach_function :MeasureText, %i[string int], :int                                          # Font#measure_text
   attach_function :MeasureTextEx, [Font.by_value, :string, :float, :float], Vector2.by_value  # Font#measure_text_ex
-  attach_function :FormatText, %i[string varargs], :string                                    # Font#format_text
-  attach_function :SubText, %i[string int int], :string                                       # Font#sub_text
   attach_function :GetGlyphIndex, [Font.by_value, :int], :int                                 # Font#glyph_index
+
+  # Text strings management functions
+  # FIXME: maybe point to ruby versions instead.
 
   #------------------------------------------------------------------------------------
   # Basic 3d Shapes Drawing Functions (Module: models)
@@ -323,7 +323,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :UnloadModel, [Model.by_value], :void                     # Model#unload
 
   # Mesh loading/unloading functions
-  attach_function :LoadMesh, [:string], Mesh                                # Mesh#load
+  # FIXME: LoadMeshes
   attach_function :UnloadMesh, [Mesh.ptr], :void                            # Mesh#unload
   attach_function :ExportMesh, [:string, Mesh.by_value], :void              # Mesh#export
 
@@ -344,7 +344,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :GenMeshCubicmap, [Image.by_value, Vector3.by_value], Mesh.by_value     # Mesh#gen_cubicmap
 
   # Material loading/unloading functions
-  attach_function :LoadMaterial, %i[string], Material.by_value                            # Material#load
+  attach_function :LoadMaterials, %i[string pointer], :pointer                            # Material#load
   attach_function :LoadMaterialDefault, [], Material.by_value                             # Material#load_default
   attach_function :UnloadMaterial, [Material.by_value], :void                             # Material#unload
 
@@ -385,7 +385,8 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   # Shader configuration functions
   attach_function :GetShaderLocation, [Shader.by_value, :string], :int                                    # Shader#location
   attach_function :SetShaderValue, [Shader.by_value, :int, :pointer, :int], :void                         # Shader#set_value
-  attach_function :SetShaderValuei, [Shader.by_value, :int, :pointer, :int], :void                        # Shader#set_valuei
+  attach_function :SetShaderValueV, [Shader.by_value, :int, :pointer, :int, :int], :void                  # Shader#set_value_v
+  attach_function :SetShaderValueTexture, [Shader.by_value, :int, Texture2D.by_value], :void              # Shader#set_value_texture
   attach_function :SetShaderValueMatrix, [Shader.by_value, :int, Matrix.by_value], :void                  # Shader#set_value_matrix
   attach_function :SetMatrixProjection, [Matrix.by_value], :void                                          # Shader#matrix_projection=
   attach_function :SetMatrixModelview, [Matrix.by_value], :void                                           # Shader#matrix_modelview=
@@ -405,12 +406,11 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :EndBlendMode, [], :void                                                                # Draw#end_blend_mode
 
   # VR control functions
-  attach_function :GetVrDeviceInfo, %i[int], VrDeviceInfo.by_value                                        # VrDeviceInfo#device_info
-  attach_function :InitVrSimulator, [VrDeviceInfo.by_value], :void                                        # VrDeviceInfo#init_vr_simulator
+  attach_function :InitVrSimulator, [], :void                                                             # VrDeviceInfo#init_vr_simulator
   attach_function :CloseVrSimulator, [], :void                                                            # VrDeviceInfo#close_vr_simulator
-  attach_function :IsVrSimulatorReady, [], :bool                                                          # VrDeviceInfo#is_vr_simulator_ready?
-  attach_function :SetVrDistortionShader, [Shader.by_value], :void                                        # VrDeviceInfo#vr_distortion_shader=
   attach_function :UpdateVrTracking, [Camera.ptr], :void                                                  # VrDeviceInfo#vr_tracking=
+  attach_function :SetVrConfiguration, [VrDeviceInfo.by_value, Shader.by_value], :void                    # VrDeviceInfo#distortion=
+  attach_function :IsVrSimulatorReady, [], :bool                                                          # VrDeviceInfo#is_vr_simulator_ready?
   attach_function :ToggleVrMode, [], :void                                                                # VrDeviceInfo#toggle_vr_mode
   attach_function :BeginVrDrawing, [], :void                                                              # VrDeviceInfo#begin_vr_drawing
   attach_function :EndVrDrawing, [], :void                                                                # VrDeviceInfo#end_vr_drawing
@@ -474,4 +474,30 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :StopAudioStream, [AudioStream.by_value], :void                     # AudioStream#stop
   attach_function :SetAudioStreamVolume, [AudioStream.by_value, :float], :void        # AudioStream#volume=
   attach_function :SetAudioStreamPitch, [AudioStream.by_value, :float], :void         # AudioStream#pitch=
+
+  # Matrix operations
+  attach_function :rlMatrixMode, %i[int], :void
+  attach_function :rlPushMatrix, [], :void
+  attach_function :rlPopMatrix, [], :void
+  attach_function :rlLoadIdentity, [], :void
+  attach_function :rlTranslatef, %i[float float float], :void
+  attach_function :rlRotatef, %i[float float float float], :void
+  attach_function :rlScalef, %i[float float float], :void
+  attach_function :rlMultMatrixf, %i[pointer], :void
+  attach_function :rlFrustum, %i[double double double double double double], :void
+  attach_function :rlOrtho, %i[double double double double double double], :void
+  attach_function :rlViewport, %i[int int int int], :void
+
+  # Vertex level operation
+  attach_function :rlBegin, %i[int], :void
+  attach_function :rlEnd, [], :void
+  attach_function :rlVertex2i, %i[int int], :void
+  attach_function :rlVertex2f, %i[float float], :void
+  attach_function :rlVertex2f, %i[float float], :void
+  attach_function :rlVertex3f, %i[float float float], :void
+  attach_function :rlTexCoord2f, %i[float float], :void
+  attach_function :rlNormal3f, %i[float float float], :void
+  attach_function :rlColor4ub, %i[uchar uchar uchar uchar], :void
+  attach_function :rlColor3f, %i[float float float], :void
+  attach_function :rlColor4f, %i[float float float float], :void
 end

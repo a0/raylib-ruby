@@ -9,9 +9,10 @@ module Raylib
 
     # Shader configuration functions
     ray_alias_object :GetShaderLocation,      :location           # Get shader uniform location
-    ray_alias_object :SetShaderValue,         :set_value          # Set shader uniform value (float)
-    ray_alias_object :SetShaderValuei,        :set_valuei         # Set shader uniform value (int)
+    ray_alias_object :SetShaderValue,         :set_value          # Set shader uniform value
+    ray_alias_object :SetShaderValueV,        :set_value_v        # Set shader uniform value vector
     ray_alias_object :SetShaderValueMatrix,   :set_value_matrix   # Set shader uniform value (matrix 4x4)
+    ray_alias_object :SetShaderValueTexture,  :set_value_texture  # Set shader uniform value for texture
     ray_alias_static :SetMatrixProjection,    :matrix_projection= # Set a custom projection matrix (replaces internal projection matrix)
     ray_alias_static :SetMatrixModelview,     :matrix_modelview=  # Set a custom modelview matrix (replaces internal modelview matrix)
     ray_alias_static :GetMatrixModelview,     :matrix_modelview   # Get internal modelview matrix

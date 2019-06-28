@@ -1,3 +1,17 @@
+# /*******************************************************************************************
+# *
+# *   raylib [models] example - Plane rotations (yaw, pitch, roll)
+# *
+# *   This example has been created using raylib 1.8 (www.raylib.com)
+# *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+# *
+# *   Example contributed by Berni (@Berni8k) and reviewed by Ramon Santamaria (@raysan5)
+# *
+# *   Copyright (c) 2017 Berni (@Berni8k) and Ramon Santamaria (@raysan5)
+# *
+# ********************************************************************************************/
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq)
+
 require 'raylib'
 
 def draw_angle_gauge(angle_gauge, x, y, angle, title, color)
@@ -26,9 +40,10 @@ tex_plane = RayTexture2D.load 'resources/plane.png'
 frame_buf = RayRenderTexture2D.load 192, 192
 
 model = RayModel.load 'resources/plane.obj'
-plane_diffuse = model.material.maps[RayMaterialMap::DIFFUSE].texture = RayTexture2D.load 'resources/plane_diffuse.png'
 
-plane_diffuse.gen_mipmaps
+# plane_diffuse = model.materials[0].maps[RayMaterialMap::DIFFUSE].texture = RayTexture2D.load 'resources/plane_diffuse.png'
+
+# plane_diffuse.gen_mipmaps
 
 camera = RayCamera.new  RayVector3.new(0.0, 60.0, -120.0),
                         RayVector3.new(0.0, 12.0, 0.0),

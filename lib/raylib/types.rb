@@ -27,11 +27,13 @@ module Raylib
   class Rectangle < FFI::Struct; end
   class RenderTexture2D < FFI::Struct; end
   RenderTexture = RenderTexture2D # RenderTexture type, same as RenderTexture2D
+  class RlGL; end
   class Shader < FFI::Struct; end
   class Sound < FFI::Struct; end
   class Texture2D < FFI::Struct; end
   Texture = Texture2D # Texture type, same as Texture2D
   class Touch; end
+  class Transform < FFI::Struct; end
   class Vector2 < FFI::Struct; end
   class Vector3 < FFI::Struct; end
   class Vector4 < FFI::Struct; end
@@ -69,6 +71,7 @@ RayRayHitInfo = Raylib::RayHitInfo
 RayRectangle = Raylib::Rectangle
 RayRenderTexture2D = Raylib::RenderTexture2D
 RayRenderTexture = Raylib::RenderTexture
+RayGL = Raylib::RlGL
 RayShader = Raylib::Shader
 RaySound = Raylib::Sound
 RayTexture2D = Raylib::Texture2D

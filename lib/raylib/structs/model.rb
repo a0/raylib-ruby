@@ -1,14 +1,21 @@
 require_relative 'material'
 require_relative 'matrix'
 require_relative 'mesh'
+require_relative 'transform'
 
 module Raylib
   # Model type
   class Model
-    layout  :mesh,      Mesh.by_value,      # Vertex data buffers (RAM and VRAM)
-            :transform, Matrix.by_value,    # Local transform matrix
-            :material,  Material.by_value   # Shader and textures data
+    layout  :transform, Matrix.by_value,    # Local transform matrix
+            :mesh_count, :int,              # Number of meshes
+            :meshes, :pointer,              # Meshes array
+            :material_count, :int,          # Number of materials
+            :materials, :pointer,           # Materials array
+            :mesh_material, :pointer,       # Mesh material number
+            :bone_count, :int,
+            :bones, :pointer,
+            :bind_pose, Transform.ptr
 
-    ray_struct_init_accessor :mesh, :transform, :material
+    ray_struct_accessor :transform
   end
 end

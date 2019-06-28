@@ -347,4 +347,10 @@ module Raylib
     HMD_VALVE_HTC_VIVE  = 4
     HMD_SONY_PSVR       = 5
   end
+
+  class RlGL
+    LINES       = 0x0001
+    TRIANGLES   = 0x0004
+    QUADS       = 0x0007
+  end
 end

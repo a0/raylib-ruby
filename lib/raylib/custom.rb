@@ -19,6 +19,7 @@ require_relative 'custom/music'
 require_relative 'custom/ray'
 require_relative 'custom/rectangle'
 require_relative 'custom/render_texture2d'
+require_relative 'custom/rlgl'
 require_relative 'custom/shader'
 require_relative 'custom/sound'
 require_relative 'custom/texture2d'
@@ -30,12 +31,13 @@ require_relative 'custom/window'
 
 module Raylib
   # Misc. functions
-  Raylib.singleton_class.send :alias_method, :show_logo,        :ShowLogo         # Activate raylib logo at startup (can be done with flags)
-  Raylib.singleton_class.send :alias_method, :config_flags=,    :SetConfigFlags   # Setup window configuration flags (view FLAGS)
-  Raylib.singleton_class.send :alias_method, :trace_log=,       :SetTraceLog      # Enable trace log message types (bit flags based)
-  Raylib.singleton_class.send :alias_method, :trace_log,        :TraceLog         # Show trace log messages (LOG_INFO, LOG_WARNING, LOG_ERROR, LOG_DEBUG)
-  Raylib.singleton_class.send :alias_method, :take_screenshot,  :TakeScreenshot   # Takes a screenshot of current screen (saved a .png)
-  Raylib.singleton_class.send :alias_method, :random_value,     :GetRandomValue   # Returns a random value between min and max (both included)
+  Raylib.singleton_class.send :alias_method, :config_flags=,          :SetConfigFlags       # Setup window configuration flags (view FLAGS)
+  Raylib.singleton_class.send :alias_method, :trace_log_level=,       :SetTraceLogLevel     # Set the current threshold (minimum) log level
+  Raylib.singleton_class.send :alias_method, :trace_log_exit=,        :SetTraceLogExit      # Set the exit threshold (minimum) log level
+  # Raylib.singleton_class.send :alias_method, :trace_log_callback=,  :SetTraceLogCallback  # FIXME: Set a trace log callback to enable custom logging
+  Raylib.singleton_class.send :alias_method, :trace_log,              :TraceLog             # Show trace log messages (LOG_INFO, LOG_WARNING, LOG_ERROR, LOG_DEBUG)
+  Raylib.singleton_class.send :alias_method, :take_screenshot,        :TakeScreenshot       # Takes a screenshot of current screen (saved a .png)
+  Raylib.singleton_class.send :alias_method, :random_value,           :GetRandomValue       # Returns a random value between min and max (both included)
 
   # Files management functions
   Raylib.singleton_class.send :alias_method, :is_file_extension?,     :IsFileExtension      # Check file extension

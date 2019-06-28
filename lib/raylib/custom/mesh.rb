@@ -4,7 +4,7 @@ module Raylib
     ray_alias_object :LoadModelFromMesh, :to_model # Load model from generated mesh
 
     # Mesh loading/unloading functions
-    ray_alias_static :LoadMesh,               :load                 # Load mesh from file
+    # TODO: LoadMeshes
     ray_alias_object :UnloadMesh,             :unload               # Unload mesh from memory (RAM and/or VRAM)
     ray_alias_object :ExportMesh,             :export               # Export mesh as an OBJ file
 

@@ -4,15 +4,15 @@ path = File.realpath File.join(__dir__, '../lib/raylib/version.rb')
 load path
 
 current = Raylib::VERSION
-numbers = current.split('.').map(&:to_i)
+numbers = current.split('.').map { |x| Integer(x, exception: false) || x }
 length = numbers.count
 
 versions = length.times.map do |index|
   version = numbers.dup
-  version[index] += 2
+  version[index] = version[index].is_a?(Integer) ? version[index] + 2 : version[index].next
   index += 1
   (index...length).each do |i|
-    version[i] = 0
+    version[i] = version[i].is_a?(Integer) ? 0 : 'a'
   end
   version.join '.'
 end.reverse
@@ -27,6 +27,7 @@ puts <<~FIN
 
   Current version: #{current}. Choose next version:
   #{text}
+  #{versions.count + 1}. Custom version
 
 FIN
 
@@ -34,8 +35,13 @@ print 'Choose? [1]'
 option = gets.strip
 
 index = option == '' ? 0 : option.to_i - 1
-version = versions[index]
-raise "Invalid option #{option}" unless version
+if index == versions.count
+  print 'Enter Version: '
+  version = gets.strip
+else
+  version = versions[index]
+  raise "Invalid option #{option}" unless version
+end
 
 `ruby -p -i -e 'gsub /#{current}/,"#{version}"' #{path}`
 puts `bundle; git add #{path} Gemfile.lock; git commit -m "Version #{version}."; git tag v#{version}`

@@ -1,7 +1,4 @@
-require_relative 'material'
 require_relative 'matrix'
-require_relative 'mesh'
-require_relative 'transform'
 
 module Raylib
   # Model type
@@ -12,9 +9,10 @@ module Raylib
             :material_count, :int,          # Number of materials
             :materials, :pointer,           # Materials array
             :mesh_material, :pointer,       # Mesh material number
-            :bone_count, :int,
-            :bones, :pointer,
-            :bind_pose, Transform.ptr
+            # Animation data
+            :bone_count, :int,              # Number of bones
+            :bones, :pointer,               # Bones information (skeleton)
+            :bind_pose, :pointer            # Bones base transformation (pose)
 
     ray_struct_accessor :transform
   end

@@ -10,15 +10,19 @@ module Raylib
   FLAG_WINDOW_RESIZABLE   =  4       # Set to allow resizable window
   FLAG_WINDOW_UNDECORATED =  8       # Set to disable window decoration (frame and buttons)
   FLAG_WINDOW_TRANSPARENT = 16       # Set to allow transparent window
+  FLAG_WINDOW_HIDDEN      = 128      # Set to create the window initially hidden
   FLAG_MSAA_4X_HINT       = 32       # Set to try enabling MSAA 4X
   FLAG_VSYNC_HINT         = 64       # Set to try enabling V-Sync on GPU
 
   # Trace log type
-  LOG_INFO      = 1
-  LOG_WARNING   = 2
-  LOG_ERROR     = 4
-  LOG_DEBUG     = 8
-  LOG_OTHER     = 16
+  LOG_ALL     = 0
+  LOG_TRACE   = 1
+  LOG_DEBUG   = 2
+  LOG_INFO    = 3
+  LOG_WARNING = 4
+  LOG_ERROR   = 5
+  LOG_FATAL   = 6
+  LOG_NONE    = 7
 
   class Camera3D
     TYPE_PERSPECTIVE   = 0
@@ -152,7 +156,7 @@ module Raylib
 
   class Key
     # Keyboard Function Keys
-    SPACE           =  32
+    SPACE           = 32
     ESCAPE          = 256
     ENTER           = 257
     TAB             = 258
@@ -233,7 +237,7 @@ module Raylib
     Z               =  90
 
     # Android Physical Buttons
-    BACK            =   4
+    BACK            =  4
     MENU            =  82
     VOLUME_UP       =  24
     VOLUME_DOWN     =  25

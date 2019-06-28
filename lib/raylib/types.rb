@@ -1,6 +1,7 @@
 module Raylib
   class AudioDevice; end
   class AudioStream < FFI::Struct; end
+  class BoneInfo < FFI::Struct; end
   class BoundingBox < FFI::Struct; end
   class Camera2D < FFI::Struct; end
   class Camera3D < FFI::Struct; end
@@ -20,8 +21,10 @@ module Raylib
   class Matrix < FFI::Struct; end
   class Mesh < FFI::Struct; end
   class Model < FFI::Struct; end
+  class ModelAnimation < FFI::Struct; end
   class Mouse; end
   class Music < FFI::Struct; end
+  class NPatchInfo < FFI::Struct; end
   class Ray < FFI::Struct; end
   class RayHitInfo < FFI::Struct; end
   class Rectangle < FFI::Struct; end
@@ -32,6 +35,7 @@ module Raylib
   class Sound < FFI::Struct; end
   class Texture2D < FFI::Struct; end
   Texture = Texture2D # Texture type, same as Texture2D
+  TextureCubemap = Texture2D # TextureCubemap type, actually, same as Texture2D
   class Touch; end
   class Transform < FFI::Struct; end
   class Vector2 < FFI::Struct; end
@@ -46,16 +50,15 @@ end
 RayAudioDevice = Raylib::AudioDevice
 RayAudioStream = Raylib::AudioStream
 RayBoundingBox = Raylib::BoundingBox
+RayCamera = Raylib::Camera
 RayCamera2D = Raylib::Camera2D
 RayCamera3D = Raylib::Camera3D
-RayCamera = Raylib::Camera
 RayCharInfo = Raylib::CharInfo
 RayCollision = Raylib::Collision
 RayColor = Raylib::Color
 RayCursor = Raylib::Cursor
 RayDraw = Raylib::Draw
 RayFont = Raylib::Font
-RaySpriteFont = Raylib::SpriteFont
 RayGamepad = Raylib::Gamepad
 RayImage = Raylib::Image
 RayKey = Raylib::Key
@@ -64,17 +67,21 @@ RayMaterialMap = Raylib::MaterialMap
 RayMatrix = Raylib::Matrix
 RayMesh = Raylib::Mesh
 RayModel = Raylib::Model
+RayModelAnimation = Raylib::ModelAnimation
 RayMouse = Raylib::Mouse
 RayMusic = Raylib::Music
 RayRay = Raylib::Ray
 RayRayHitInfo = Raylib::RayHitInfo
 RayRectangle = Raylib::Rectangle
-RayRenderTexture2D = Raylib::RenderTexture2D
 RayRenderTexture = Raylib::RenderTexture
+RayRenderTexture2D = Raylib::RenderTexture2D
 RayGL = Raylib::RlGL
 RayShader = Raylib::Shader
 RaySound = Raylib::Sound
+RaySpriteFont = Raylib::SpriteFont
+RayTexture = Raylib::Texture
 RayTexture2D = Raylib::Texture2D
+RayTextureCubemap = Raylib::TextureCubemap
 RayTexture = Raylib::Texture
 RayVector2 = Raylib::Vector2
 RayVector3 = Raylib::Vector3

@@ -9,9 +9,9 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
 
   # Window-related functions
   attach_function :InitWindow, %i[int int string], :void                  # Window#init
+  attach_function :WindowShouldClose, [], :bool                           # Window#should_close?
   attach_function :CloseWindow, [], :void                                 # Window#close
   attach_function :IsWindowReady, [], :bool                               # Window#is_ready?
-  attach_function :WindowShouldClose, [], :bool                           # Window#should_close?
   attach_function :IsWindowMinimized, [], :bool                           # Window#is_minimized?
   attach_function :ToggleFullscreen, [], :bool                            # Window#toggle_fullscreen
   attach_function :SetWindowIcon, [Image.by_value], :void                 # Window#icon=

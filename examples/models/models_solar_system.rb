@@ -104,6 +104,8 @@ until RayWindow.should_close?
     sun.draw_names
 
     RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, RayColor::YELLOW
+    camera_str = format "\nposition: [%3.3f, %3.3f, %3.3f]\ntarget: [%3.3f, %3.3f, %3.3f]\nup: [%3.3f, %3.3f, %3.3f]", camera.position.x, camera.position.y, camera.position.z, camera.target.x, camera.target.y, camera.target.z, camera.up.x, camera.up.y, camera.up.z
+    RayDraw.text "Camera #{camera_str}", 10, 50, 20, RayColor::WHITE
     RayDraw.fps 10, 10
   end
 end

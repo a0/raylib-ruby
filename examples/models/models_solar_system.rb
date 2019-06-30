@@ -1,3 +1,5 @@
+# Copyright (c) 2019 Aldrin Martoq (@aldrinmartoq)
+
 require 'raylib'
 
 screen_w = 1024

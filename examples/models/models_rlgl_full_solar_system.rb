@@ -98,7 +98,7 @@ sun     = Body.new radius: 0.2, color: RayColor::GOLD, name: 'sun'
 
 moon    = Body.new radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      color: RayColor::GRAY,       name: 'moon'
 mercury = Body.new radius: 0.05, orbit_radius: 0.396,  orbit_period: 90,      color: RayColor::GRAY,       name: 'mercury'
-venus   = Body.new radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     color: RayColor::MAGENTA,     name: 'venus'
+venus   = Body.new radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     color: RayColor::MAGENTA,    name: 'venus'
 earth   = Body.new radius: 0.05, orbit_radius: 1.000,  orbit_period: 365,     color: RayColor::BLUE,       name: 'earth'
 mars    = Body.new radius: 0.05, orbit_radius: 1.523,  orbit_period: 690,     color: RayColor::RED,        name: 'mars'
 jupiter = Body.new radius: 0.05, orbit_radius: 5.200,  orbit_period: 4_260,   color: RayColor::BROWN,      name: 'jupiter'

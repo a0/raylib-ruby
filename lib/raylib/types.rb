@@ -82,7 +82,6 @@ RaySpriteFont = Raylib::SpriteFont
 RayTexture = Raylib::Texture
 RayTexture2D = Raylib::Texture2D
 RayTextureCubemap = Raylib::TextureCubemap
-RayTexture = Raylib::Texture
 RayVector2 = Raylib::Vector2
 RayVector3 = Raylib::Vector3
 RayVector4 = Raylib::Vector4

@@ -37,5 +37,9 @@ module Raylib
       yield
       Raylib.rlEnd
     end
+
+    # OpenGL equivalent functions (common to 1.1, 3.3+, ES2)
+    ray_alias_static :rlEnableTexture,  :enable_texture
+    ray_alias_static :rlDisableTexture, :disable_texture
   end
 end

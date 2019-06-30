@@ -500,4 +500,8 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :rlColor4ub, %i[uchar uchar uchar uchar], :void
   attach_function :rlColor3f, %i[float float float], :void
   attach_function :rlColor4f, %i[float float float float], :void
+
+  # OpenGL equivalent functions (common to 1.1, 3.3+, ES2)
+  attach_function :rlEnableTexture, %i[uint], :void
+  attach_function :rlDisableTexture, [], :void
 end

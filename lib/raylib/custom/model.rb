@@ -12,14 +12,31 @@ module Raylib
     ray_alias_object :DrawModelWires,         :draw_wires           # Draw a model wires (with texture if set)
     ray_alias_object :DrawModelWiresEx,       :draw_wires_ex        # Draw a model wires (with texture if set) with extended parameters
 
+    # TODO: There must be a better way of doing this…
+    def meshes
+      return @meshes if @meshes
+
+      @meshes = mesh_count.times.map do |i|
+        Mesh.new(self[:meshes] + i * Mesh.size)
+      end
+    end
+
+    # TODO: There must be a better way of doing this…
     def materials
-      puts "MATERIAL COUNT: #{self[:material_count]} got #{self[:materials].address}"
-      result = self[:materials].read_array_of_pointer(self[:material_count]).map { |pointer| Material.new pointer }
-      puts "RESULT: #{result}"
-      puts "RESULT FIRST: #{result.first}"
-      puts "RESULT FIRST SHADER: #{result.first.shader}"
-      puts "RESULT FIRST SHADER: #{result.first.shader} #{result.first.shader[:id]}"
-      result
+      return @materials if @materials
+
+      @materials = material_count.times.map do |i|
+        Material.new(self[:materials] + i * Material.size)
+      end
+    end
+
+    # TODO: There must be a better way of doing this…
+    def bones
+      return @bones if @bones
+
+      @bones = bone_count.times.map do |i|
+        BoneInfo.new(self[:bones] + i * BoneInfo.size)
+      end
     end
   end
 end

@@ -2,7 +2,7 @@ module Raylib
   # Model animation
   class ModelAnimation
     layout  :bone_count, :int,      # Number of bones
-            :bone_info, :bones,     # Bones information (skeleton)
+            :bone_info, :pointer,   # Bones information (skeleton)
             :frame_count, :int,     # Number of animation frames
             :frame_poses, :pointer  # Poses array by frame
 

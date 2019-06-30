@@ -21,7 +21,7 @@ module Raylib
             :vaoId,           :uint,      # OpenGL Vertex Array Object id
             :vboId,           [:uint, 7]  # OpenGL Vertex Buffer Objects id (7 types of vertex data)
 
-    ray_struct_accessor :vertexCount, :triangleCount,
+    ray_struct_accessor :vertex_count, :triangle_count,
                         :vertices, :texcoords, :texcoords2, :normals, :tangents, :colors, :indices,
                         :anim_vertices, :anim_normals, :bone_ids, :bone_weights,
                         :vaoId, :vboId

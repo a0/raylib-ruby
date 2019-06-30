@@ -41,9 +41,9 @@ frame_buf = RayRenderTexture2D.load 192, 192
 
 model = RayModel.load 'resources/plane.obj'
 
-# plane_diffuse = model.materials[0].maps[RayMaterialMap::DIFFUSE].texture = RayTexture2D.load 'resources/plane_diffuse.png'
+plane_diffuse = model.materials[0].maps[RayMaterialMap::DIFFUSE].texture = RayTexture2D.load 'resources/plane_diffuse.png'
 
-# plane_diffuse.gen_mipmaps
+plane_diffuse.gen_mipmaps
 
 camera = RayCamera.new  RayVector3.new(0.0, 60.0, -120.0),
                         RayVector3.new(0.0, 12.0, 0.0),

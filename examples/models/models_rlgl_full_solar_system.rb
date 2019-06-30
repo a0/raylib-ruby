@@ -8,14 +8,14 @@ screen_h = 768
 
 SPEED = 0.2
 
-Body = Struct.new :name, :radius, :aphelion, :orbit_period, :rotation_period, :color, :children, :orbit_pos, :rotation_pos, keyword_init: true do
-  def initialize(*)
-    super
+class Body
+  attr_accessor :name, :radius, :orbit_radius, :orbit_period, :rotation_period, :color, :children, :orbit_pos, :rotation_pos, :screen_pos, :camera
+
+  def initialize(**args)
+    args.each { |key, val| send "#{key}=", val }
     self.orbit_pos = self.rotation_pos = 0.0
     self.children ||= []
-    self.radius /= 10
-    self.aphelion *= 5 if aphelion
-    puts "radius: #{radius} aphelion: #{aphelion}"
+    self.orbit_radius ||= 0.0
   end
 
   def draw_slices # rubocop:disable Metrics/AbcSize
@@ -56,6 +56,7 @@ Body = Struct.new :name, :radius, :aphelion, :orbit_period, :rotation_period, :c
         RayGL.color4ub color.r, color.g, color.b, color.a
         draw_slices
       end
+      self.screen_pos = camera.world_to_screen RayVector3.new(orbit_radius, radius, 0.0)
     end
 
     draw_children
@@ -66,30 +67,47 @@ Body = Struct.new :name, :radius, :aphelion, :orbit_period, :rotation_period, :c
       child.orbit_pos += SPEED * 360 / child.orbit_period
       RayGL.push_matrix do
         RayGL.rotatef child.orbit_pos, 0.0, 1.0, 0.0
-        RayGL.translatef child.aphelion, 0.0, 0.0
+        RayGL.translatef child.orbit_radius, 0.0, 0.0
         RayGL.rotatef(-child.orbit_pos, 0.0, 1.0, 0.0)
 
         child.draw
       end
 
-      RayDraw.circle_3d RayVector3.new(0.0, 0.0, 0.0), child.aphelion, RayVector3.new(1.0, 0.0, 0.0), 90.0, RayColor::RED
+      RayDraw.circle_3d RayVector3.new(0.0, 0.0, 0.0), child.orbit_radius, RayVector3.new(1.0, 0.0, 0.0), 90.0, child.color
     end
+  end
+
+  def draw_text
+    RayDraw.text name, screen_pos.x - RayFont.measure_text(name, 10) / 2, screen_pos.y, 20, RayColor::BLACK if screen_pos
+
+    children.each(&:draw_text)
   end
 end
 
-moon = Body.new radius: 0.5, aphelion: 0.2, orbit_period: 24, color: RayColor::GRAY, name: 'moon'
-earth = Body.new radius: 1.0, aphelion: 1.0, orbit_period: 365, color: RayColor::BLUE, name: 'earth', children: [moon]
-sun = Body.new radius: 109.0 / 10, color: RayColor::GOLD, name: 'sun', children: [earth]
-
 RayWindow.init screen_w, screen_h, 'ruby raylib [models] example - rlgl module usage with push/pop matrix transformations'
 
-camera = RayCamera.new  RayVector3.new(16.0, 16.0, 16.0),
+camera = RayCamera.new  RayVector3.new(8.0, 8.0, 8.0),
                         RayVector3.new(0.0, 0.0, 0.0),
                         RayVector3.new(0.0, 1.0, 0.0),
                         45.0,
                         RayCamera::TYPE_PERSPECTIVE
 
 camera.mode = RayCamera::MODE_FREE
+
+sun     = Body.new camera: camera, radius: 0.2, color: RayColor::GOLD, name: 'sun'
+moon    = Body.new camera: camera, radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      color: RayColor::GRAY,       name: 'moon'
+mercury = Body.new camera: camera, radius: 0.05, orbit_radius: 0.396,  orbit_period: 90,      color: RayColor::GRAY,       name: 'mercury'
+venus   = Body.new camera: camera, radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     color: RayColor::MAGENTA,     name: 'venus'
+earth   = Body.new camera: camera, radius: 0.05, orbit_radius: 1.000,  orbit_period: 365,     color: RayColor::BLUE,       name: 'earth'
+mars    = Body.new camera: camera, radius: 0.05, orbit_radius: 1.523,  orbit_period: 690,     color: RayColor::RED,        name: 'mars'
+jupiter = Body.new camera: camera, radius: 0.05, orbit_radius: 5.200,  orbit_period: 4_260,   color: RayColor::BROWN,      name: 'jupiter'
+saturn  = Body.new camera: camera, radius: 0.05, orbit_radius: 9.532,  orbit_period: 10_620,  color: RayColor::GREEN,      name: 'saturn'
+uranus  = Body.new camera: camera, radius: 0.05, orbit_radius: 19.180, orbit_period: 30_270,  color: RayColor::SKYBLUE,    name: 'uranus'
+neptune = Body.new camera: camera, radius: 0.05, orbit_radius: 30.056, orbit_period: 59_370,  color: RayColor::PURPLE,     name: 'neptune'
+pluto   = Body.new camera: camera, radius: 0.05, orbit_radius: 39.463, orbit_period: 89_310,  color: RayColor::DARKGREEN,  name: 'pluto'
+
+earth.children += [moon]
+sun.children += [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
 RayWindow.target_fps = 60 # Set our game to run at 60 frames-per-second
 
@@ -104,9 +122,11 @@ until RayWindow.should_close? # Detect window close button or ESC key
     camera.begin_mode3d do
       sun.draw
 
-      RayDraw.grid 20, 1.0
+      RayDraw.grid 80, 1.0
+      # RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, RayColor::MAROON
     end
 
+    sun.draw_text
     RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, RayColor::MAROON
     RayDraw.fps 10, 10
   end

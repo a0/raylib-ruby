@@ -316,6 +316,17 @@ module Raylib
 
     LOC_MAP_DIFFUSE   = LOC_MAP_ALBEDO
     LOC_MAP_SPECULAR  = LOC_MAP_METALNESS
+
+    # Shader uniform data types
+    UNIFORM_FLOAT           = 0
+    UNIFORM_VEC2            = 1
+    UNIFORM_VEC3            = 2
+    UNIFORM_VEC4            = 3
+    UNIFORM_INT             = 4
+    UNIFORM_IVEC2           = 5
+    UNIFORM_IVEC3           = 6
+    UNIFORM_IVEC4           = 7
+    UNIFORM_SAMPLER2D       = 8
   end
 
   class Mouse

@@ -43,8 +43,6 @@ map = {}
   end
 end
 
-pp map
-
 image_map.unload # Unload image from RAM
 
 map_position = RayVector3.new(-16.0, 0.0, -8.0) # Set model position
@@ -76,9 +74,9 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # TODO: Improvement: Just check player surrounding cells for collision
   (0...cubic_map.height).each do |y|
     (0...cubic_map.width).each do |x|
-      if map[[x, y]] && RayCollision.check_circle_rec(player_position, player_radius, RayRectangle.new(map_position.x - 0.5 + x * 1.0, map_position.z - 0.5 + y * 1.0, 1.0, 1.0))
-        camera.position = old_cam_pos
-      end
+      collision_rectangle = RayRectangle.new(map_position.x - 0.5 + x * 1.0, map_position.z - 0.5 + y * 1.0, 1.0, 1.0)
+
+      camera.position = old_cam_pos if map[[x, y]] && RayCollision.check_circle_rec(player_position, player_radius, collision_rectangle)
     end
   end
 

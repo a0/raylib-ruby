@@ -12,6 +12,7 @@ require_relative 'custom/gamepad'
 require_relative 'custom/image'
 require_relative 'custom/key'
 require_relative 'custom/material'
+require_relative 'custom/matrix'
 require_relative 'custom/mesh'
 require_relative 'custom/model'
 require_relative 'custom/mouse'
@@ -30,6 +31,10 @@ require_relative 'custom/wave'
 require_relative 'custom/window'
 
 module Raylib
+  #
+  # raylib.h
+  #
+
   # Misc. functions
   Raylib.singleton_class.send :alias_method, :config_flags=,          :SetConfigFlags       # Setup window configuration flags (view FLAGS)
   Raylib.singleton_class.send :alias_method, :trace_log_level=,       :SetTraceLogLevel     # Set the current threshold (minimum) log level
@@ -56,4 +61,12 @@ module Raylib
 
   # Shader loading/unloading functions
   Raylib.singleton_class.send :alias_method, :load_text,              :LoadText # Load chars array from text file
+
+  #
+  # raymath.h
+  #
+
+  # Utils math
+  Raylib.singleton_class.send :alias_method, :clamp,                  :Clamp                # Clamp float value
+  Raylib.singleton_class.send :alias_method, :lerp,                   :Lerp                 # Calculate linear interpolation between two vectors
 end

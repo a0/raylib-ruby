@@ -91,9 +91,9 @@ until RayWindow.should_close?
   pitch_offset *= 10
 
   transform  = RayMatrix.identity
-  transform *= RayMatrix.identity.rotate_z Raylib::DEG2RAD * roll
-  transform *= RayMatrix.identity.rotate_x Raylib::DEG2RAD * pitch
-  transform *= RayMatrix.identity.rotate_y Raylib::DEG2RAD * yaw
+  transform *= RayMatrix.rotate_z Raylib::DEG2RAD * roll
+  transform *= RayMatrix.rotate_x Raylib::DEG2RAD * pitch
+  transform *= RayMatrix.rotate_y Raylib::DEG2RAD * yaw
 
   model.transform = transform
 

@@ -11,10 +11,14 @@ module Raylib
   class Color < FFI::Struct; end
   class Cursor; end
   class Draw; end
+  class Float16 < FFI::Struct; end
+  class Float3 < FFI::Struct; end
+  class FloatPtr < FFI::Struct; end
   class Font < FFI::Struct; end
   SpriteFont = Font # SpriteFont type fallback, defaults to Font
   class Gamepad; end
   class Image < FFI::Struct; end
+  class IntPtr < FFI::Struct; end
   class Key; end
   class Material < FFI::Struct; end
   class MaterialMap < FFI::Struct; end
@@ -59,8 +63,12 @@ RayColor = Raylib::Color
 RayCursor = Raylib::Cursor
 RayDraw = Raylib::Draw
 RayFont = Raylib::Font
+RayFloat16 = Raylib::Float16
+RayFloat3 = Raylib::Float3
+RayFloatPtr = Raylib::FloatPtr
 RayGamepad = Raylib::Gamepad
 RayImage = Raylib::Image
+RayIntPtr = Raylib::IntPtr
 RayKey = Raylib::Key
 RayMaterial = Raylib::Material
 RayMaterialMap = Raylib::MaterialMap

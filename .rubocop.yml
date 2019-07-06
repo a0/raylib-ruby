@@ -17,6 +17,6 @@ Metrics/MethodLength:
 Metrics/BlockLength:
   Max: 50
 Metrics/LineLength:
-  Max: 160
+  Max: 240
 Naming/UncommunicativeMethodParamName:
   Enabled: false

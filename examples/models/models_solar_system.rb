@@ -30,6 +30,7 @@ class Body
 
     children.each do |child|
       child.orbit_pos += SPEED * 360 / child.orbit_period
+
       RayGL.push_matrix do
         RayGL.rotatef child.orbit_pos, 0.0, 1.0, 0.0
         RayGL.translatef child.orbit_radius, 0.0, 0.0
@@ -74,10 +75,10 @@ camera.mode = RayCamera::MODE_FREE
 sun     = Body.new radius: 0.2, name: 'sun', texture: '2k_sun'
 
 moon    = Body.new radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      name: 'moon',     texture: '2k_moon'
-mercury = Body.new radius: 0.06, orbit_radius: 0.396,  orbit_period: 90,      name: 'mercury',  texture: '2k_mercury'
-venus   = Body.new radius: 0.07, orbit_radius: 0.723,  orbit_period: 210,     name: 'venus',    texture: '2k_venus'
-earth   = Body.new radius: 0.08, orbit_radius: 1.000,  orbit_period: 365,     name: 'earth',    texture: '2k_earth_daymap'
-mars    = Body.new radius: 0.09, orbit_radius: 1.523,  orbit_period: 690,     name: 'mars',     texture: '2k_mars'
+mercury = Body.new radius: 0.05, orbit_radius: 0.396,  orbit_period: 90,      name: 'mercury',  texture: '2k_mercury'
+venus   = Body.new radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     name: 'venus',    texture: '2k_venus_atmosphere'
+earth   = Body.new radius: 0.05, orbit_radius: 1.000,  orbit_period: 365,     name: 'earth',    texture: '2k_earth_daymap'
+mars    = Body.new radius: 0.05, orbit_radius: 1.523,  orbit_period: 690,     name: 'mars',     texture: '2k_mars'
 jupiter = Body.new radius: 0.05, orbit_radius: 5.200,  orbit_period: 4_260,   name: 'jupiter',  texture: '2k_jupiter'
 saturn  = Body.new radius: 0.05, orbit_radius: 9.532,  orbit_period: 10_620,  name: 'saturn',   texture: '2k_saturn'
 uranus  = Body.new radius: 0.05, orbit_radius: 19.180, orbit_period: 30_270,  name: 'uranus',   texture: '2k_uranus'
@@ -85,12 +86,16 @@ neptune = Body.new radius: 0.05, orbit_radius: 30.056, orbit_period: 59_370,  na
 pluto   = Body.new radius: 0.05, orbit_radius: 39.463, orbit_period: 89_310,  name: 'pluto',    texture: '2k_eris_fictional'
 
 earth.children += [moon]
+earth.children = []
 sun.children += [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
+sun.children = [earth]
 
 RayWindow.target_fps = 60
 
 until RayWindow.should_close?
   camera.update
+
+  RayWindow.toggle_fullscreen if RayKey.is_down? RayKey::F
 
   RayDraw.begin_drawing do
     RayDraw.clear_background RayColor::BLACK
@@ -104,7 +109,7 @@ until RayWindow.should_close?
     sun.draw_names
 
     RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, RayColor::YELLOW
-    camera_str = format "\nposition: [%3.3f, %3.3f, %3.3f]\ntarget: [%3.3f, %3.3f, %3.3f]\nup: [%3.3f, %3.3f, %3.3f]", camera.position.x, camera.position.y, camera.position.z, camera.target.x, camera.target.y, camera.target.z, camera.up.x, camera.up.y, camera.up.z
+    camera_str = "\nposition: #{camera.position}\ntarget: #{camera.target}\nup: #{camera.up}"
     RayDraw.text "Camera #{camera_str}", 10, 50, 20, RayColor::WHITE
     RayDraw.fps 10, 10
   end

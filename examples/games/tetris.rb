@@ -32,8 +32,10 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 
   def initialize(*args)
     super
-
     self.matrix = Matrix.build(hor_size, ver_size) { :empty }
+  end
+  
+  def update 
   end
 
   def draw(x, y)
@@ -70,12 +72,28 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
   end
 end
 
-class Piece < Grid; end
+class Piece < Grid;
+  def initialize(*args)
+    @frames = 0
+    @y = 20
+  end 
+  def draw(x,y)
+    RayDraw.rectangle x, @y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GREEN
+    return x,y
+  end
+  def update
+    @frames += 1
+    # @y += SQUARE_SIZE if @frames % 10 == 0
+    puts "piece frames #{@frames}"
+  end
+end
 
 class Game
   attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, :incoming, :lines
 
   def initialize
+    @over=false
+    @pause=false
     self.screen_w = 800
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
@@ -86,7 +104,10 @@ class Game
 
   def init; end
 
-  def update; end
+  def update;
+    @grid.update 
+    @incoming.update
+  end
 
   def draw
     RayDraw.begin_drawing do
@@ -115,7 +136,7 @@ class Game
   def run
     puts "screen_w: #{screen_w} screen_h: #{screen_h}"
     RayWindow.init screen_w, screen_h, 'ruby sample game: tetris'
-    RayWindow.target_fps = 1
+    RayWindow.target_fps = 60
 
     init
     until RayWindow.should_close?

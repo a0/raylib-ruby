@@ -1,4 +1,5 @@
 require 'ffi'
+require 'glfw3'
 
 require_relative 'raylib/helpers'
 require_relative 'raylib/types'

@@ -94,8 +94,8 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 end
 
 class Piece < Grid
-  attr_accessor :falling_color, :disposition
-  attr_reader :gridx, :gridy
+  attr_accessor :falling_color, :disposition, :gridy
+  attr_reader :gridx
 
   def initialize(*args)
     super
@@ -146,17 +146,16 @@ puts @matrix.inspect
     # remember update @pad_blanks
   end
   
-  def stopped? 
-    at_bottom?
-  end
-
   def at_bottom?
     out = @gridy + @pad_blanks + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
     puts "at_bottom? #{out}"
     return out 
   end
   
-  def grid_cross(tgrid)
+  def stopped?(tgrid)
+    return @stopped if @stopped
+    @stopped = at_bottom?
+    return @stopped if @stopped
     # tg2 = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM) { :empty }
     # (0...PIECE_GRID_DIM).each do |j|
     #   (0...PIECE_GRID_DIM).each do |i|
@@ -168,19 +167,24 @@ puts @matrix.inspect
     # puts "P:"+@matrix.column_vectors.inspect
     # note: column vectors actually works out to be "row vectors" 
     # due to the way we are storing the grids to begin with
-    gvecs=tgrid.column_vectors.inspect
-    pvecs=@matrix.column_vectors.inspect
+    gvecs=tgrid.column_vectors
+    pvecs=@matrix.column_vectors
     # puts "G:"+tgrid.column_vectors.inspect
-    c=PIECE_GRID_DIM
+    c=PIECE_GRID_DIM - 1 
+    # byebug if at_bottom?
+puts gvecs.inspect
     while c >= 0 do
-     c -= 1 
+      pvecs[c].each_with_index do |pv,pi|
+        if pv == FALLING && gvecs[c][pi].is_a?(RayColor)
+          return @stopped = true
+        end
+      end
+      c -= 1
     end
-    # byebug
   end
 
   
   def update
-    keydownpressed=false
     if RayKey.is_pressed? RayKey::LEFT
       @gridx -= 1
       @gridx = 0 if @gridx < 0
@@ -190,19 +194,20 @@ puts @matrix.inspect
       @gridx = rlim if @gridx > rlim
     elsif RayKey.is_down? RayKey::UP
       @matrix.rotate_x(90)
-    elsif !stopped? && ( RayKey.is_down?( RayKey::DOWN ) || 
-      RayKey.is_pressed?( RayKey::DOWN ) )
-      keydownpressed=true
+    elsif @keydownpressed
+      @keydownpressed=false
       @gridy += 1
+    elsif !@keydownpressed && ( RayKey.is_down?( RayKey::DOWN ) || 
+      RayKey.is_pressed?( RayKey::DOWN ) )
+      @keydownpressed=true
     end
 
     @frames += 1
-    if !stopped?
-      @gridy += 1 if @frames % 35 == 0 
+    if !at_bottom?
+      if !@stopped 
+        @gridy += 1 if @frames % 35 == 0 
+      end
     end
-    # puts "piece frames #{@frames}"
-    # puts "gridx #{@gridx}"
-    # puts "gridy #{@gridy}"
   end
 end
 
@@ -251,7 +256,7 @@ class Game
     (0...PIECE_GRID_DIM).each do |j|
       (0...PIECE_GRID_DIM).each do |i|
         piece.gridx..piece.gridx+PIECE_GRID_DIM
-        out[i,j] = matr[piece.gridx+i,piece.gridy+j]
+        out[i,j] = matr[piece.gridx+i,piece.gridy+j+1]
       end
     end
     return out
@@ -263,11 +268,10 @@ class Game
     out 
   end
 
-  def update;
+  def update
     @grid.update 
     @incoming.update
-    @falling.grid_cross( grid_sub(@grid.matrix, @falling) )
-    if @falling.stopped?
+    if @falling.stopped?( grid_sub(@grid.matrix, @falling) )
       @grid.freeze_in!(@falling)
       @falling = @incoming
       @falling.disposition = FALLING

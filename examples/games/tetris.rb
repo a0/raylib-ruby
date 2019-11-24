@@ -46,11 +46,18 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
   end
 
   def freeze_in!(piece)
+    return unless piece.disposition == FALLING && piece.stopped == true
     (0...ver_size).each do |j|
       (0...hor_size).each do |i|
-        @matrix[i+piece.gridx,j+piece.gridy] = piece.falling_color if piece.matrix[i,j] == FALLING 
+puts @matrix[ i+piece.gridx, j+piece.gridy ].to_s
+        if @matrix[ i+piece.gridx, j+piece.gridy ] == EMPTY &&
+          piece.matrix[i,j] == FALLING
+          @matrix[i+piece.gridx,j+piece.gridy] = piece.falling_color 
+        end
       end
     end
+    piece.disposition = FROZEN
+    return piece
   end
 
   def draw(x, y)
@@ -95,7 +102,7 @@ end
 
 class Piece < Grid
   attr_accessor :falling_color, :disposition, :gridy
-  attr_reader :gridx
+  attr_reader :gridx, :stopped
 
   def initialize(*args)
     super
@@ -174,10 +181,11 @@ puts @matrix.inspect
     # puts "G:"+tgrid.column_vectors.inspect
     c=PIECE_GRID_DIM - 1
     # byebug if at_bottom?
-# puts gvecs.inspect
+puts "P: " + pvecs.inspect
+puts "G: " + gvecs.inspect
     while c >= 0 do
       pvecs[c].each_with_index do |pv,pi|
-        if pv == FALLING && gvecs[c][pi].is_a?(RayColor)
+        if pv == FALLING && gvecs[c][pi] != EMPTY
           return @stopped = true
         end
       end
@@ -197,13 +205,10 @@ puts @matrix.inspect
       @gridx = rlim if @gridx > rlim
     elsif RayKey.is_down? RayKey::UP
       @matrix.rotate_x(90)
-    elsif @keydownpressed
-      @keydownpressed=false
-      @gridy += 1
-    elsif !@keydownpressed && 
-      ( RayKey.is_down?( RayKey::DOWN )  || 
-      RayKey.is_pressed?( RayKey::DOWN ) )
-      @keydownpressed=true
+    elsif RayKey.is_down?( RayKey::DOWN )
+      if !at_bottom? && !@stopped 
+        @gridy += 1 
+      end
     end
 
     @frames += 1
@@ -275,10 +280,12 @@ class Game
   def update
     @grid.update 
     @incoming.update
-    if @falling.stopped?( grid_sub(@grid.matrix, @falling) )
-      @falling.disposition = FROZEN 
+    if @falling.disposition == FALLING &&
+      @falling.stopped?( grid_sub(@grid.matrix, @falling) )
       @grid.freeze_in!(@falling)
+      @falling.disposition = FROZEN
       @falling = @incoming
+      @falling.disposition = FALLING
       @incoming = make_new_incoming 
     else
       @falling.update

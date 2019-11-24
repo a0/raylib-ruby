@@ -154,8 +154,10 @@ puts @matrix.inspect
   
   def stopped?(tgrid)
     return @stopped if @stopped
-    @stopped = at_bottom?
-    return @stopped if @stopped
+    if at_bottom?
+      return @stopped = true 
+    end 
+    # return @stopped if @stopped
     # tg2 = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM) { :empty }
     # (0...PIECE_GRID_DIM).each do |j|
     #   (0...PIECE_GRID_DIM).each do |i|
@@ -170,9 +172,9 @@ puts @matrix.inspect
     gvecs=tgrid.column_vectors
     pvecs=@matrix.column_vectors
     # puts "G:"+tgrid.column_vectors.inspect
-    c=PIECE_GRID_DIM - 1 
+    c=PIECE_GRID_DIM - 1
     # byebug if at_bottom?
-puts gvecs.inspect
+# puts gvecs.inspect
     while c >= 0 do
       pvecs[c].each_with_index do |pv,pi|
         if pv == FALLING && gvecs[c][pi].is_a?(RayColor)
@@ -185,6 +187,7 @@ puts gvecs.inspect
 
   
   def update
+    return if !@disposition == FALLING
     if RayKey.is_pressed? RayKey::LEFT
       @gridx -= 1
       @gridx = 0 if @gridx < 0
@@ -197,14 +200,15 @@ puts gvecs.inspect
     elsif @keydownpressed
       @keydownpressed=false
       @gridy += 1
-    elsif !@keydownpressed && ( RayKey.is_down?( RayKey::DOWN ) || 
+    elsif !@keydownpressed && 
+      ( RayKey.is_down?( RayKey::DOWN )  || 
       RayKey.is_pressed?( RayKey::DOWN ) )
       @keydownpressed=true
     end
 
     @frames += 1
     if !at_bottom?
-      if !@stopped 
+      if !@stopped
         @gridy += 1 if @frames % 35 == 0 
       end
     end
@@ -272,9 +276,9 @@ class Game
     @grid.update 
     @incoming.update
     if @falling.stopped?( grid_sub(@grid.matrix, @falling) )
+      @falling.disposition = FROZEN 
       @grid.freeze_in!(@falling)
       @falling = @incoming
-      @falling.disposition = FALLING
       @incoming = make_new_incoming 
     else
       @falling.update

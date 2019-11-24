@@ -61,6 +61,9 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
         elsif matrix[i, j] == :fading
           RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, fading_color
           x += SQUARE_SIZE
+        elsif matrix[i, j] == :falling
+          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
+          x += SQUARE_SIZE
         end
       end
 
@@ -73,23 +76,58 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 end
 
 class Piece < Grid;
+  attr_accessor :falling_color
   def initialize(*args)
+    super
+    @matrix = Matrix.build(hor_size, ver_size) { :empty }
+puts (@matrix.methods-Object.methods).sort.inspect
+# [:&, :^, :rationalize, :to_a, :to_c, :to_f, :to_h, :to_i, :to_r, :|]
+
     @frames = 0
-    @y = 20
+    @y = 25
+    @x = 50
   end 
+  
   def draw(x,y)
-    RayDraw.rectangle x, @y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GREEN
-    return x,y
+    @x = x if x
+    @y = y if y
+    oux, ouy = super @x,@y
+    # RayDraw.rectangle @x, @y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GREEN
+    return oux, ouy
   end
+  
   def update
+    if RayKey.is_pressed? RayKey::LEFT
+      @x -= SQUARE_SIZE
+    elsif RayKey.is_pressed? RayKey::RIGHT
+      @x += SQUARE_SIZE
+    elsif RayKey.is_down? RayKey::UP
+      @matrix.rotate_x(90)
+    elsif RayKey.is_down? RayKey::DOWN
+    end
     @frames += 1
-    # @y += SQUARE_SIZE if @frames % 10 == 0
+    @y += SQUARE_SIZE if @frames % 35 == 0
     puts "piece frames #{@frames}"
   end
 end
 
+class LeftL < Piece 
+  def initialize(*args)
+    super
+    @falling_color = RayColor.new 213,41,176,255
+    @matrix = Matrix.build(hor_size, ver_size) { :empty }
+    @matrix[0,0]=:falling
+    @matrix[0,1]=:falling
+    @matrix[1,1]=:falling
+    @matrix[2,1]=:falling
+    @matrix[3,1]=:falling
+  end
+
+end
+
 class Game
-  attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, :incoming, :lines
+  attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, 
+    :incoming, :falling, :lines
 
   def initialize
     @over=false
@@ -97,7 +135,8 @@ class Game
     self.screen_w = 800
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
-    self.incoming = Piece.new hor_size: 4, ver_size: 4
+    self.falling = LeftL.new hor_size: 4, ver_size: 4
+    self.incoming = LeftL.new hor_size: 4, ver_size: 4
     self.lines = 0
     self.level = 1
   end
@@ -107,6 +146,7 @@ class Game
   def update;
     @grid.update 
     @incoming.update
+    @falling.update
   end
 
   def draw
@@ -120,11 +160,13 @@ class Game
 
         grid.draw x, y
 
+
+        fallx, fally = falling.draw(nil,nil)
+
+        # show incoming piece 
         x = 500
         y = 45
-
-        x, y = incoming.draw x, y
-
+        x, y = incoming.draw(x,y)
         RayDraw.text 'INCOMING:', x, y - 100, 10, RayColor::GRAY
         RayDraw.text format('LINES:    %04i', lines), x, y + 20, 10, RayColor::GRAY
       end

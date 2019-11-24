@@ -15,9 +15,10 @@
 # FIXME: WIP, not fully ported yet
 require 'raylib'
 require 'matrix'
+require 'byebug'
 
 SQUARE_SIZE             = 20
-
+PIECE_GRID_DIM          = 4
 GRID_HORIZONTAL_SIZE    = 12
 GRID_VERTICAL_SIZE      = 20
 
@@ -32,7 +33,7 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 
   def initialize(*args)
     super
-    self.matrix = Matrix.build(hor_size, ver_size) { :empty }
+    self.matrix = Matrix.build(hor_size, ver_size) { 0 }
   end
   
   def update 
@@ -43,7 +44,7 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 
     (0...ver_size).each do |j|
       (0...hor_size).each do |i|
-        if matrix[i, j] == :empty
+        if matrix[i, j] == :empty || matrix[i, j] == 0 || matrix[i, j] == 8
           RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::LIGHTGRAY
           RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::LIGHTGRAY
           RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
@@ -77,17 +78,36 @@ end
 
 class Piece < Grid;
   attr_accessor :falling_color
+  attr_reader :gridx, :gridy
   def initialize(*args)
     super
-    @matrix = Matrix.build(hor_size, ver_size) { :empty }
-puts (@matrix.methods-Object.methods).sort.inspect
-# [:&, :^, :rationalize, :to_a, :to_c, :to_f, :to_h, :to_i, :to_r, :|]
-    @gridx=GRID_HORIZONTAL_SIZE;  @gridy = 0;
+    @matrix = Matrix.build(hor_size, ver_size) { 4 }
+puts @matrix.inspect
+# puts (@matrix.methods-Object.methods).sort.inspect
+# [:*, :**, :+, :+@, :-, :-@, :/, :Fail, :Raise, :[], :[]=, :adjugate, :all?, :antisymmetric?, :any?, :chain, :chunk, :chunk_while, :coerce, :cofactor, :cofactor_expansion, :collect, :collect!, :collect_concat, :column, :column_count, :column_size, :column_vectors, :combine, :component, :conj, :conjugate, :count, :cycle, :det, :det_e, :detect, :determinant, :determinant_e, :diagonal?, :drop, :drop_while, :each, :each_cons, :each_entry, :each_slice, :each_with_index, :each_with_object, :eigen, :eigensystem, :element, :elements_to_f, :elements_to_i, :elements_to_r, :empty?, :entries, :entrywise_product, :filter, :find, :find_all, :find_index, :first, :first_minor, :flat_map, :grep, :grep_v, :group_by, :hadamard_product, :hermitian?, :hstack, :imag, :imaginary, :index, :inject, :inv, :inverse, :laplace_expansion, :lazy, :lower_triangular?, :lup, :lup_decomposition, :map, :map!, :max, :max_by, :member?, :min, :min_by, :minmax, :minmax_by, :minor, :none?, :normal?, :one?, :orthogonal?, :partition, :permutation?, :rank, :rank_e, :real, :real?, :rect, :rectangular, :reduce, :regular?, :reject, :reverse_each, :round, :row, :row_count, :row_size, :row_vectors, :rows, :select, :singular?, :skew_symmetric?, :slice_after, :slice_before, :slice_when, :sort, :sort_by, :square?, :sum, :symmetric?, :t, :take, :take_while, :to_a, :to_h, :to_matrix, :to_set, :tr, :trace, :transpose, :uniq, :unitary?, :upper_triangular?, :vstack, :zero?, :zip]
+
+    # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
+    @gridx=0;  @gridy = 0;
     @frames = 0
     # @y = 25
     # @x = 50
   end 
   
+  def at_bottom?
+  
+  end
+  def grid_cross(tgrid)
+    # tg2 = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM) { :empty }
+    # (0...PIECE_GRID_DIM).each do |j|
+    #   (0...PIECE_GRID_DIM).each do |i|
+    #     tg2[i,j] = tgrid[@gridx+i, @gridy+j]
+    #   end 
+    # end
+    # puts tg2.inspect
+    puts tgrid.inspect
+    # byebug
+  end
+
   def draw(x,y)
     drawx = x || @x; drawy=y || @y
     oux, ouy = super drawx, drawy
@@ -104,9 +124,10 @@ puts (@matrix.methods-Object.methods).sort.inspect
       @matrix.rotate_x(90)
     elsif RayKey.is_down? RayKey::DOWN
     end
+
     @frames += 1
     @gridy += 1 if @frames % 35 == 0
-    @x = 50 + @gridx * SQUARE_SIZE
+    @x = 230 + @gridx * SQUARE_SIZE
     @y = 25 + @gridy * SQUARE_SIZE
     # puts "piece frames #{@frames}"
     # puts "gridx #{@gridx}"
@@ -118,12 +139,12 @@ class LeftL < Piece
   def initialize(*args)
     super
     @falling_color = RayColor.new 213,41,176,255
-    @matrix = Matrix.build(hor_size, ver_size) { :empty }
-    @matrix[0,0]=:falling
-    @matrix[0,1]=:falling
-    @matrix[1,1]=:falling
-    @matrix[2,1]=:falling
-    @matrix[3,1]=:falling
+    @matrix = Matrix.build(hor_size, ver_size) { 8 }
+    @matrix[0,2]=:falling
+    @matrix[0,3]=:falling
+    @matrix[1,3]=:falling
+    @matrix[2,3]=:falling
+    @matrix[3,3]=:falling
   end
 
 end
@@ -138,17 +159,32 @@ class Game
     self.screen_w = 800
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
-    self.falling = LeftL.new hor_size: 4, ver_size: 4
-    self.incoming = LeftL.new hor_size: 4, ver_size: 4
+    self.falling = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    self.incoming = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
     self.lines = 0
     self.level = 1
   end
 
   def init; end
-
+  
+  def grid_sub(matr, piece)
+    # return an array of 4 horizontal arrays
+    # that are a chunk of the game grid, starting at 
+    # the piece's gridx,gridy coordinates
+    out = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM){ 0 }
+    (0...PIECE_GRID_DIM).each do |j|
+      (0...PIECE_GRID_DIM).each do |i|
+        piece.gridx..piece.gridx+PIECE_GRID_DIM
+        out[i,j] = matr[piece.gridx+i,piece.gridy+j]
+      end
+    end
+    return out
+  end
+  
   def update;
     @grid.update 
     @incoming.update
+    @falling.grid_cross( grid_sub(@grid.matrix, @falling) )
     @falling.update
   end
 
@@ -162,7 +198,6 @@ class Game
         y = screen_h / 2 - (GRID_VERTICAL_SIZE - 1)* SQUARE_SIZE / 2 + SQUARE_SIZE * 2 - 50
 
         grid.draw x, y
-
 
         fallx, fally = falling.draw(nil,nil)
 

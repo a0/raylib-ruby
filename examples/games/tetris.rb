@@ -82,32 +82,35 @@ class Piece < Grid;
     @matrix = Matrix.build(hor_size, ver_size) { :empty }
 puts (@matrix.methods-Object.methods).sort.inspect
 # [:&, :^, :rationalize, :to_a, :to_c, :to_f, :to_h, :to_i, :to_r, :|]
-
+    @gridx=GRID_HORIZONTAL_SIZE;  @gridy = 0;
     @frames = 0
-    @y = 25
-    @x = 50
+    # @y = 25
+    # @x = 50
   end 
   
   def draw(x,y)
-    @x = x if x
-    @y = y if y
-    oux, ouy = super @x,@y
+    drawx = x || @x; drawy=y || @y
+    oux, ouy = super drawx, drawy
     # RayDraw.rectangle @x, @y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GREEN
     return oux, ouy
   end
   
   def update
     if RayKey.is_pressed? RayKey::LEFT
-      @x -= SQUARE_SIZE
+      @gridx -= 1
     elsif RayKey.is_pressed? RayKey::RIGHT
-      @x += SQUARE_SIZE
+      @gridx += 1
     elsif RayKey.is_down? RayKey::UP
       @matrix.rotate_x(90)
     elsif RayKey.is_down? RayKey::DOWN
     end
     @frames += 1
-    @y += SQUARE_SIZE if @frames % 35 == 0
-    puts "piece frames #{@frames}"
+    @gridy += 1 if @frames % 35 == 0
+    @x = 50 + @gridx * SQUARE_SIZE
+    @y = 25 + @gridy * SQUARE_SIZE
+    # puts "piece frames #{@frames}"
+    # puts "gridx #{@gridx}"
+    # puts "gridy #{@gridy}"
   end
 end
 

@@ -28,6 +28,11 @@ FAST_FALL_AWAIT_COUNTER = 30
 
 FADING_TIME             = 33
 
+# square dispositions
+EMPTY                   = 0
+INCOMING                = 4
+FALLING                 = 8
+
 Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
   attr_accessor :matrix
 
@@ -41,14 +46,14 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 
   def draw(x, y)
     controller = x
-
     (0...ver_size).each do |j|
       (0...hor_size).each do |i|
-        if matrix[i, j] == :empty || matrix[i, j] == 0 || matrix[i, j] == 8
+        if matrix[i, j] == EMPTY || matrix[i, j] == FALLING 
           RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::LIGHTGRAY
           RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::LIGHTGRAY
           RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
           RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
+          # RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
           x += SQUARE_SIZE
         elsif matrix[i, j] == :full
           RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GRAY
@@ -62,8 +67,8 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
         elsif matrix[i, j] == :fading
           RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, fading_color
           x += SQUARE_SIZE
-        elsif matrix[i, j] == :falling
-          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
+        elsif matrix[i, j] == FALLING
+          # RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
           x += SQUARE_SIZE
         end
       end
@@ -76,15 +81,16 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
   end
 end
 
-class Piece < Grid;
-  attr_accessor :falling_color
+class Piece < Grid
+  attr_accessor :falling_color, :disposition
   attr_reader :gridx, :gridy
+
   def initialize(*args)
     super
     @matrix = Matrix.build(hor_size, ver_size) { 4 }
 puts @matrix.inspect
 # puts (@matrix.methods-Object.methods).sort.inspect
-# [:*, :**, :+, :+@, :-, :-@, :/, :Fail, :Raise, :[], :[]=, :adjugate, :all?, :antisymmetric?, :any?, :chain, :chunk, :chunk_while, :coerce, :cofactor, :cofactor_expansion, :collect, :collect!, :collect_concat, :column, :column_count, :column_size, :column_vectors, :combine, :component, :conj, :conjugate, :count, :cycle, :det, :det_e, :detect, :determinant, :determinant_e, :diagonal?, :drop, :drop_while, :each, :each_cons, :each_entry, :each_slice, :each_with_index, :each_with_object, :eigen, :eigensystem, :element, :elements_to_f, :elements_to_i, :elements_to_r, :empty?, :entries, :entrywise_product, :filter, :find, :find_all, :find_index, :first, :first_minor, :flat_map, :grep, :grep_v, :group_by, :hadamard_product, :hermitian?, :hstack, :imag, :imaginary, :index, :inject, :inv, :inverse, :laplace_expansion, :lazy, :lower_triangular?, :lup, :lup_decomposition, :map, :map!, :max, :max_by, :member?, :min, :min_by, :minmax, :minmax_by, :minor, :none?, :normal?, :one?, :orthogonal?, :partition, :permutation?, :rank, :rank_e, :real, :real?, :rect, :rectangular, :reduce, :regular?, :reject, :reverse_each, :round, :row, :row_count, :row_size, :row_vectors, :rows, :select, :singular?, :skew_symmetric?, :slice_after, :slice_before, :slice_when, :sort, :sort_by, :square?, :sum, :symmetric?, :t, :take, :take_while, :to_a, :to_h, :to_matrix, :to_set, :tr, :trace, :transpose, :uniq, :unitary?, :upper_triangular?, :vstack, :zero?, :zip]
+# [:eigen, :lup, :lup_decomposition, :row_vectors, :column_vectors, :elements_to_f, :elements_to_i, :elements_to_r, :Fail, :/, :coerce, :real?, :zero?, :round, :rectangular, :rect, :real, :imaginary, :imag, :+@, :-@, :**, :conj, :conjugate, :rows, :row, :row_count, :column_count, :trace, :column, :vstack, :hstack, :combine, :Raise, :element, :t, :to_matrix, :row_size, :column_size, :minor, :tr, :first_minor, :cofactor, :square?, :determinant, :adjugate, :laplace_expansion, :cofactor_expansion, :diagonal?, :hermitian?, :lower_triangular?, :normal?, :orthogonal?, :permutation?, :regular?, :singular?, :symmetric?, :antisymmetric?, :skew_symmetric?, :unitary?, :upper_triangular?, :inverse, :hadamard_product, :entrywise_product, :inv, :eigensystem, :det, :determinant_e, :component, :det_e, :rank, :rank_e]
 
     # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
     @gridx=0;  @gridy = 0;
@@ -92,9 +98,36 @@ puts @matrix.inspect
     # @y = 25
     # @x = 50
   end 
-  
+
+  def draw(x, y)
+    drawx = x || @x; drawy=y || @y
+    x=drawx; y = drawy
+    if @disposition == FALLING || @disposition == INCOMING
+      (0...PIECE_GRID_DIM).each do |j|
+        (0...PIECE_GRID_DIM).each do |i|
+          if matrix[i, j] == EMPTY
+            RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::LIGHTGRAY
+            RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::LIGHTGRAY
+            RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
+            RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
+            x += SQUARE_SIZE
+          else
+            RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
+            x += SQUARE_SIZE
+          end
+        end
+        x=drawx
+        y += SQUARE_SIZE
+      end
+      oux = @x
+      ouy = @y
+    else
+      oux, ouy = super drawx, drawy
+    end
+    return oux, ouy
+  end
+
   def at_bottom?
-  
   end
   def grid_cross(tgrid)
     # tg2 = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM) { :empty }
@@ -104,16 +137,12 @@ puts @matrix.inspect
     #   end 
     # end
     # puts tg2.inspect
+
+    puts @matrix.inspect
     puts tgrid.inspect
     # byebug
   end
 
-  def draw(x,y)
-    drawx = x || @x; drawy=y || @y
-    oux, ouy = super drawx, drawy
-    # RayDraw.rectangle @x, @y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GREEN
-    return oux, ouy
-  end
   
   def update
     if RayKey.is_pressed? RayKey::LEFT
@@ -142,14 +171,13 @@ class LeftL < Piece
   def initialize(*args)
     super
     @falling_color = RayColor.new 213,41,176,255
-    @matrix = Matrix.build(hor_size, ver_size) { 8 }
-    @matrix[0,2]=:falling
-    @matrix[0,3]=:falling
-    @matrix[1,3]=:falling
-    @matrix[2,3]=:falling
-    @matrix[3,3]=:falling
+    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
+    @matrix[0,2]=FALLING
+    @matrix[0,3]=FALLING
+    @matrix[1,3]=FALLING
+    @matrix[2,3]=FALLING
+    @matrix[3,3]=FALLING
   end
-
 end
 
 class Game
@@ -162,8 +190,13 @@ class Game
     self.screen_w = 800
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
+    
     self.falling = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    self.falling.disposition = FALLING
+    
     self.incoming = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    self.incoming.disposition = INCOMING
+
     self.lines = 0
     self.level = 1
   end
@@ -205,11 +238,12 @@ class Game
         fallx, fally = falling.draw(nil,nil)
 
         # show incoming piece 
-        x = 500
-        y = 45
-        x, y = incoming.draw(x,y)
-        RayDraw.text 'INCOMING:', x, y - 100, 10, RayColor::GRAY
-        RayDraw.text format('LINES:    %04i', lines), x, y + 20, 10, RayColor::GRAY
+        x = 500 ;y = 45
+        incoming.draw(x,y)
+        x = 500 ;y = 20
+        RayDraw.text 'INCOMING:', x, y , 10, RayColor::GRAY
+        x = 500 ;y = 135
+        RayDraw.text format('LINES:    %04i', lines), x, y , 10, RayColor::GRAY
       end
     end
   end

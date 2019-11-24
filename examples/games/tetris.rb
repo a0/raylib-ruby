@@ -118,8 +118,11 @@ puts @matrix.inspect
   def update
     if RayKey.is_pressed? RayKey::LEFT
       @gridx -= 1
+      @gridx = 0 if @gridx < 0
     elsif RayKey.is_pressed? RayKey::RIGHT
       @gridx += 1
+      rlim = GRID_HORIZONTAL_SIZE - PIECE_GRID_DIM
+      @gridx = rlim if @gridx > rlim
     elsif RayKey.is_down? RayKey::UP
       @matrix.rotate_x(90)
     elsif RayKey.is_down? RayKey::DOWN

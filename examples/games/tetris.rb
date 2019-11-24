@@ -100,16 +100,19 @@ puts @matrix.inspect
   end 
 
   def draw(x, y)
+    @x = 230 + @gridx * SQUARE_SIZE
+    @y = 25 + @gridy * SQUARE_SIZE
+
     drawx = x || @x; drawy=y || @y
     x=drawx; y = drawy
     if @disposition == FALLING || @disposition == INCOMING
       (0...PIECE_GRID_DIM).each do |j|
         (0...PIECE_GRID_DIM).each do |i|
           if matrix[i, j] == EMPTY
-            RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::LIGHTGRAY
-            RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::LIGHTGRAY
-            RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
-            RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
+            RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::GOLD
+            RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::GOLD
+            RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
+            RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
             x += SQUARE_SIZE
           else
             RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
@@ -128,7 +131,11 @@ puts @matrix.inspect
   end
 
   def at_bottom?
+    out = @gridy + @pad_blanks + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
+    puts "at_bottom? #{out}"
+    return out 
   end
+  
   def grid_cross(tgrid)
     # tg2 = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM) { :empty }
     # (0...PIECE_GRID_DIM).each do |j|
@@ -138,13 +145,22 @@ puts @matrix.inspect
     # end
     # puts tg2.inspect
 
-    puts @matrix.inspect
-    puts tgrid.inspect
+    # puts "P:"+@matrix.column_vectors.inspect
+    # note: column vectors actually works out to be "row vectors" 
+    # due to the way we are storing the grids to begin with
+    gvecs=tgrid.column_vectors.inspect
+    pvecs=@matrix.column_vectors.inspect
+    # puts "G:"+tgrid.column_vectors.inspect
+    c=PIECE_GRID_DIM
+    while c >= 0 do
+     c -= 1 
+    end
     # byebug
   end
 
   
   def update
+
     if RayKey.is_pressed? RayKey::LEFT
       @gridx -= 1
       @gridx = 0 if @gridx < 0
@@ -158,9 +174,10 @@ puts @matrix.inspect
     end
 
     @frames += 1
-    @gridy += 1 if @frames % 35 == 0
-    @x = 230 + @gridx * SQUARE_SIZE
-    @y = 25 + @gridy * SQUARE_SIZE
+    if !at_bottom?
+      @gridy += 1 if @frames % 35 == 0
+    end
+
     # puts "piece frames #{@frames}"
     # puts "gridx #{@gridx}"
     # puts "gridy #{@gridy}"
@@ -177,6 +194,7 @@ class LeftL < Piece
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
     @matrix[3,3]=FALLING
+    @pad_blanks = 0
   end
 end
 

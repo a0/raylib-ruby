@@ -32,16 +32,25 @@ FADING_TIME             = 33
 EMPTY                   = 0
 INCOMING                = 4
 FALLING                 = 8
+FROZEN                  = 16
 
 Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
   attr_accessor :matrix
-
   def initialize(*args)
     super
+    # @frozen_colors = [[nil*GRID_VERTICAL_SIZE]*GRID_HORIZONTAL_SIZE]
     self.matrix = Matrix.build(hor_size, ver_size) { 0 }
   end
   
   def update 
+  end
+
+  def freeze_in!(piece)
+    (0...ver_size).each do |j|
+      (0...hor_size).each do |i|
+        @matrix[i+piece.gridx,j+piece.gridy] = piece.falling_color if piece.matrix[i,j] == FALLING 
+      end
+    end
   end
 
   def draw(x, y)
@@ -66,6 +75,9 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
           x += SQUARE_SIZE
         elsif matrix[i, j] == :fading
           RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, fading_color
+          x += SQUARE_SIZE
+        elsif matrix[i, j].is_a?(RayColor)
+          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, matrix[i, j]
           x += SQUARE_SIZE
         elsif matrix[i, j] == FALLING
           # RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
@@ -130,6 +142,14 @@ puts @matrix.inspect
     return oux, ouy
   end
 
+  def rotate!
+    # remember update @pad_blanks
+  end
+  
+  def stopped? 
+    at_bottom?
+  end
+
   def at_bottom?
     out = @gridy + @pad_blanks + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
     puts "at_bottom? #{out}"
@@ -160,7 +180,7 @@ puts @matrix.inspect
 
   
   def update
-
+    keydownpressed=false
     if RayKey.is_pressed? RayKey::LEFT
       @gridx -= 1
       @gridx = 0 if @gridx < 0
@@ -170,14 +190,16 @@ puts @matrix.inspect
       @gridx = rlim if @gridx > rlim
     elsif RayKey.is_down? RayKey::UP
       @matrix.rotate_x(90)
-    elsif RayKey.is_down? RayKey::DOWN
+    elsif !stopped? && ( RayKey.is_down?( RayKey::DOWN ) || 
+      RayKey.is_pressed?( RayKey::DOWN ) )
+      keydownpressed=true
+      @gridy += 1
     end
 
     @frames += 1
-    if !at_bottom?
-      @gridy += 1 if @frames % 35 == 0
+    if !stopped?
+      @gridy += 1 if @frames % 35 == 0 
     end
-
     # puts "piece frames #{@frames}"
     # puts "gridx #{@gridx}"
     # puts "gridy #{@gridy}"
@@ -212,7 +234,7 @@ class Game
     self.falling = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
     self.falling.disposition = FALLING
     
-    self.incoming = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    self.incoming = make_new_incoming
     self.incoming.disposition = INCOMING
 
     self.lines = 0
@@ -235,11 +257,24 @@ class Game
     return out
   end
   
+  def make_new_incoming
+    out = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    out.disposition = INCOMING
+    out 
+  end
+
   def update;
     @grid.update 
     @incoming.update
     @falling.grid_cross( grid_sub(@grid.matrix, @falling) )
-    @falling.update
+    if @falling.stopped?
+      @grid.freeze_in!(@falling)
+      @falling = @incoming
+      @falling.disposition = FALLING
+      @incoming = make_new_incoming 
+    else
+      @falling.update
+    end
   end
 
   def draw

@@ -131,7 +131,9 @@ puts @matrix.inspect
 
     # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
     @frames = 0
-    @top_pad, @bottom_pad = get_padding(@matrix)
+    @top_pad, @bottom_pad, @left_pad, @right_pad = 
+      get_padding
+
     @gridx=0;  @gridy = -@top_pad;
   end 
 
@@ -166,9 +168,11 @@ puts @matrix.inspect
     return oux, ouy
   end
   
-  def get_padding(mtrx)
-    tp = 0; bp = 0
+  def get_padding
+    mtrx=@matrix
+    tp = 0; bp = 0; lp = 0; rp = 0
     tpfinal = nil; bpfinal = nil
+    lpfinal = nil; rpfinal = nil
     ary=[0,1,2,3]
     (0...PIECE_GRID_DIM).each do |v|
       if tpfinal.nil? 
@@ -177,8 +181,7 @@ puts @matrix.inspect
         else 
           tpfinal = tp
         end
-      end
-      if tpfinal && bpfinal.nil? 
+      else
         if ary.all?{ |h| mtrx[h,v] == EMPTY } 
           bp += 1
         else 
@@ -186,9 +189,27 @@ puts @matrix.inspect
         end
       end
     end
-
+    (0...PIECE_GRID_DIM).each do |h|
+      if lpfinal.nil? 
+        if ary.all?{ |v| mtrx[h,v] == EMPTY } 
+          lp += 1
+        else 
+          lpfinal = lp
+        end
+      else
+        if ary.all?{ |v| mtrx[h,v] == EMPTY } 
+          rp += 1
+        else 
+          rpfinal = rp
+        end
+      end
+    end
+    rpfinal = rp
     tpfinal ||= 0; bpfinal ||= 0
-    return tpfinal, bpfinal
+    lpfinal ||= 0; rpfinal ||= 0
+    puts "paddings: "
+    puts [tpfinal, bpfinal, lpfinal, rpfinal].inspect 
+    return tpfinal, bpfinal, lpfinal, rpfinal
   end
 
   def rotate!(dir=:left)
@@ -205,13 +226,15 @@ puts @matrix.inspect
     end
 # puts "after : " + nmatrix.to_s
 
-    @top_pad, @bottom_pad = get_padding(nmatrix)
     @matrix = nmatrix
+    @top_pad, @bottom_pad, @left_pad, @right_pad = 
+      get_padding
+    return @matrix
   end
   
   def at_bottom?
-    out = @gridy + @bottom_pad + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
-    puts "at_bottom? #{out}"
+    out = @gridy - @bottom_pad + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
+    puts "at_bottom? #{@bottom_pad}, #{@gridy}, #{out}"
     return out 
   end
   
@@ -220,18 +243,6 @@ puts @matrix.inspect
     if at_bottom?
       return @stopped = true 
     end 
-    # return @stopped if @stopped
-    # tg2 = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM) { :empty }
-    # (0...PIECE_GRID_DIM).each do |j|
-    #   (0...PIECE_GRID_DIM).each do |i|
-    #     tg2[i,j] = tgrid[@gridx+i, @gridy+j]
-    #   end 
-    # end
-    # puts tg2.inspect
-
-    # puts "P:"+@matrix.column_vectors.inspect
-    # note: column vectors actually works out to be "row vectors" 
-    # due to the way we are storing the grids to begin with
     gvecs=tgrid.column_vectors
     pvecs=@matrix.column_vectors
     # puts "G:"+tgrid.column_vectors.inspect
@@ -252,12 +263,14 @@ puts "G: " + gvecs.inspect
   
   def update
     return if !@disposition == FALLING
-    if RayKey.is_pressed? RayKey::LEFT
+    if RayKey.is_down? RayKey::LEFT
       @gridx -= 1
-      @gridx = 0 if @gridx < 0
-    elsif RayKey.is_pressed? RayKey::RIGHT
+      llim =  -@left_pad
+      @gridx = llim if @gridx < llim
+    elsif RayKey.is_down? RayKey::RIGHT
       @gridx += 1
-      rlim = GRID_HORIZONTAL_SIZE - PIECE_GRID_DIM
+# puts "right_pad: "+@right_pad.to_s      
+      rlim = GRID_HORIZONTAL_SIZE - PIECE_GRID_DIM + @right_pad
       @gridx = rlim if @gridx > rlim
     elsif RayKey.is_pressed? RayKey::UP
       @matrix = rotate!(90)
@@ -285,8 +298,9 @@ class LeftL < Piece
     @matrix[0,3]=FALLING
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
-    @matrix[3,3]=FALLING
-    @top_pad, @bottom_pad = get_padding(@matrix)
+    # @matrix[3,3]=FALLING
+    @top_pad, @bottom_pad, @left_pad, @right_pad = 
+      get_padding
     @gridy = -@top_pad
   end
 end
@@ -296,12 +310,13 @@ class RightL < Piece
     super
     @falling_color = RayColor.new 167,241,142,255
     @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
-    @matrix[3,2]=FALLING
+    @matrix[2,2]=FALLING
     @matrix[0,3]=FALLING
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
-    @matrix[3,3]=FALLING
-    @top_pad, @bottom_pad = get_padding(@matrix)
+    # @matrix[3,3]=FALLING
+    @top_pad, @bottom_pad, @left_pad, @right_pad = 
+      get_padding
     @gridy = -@top_pad
   end
 end
@@ -315,7 +330,8 @@ class Cube < Piece
     @matrix[1,2]=FALLING
     @matrix[2,1]=FALLING
     @matrix[2,2]=FALLING
-    @top_pad, @bottom_pad = get_padding(@matrix)
+    @top_pad, @bottom_pad, @left_pad, @right_pad = 
+      get_padding
     @gridy = -@top_pad
   end
 end
@@ -329,7 +345,8 @@ class Bar < Piece
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
     @matrix[3,3]=FALLING
-    @top_pad, @bottom_pad = get_padding(@matrix)
+    @top_pad, @bottom_pad, @left_pad, @right_pad = 
+      get_padding
     @gridy = -@top_pad
   end
 end
@@ -346,6 +363,8 @@ class Game
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
     
     self.falling = make_new_incoming
+    
+    # pp = *@falling.get_padding()
     self.falling.disposition = FALLING
     
     self.incoming = make_new_incoming
@@ -373,6 +392,7 @@ class Game
   
   def make_new_incoming
     klass = [LeftL, RightL, Bar, Cube].sample
+    # klass = [Cube].sample
     out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
     out.disposition = INCOMING
     out 
@@ -382,7 +402,7 @@ class Game
     @grid.update 
 
     if @falling.disposition == FALLING &&
-      @falling.stopped?( grid_sub(@grid.matrix, @falling) )
+    @falling.stopped?( grid_sub(@grid.matrix, @falling) )
       @grid.freeze_in!(@falling)
       @falling.disposition = FROZEN
       @falling = @incoming
@@ -422,7 +442,7 @@ class Game
   def run
     puts "screen_w: #{screen_w} screen_h: #{screen_h}"
     RayWindow.init screen_w, screen_h, 'ruby sample game: tetris'
-    RayWindow.target_fps = 60
+    RayWindow.target_fps = 20
 
     init
     until RayWindow.should_close?

@@ -47,15 +47,33 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 
   def freeze_in!(piece)
     return unless piece.disposition == FALLING && piece.stopped == true
-    (0...ver_size).each do |j|
-      (0...hor_size).each do |i|
-# puts @matrix[ i+piece.gridx, j+piece.gridy ].to_s
+    (0...PIECE_GRID_DIM).each do |j|
+      (0...PIECE_GRID_DIM).each do |i|
+# puts "f G: " + @matrix.to_s
+# puts "f P: " + piece.matrix.to_s
         if @matrix[ i+piece.gridx, j+piece.gridy ] == EMPTY &&
           piece.matrix[i,j] == FALLING
           @matrix[i+piece.gridx,j+piece.gridy] = piece.falling_color 
         end
       end
     end
+    # (0...PIECE_GRID_DIM).each do |j|
+    #   (0...PIECE_GRID_DIM).each do |i|
+    #     if matrix[i, j] == EMPTY
+    #       RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::GOLD
+    #       RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::GOLD
+    #       RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
+    #       RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
+    #       x += SQUARE_SIZE
+    #     else
+    #       RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
+    #       x += SQUARE_SIZE
+    #     end
+    #   end
+    #   x=drawx
+    #   y += SQUARE_SIZE
+    # end
+
     piece.disposition = FROZEN
     return piece
   end
@@ -148,18 +166,47 @@ puts @matrix.inspect
     end
     return oux, ouy
   end
+  
+  def get_padding(mtrx)
+    tp = 0; bp = 0
+    tpfinal = nil; bpfinal = nil
+    ary=[0,1,2,3]
+    (0...PIECE_GRID_DIM).each do |v|
+      if tpfinal.nil? 
+        if ary.all?{ |h| mtrx[h,v] == EMPTY } 
+          tp += 1
+        else 
+          tpfinal = tp
+        end
+      end
+      if tpfinal && bpfinal.nil? 
+        if ary.all?{ |h| mtrx[h,v] == EMPTY } 
+          bp += 1
+        else 
+          bpfinal = tp
+        end
+      end
+    end
+
+    tpfinal ||= 0; bpfinal = 0
+    return tpfinal, bpfinal
+  end
 
   def rotate!(dir=:left)
-    return @matrix unless disposition==FALLING
     # remember update @pad_blanks
+    return @matrix unless disposition==FALLING
     nmatrix = Matrix.build(PIECE_GRID_DIM, PIECE_GRID_DIM) { EMPTY }
 
+# puts "before: " + @matrix.to_s
     (0...PIECE_GRID_DIM).each do |v|
       (0...PIECE_GRID_DIM).each do |h|
         # nmatrix[h,v]=EMPTY
         nmatrix[h,v]=@matrix[v,PIECE_GRID_DIM-h-1]
       end
     end
+# puts "after : " + nmatrix.to_s
+
+    @top_pad, @bottom_pad = get_padding(nmatrix)
     @matrix = nmatrix
   end
   
@@ -224,7 +271,7 @@ puts "G: " + gvecs.inspect
     @frames += 1
     if !at_bottom?
       if !@stopped
-        # @gridy += 1 if @frames % 35 == 0 
+        @gridy += 1 if @frames % 35 == 0 
       end
     end
   end
@@ -289,17 +336,18 @@ class Game
 
   def update
     @grid.update 
-    @incoming.update
+
     if @falling.disposition == FALLING &&
       @falling.stopped?( grid_sub(@grid.matrix, @falling) )
       @grid.freeze_in!(@falling)
       @falling.disposition = FROZEN
       @falling = @incoming
       @falling.disposition = FALLING
-      @incoming = make_new_incoming 
+      @incoming = make_new_incoming
     else
       @falling.update
     end
+
   end
 
   def draw
@@ -312,7 +360,6 @@ class Game
         y = screen_h / 2 - (GRID_VERTICAL_SIZE - 1)* SQUARE_SIZE / 2 + SQUARE_SIZE * 2 - 50
 
         grid.draw x, y
-
         fallx, fally = falling.draw(nil,nil)
 
         # show incoming piece 

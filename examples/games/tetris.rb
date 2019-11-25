@@ -291,6 +291,49 @@ class LeftL < Piece
   end
 end
 
+class RightL < Piece 
+  def initialize(*args)
+    super
+    @falling_color = RayColor.new 167,241,142,255
+    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
+    @matrix[3,2]=FALLING
+    @matrix[0,3]=FALLING
+    @matrix[1,3]=FALLING
+    @matrix[2,3]=FALLING
+    @matrix[3,3]=FALLING
+    @top_pad, @bottom_pad = get_padding(@matrix)
+    @gridy = -@top_pad
+  end
+end
+
+class Cube < Piece 
+  def initialize(*args)
+    super
+    @falling_color = RayColor.new 204,115,88,255
+    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
+    @matrix[1,1]=FALLING
+    @matrix[1,2]=FALLING
+    @matrix[2,1]=FALLING
+    @matrix[2,2]=FALLING
+    @top_pad, @bottom_pad = get_padding(@matrix)
+    @gridy = -@top_pad
+  end
+end
+
+class Bar < Piece 
+  def initialize(*args)
+    super
+    @falling_color = RayColor.new 114,188,202,255
+    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
+    @matrix[0,3]=FALLING
+    @matrix[1,3]=FALLING
+    @matrix[2,3]=FALLING
+    @matrix[3,3]=FALLING
+    @top_pad, @bottom_pad = get_padding(@matrix)
+    @gridy = -@top_pad
+  end
+end
+
 class Game
   attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, 
     :incoming, :falling, :lines
@@ -329,7 +372,8 @@ class Game
   end
   
   def make_new_incoming
-    out = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    klass = [LeftL, RightL, Bar, Cube].sample
+    out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
     out.disposition = INCOMING
     out 
   end

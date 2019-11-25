@@ -132,8 +132,7 @@ puts @matrix.inspect
     # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
     @gridx=0;  @gridy = 0;
     @frames = 0
-    # @y = 25
-    # @x = 50
+    @top_pad, @bottom_pad = get_padding(@matrix)
   end 
 
   def draw(x, y)
@@ -211,7 +210,7 @@ puts @matrix.inspect
   end
   
   def at_bottom?
-    out = @gridy + @pad_blanks + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
+    out = @gridy + @bottom_pad + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
     puts "at_bottom? #{out}"
     return out 
   end
@@ -287,7 +286,6 @@ class LeftL < Piece
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
     @matrix[3,3]=FALLING
-    @pad_blanks = 0
   end
 end
 

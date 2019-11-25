@@ -124,15 +124,15 @@ class Piece < Grid
 
   def initialize(*args)
     super
-    @matrix = Matrix.build(hor_size, ver_size) { 4 }
+    @matrix = Matrix.build(hor_size, ver_size) { INCOMING }
 puts @matrix.inspect
 # puts (@matrix.methods-Object.methods).sort.inspect
 # [:eigen, :lup, :lup_decomposition, :row_vectors, :column_vectors, :elements_to_f, :elements_to_i, :elements_to_r, :Fail, :/, :coerce, :real?, :zero?, :round, :rectangular, :rect, :real, :imaginary, :imag, :+@, :-@, :**, :conj, :conjugate, :rows, :row, :row_count, :column_count, :trace, :column, :vstack, :hstack, :combine, :Raise, :element, :t, :to_matrix, :row_size, :column_size, :minor, :tr, :first_minor, :cofactor, :square?, :determinant, :adjugate, :laplace_expansion, :cofactor_expansion, :diagonal?, :hermitian?, :lower_triangular?, :normal?, :orthogonal?, :permutation?, :regular?, :singular?, :symmetric?, :antisymmetric?, :skew_symmetric?, :unitary?, :upper_triangular?, :inverse, :hadamard_product, :entrywise_product, :inv, :eigensystem, :det, :determinant_e, :component, :det_e, :rank, :rank_e]
 
     # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
-    @gridx=0;  @gridy = 0;
     @frames = 0
     @top_pad, @bottom_pad = get_padding(@matrix)
+    @gridx=0;  @gridy = -@top_pad;
   end 
 
   def draw(x, y)
@@ -187,7 +187,7 @@ puts @matrix.inspect
       end
     end
 
-    tpfinal ||= 0; bpfinal = 0
+    tpfinal ||= 0; bpfinal ||= 0
     return tpfinal, bpfinal
   end
 
@@ -286,6 +286,8 @@ class LeftL < Piece
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
     @matrix[3,3]=FALLING
+    @top_pad, @bottom_pad = get_padding(@matrix)
+    @gridy = -@top_pad
   end
 end
 

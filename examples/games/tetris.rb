@@ -49,7 +49,7 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
     return unless piece.disposition == FALLING && piece.stopped == true
     (0...ver_size).each do |j|
       (0...hor_size).each do |i|
-puts @matrix[ i+piece.gridx, j+piece.gridy ].to_s
+# puts @matrix[ i+piece.gridx, j+piece.gridy ].to_s
         if @matrix[ i+piece.gridx, j+piece.gridy ] == EMPTY &&
           piece.matrix[i,j] == FALLING
           @matrix[i+piece.gridx,j+piece.gridy] = piece.falling_color 
@@ -149,8 +149,18 @@ puts @matrix.inspect
     return oux, ouy
   end
 
-  def rotate!
+  def rotate!(dir=:left)
+    return @matrix unless disposition==FALLING
     # remember update @pad_blanks
+    nmatrix = Matrix.build(PIECE_GRID_DIM, PIECE_GRID_DIM) { EMPTY }
+
+    (0...PIECE_GRID_DIM).each do |v|
+      (0...PIECE_GRID_DIM).each do |h|
+        # nmatrix[h,v]=EMPTY
+        nmatrix[h,v]=@matrix[v,PIECE_GRID_DIM-h-1]
+      end
+    end
+    @matrix = nmatrix
   end
   
   def at_bottom?
@@ -203,8 +213,8 @@ puts "G: " + gvecs.inspect
       @gridx += 1
       rlim = GRID_HORIZONTAL_SIZE - PIECE_GRID_DIM
       @gridx = rlim if @gridx > rlim
-    elsif RayKey.is_down? RayKey::UP
-      @matrix.rotate_x(90)
+    elsif RayKey.is_pressed? RayKey::UP
+      @matrix = rotate!(90)
     elsif RayKey.is_down?( RayKey::DOWN )
       if !at_bottom? && !@stopped 
         @gridy += 1 
@@ -214,7 +224,7 @@ puts "G: " + gvecs.inspect
     @frames += 1
     if !at_bottom?
       if !@stopped
-        @gridy += 1 if @frames % 35 == 0 
+        # @gridy += 1 if @frames % 35 == 0 
       end
     end
   end
@@ -245,7 +255,7 @@ class Game
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
     
-    self.falling = LeftL.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    self.falling = make_new_incoming
     self.falling.disposition = FALLING
     
     self.incoming = make_new_incoming

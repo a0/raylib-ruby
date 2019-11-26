@@ -131,10 +131,7 @@ class Piece < Grid
 
     # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
     @frames = 0
-    @top_pad, @bottom_pad, @left_pad, @right_pad = 
-      get_padding
-
-    @gridx=0;  @gridy = -@top_pad;
+    @gridx=0;  @gridy = -2;
   end 
 
   def draw(x, y)
@@ -171,46 +168,40 @@ class Piece < Grid
   def get_padding
     mtrx=@matrix
     tp = 0; bp = 0; lp = 0; rp = 0
-    tpfinal = nil; bpfinal = nil
-    lpfinal = nil; rpfinal = nil
+    tpdone = false; bpdone = false
+    lpdone = false; rpdone = false
     ary=[0,1,2,3]
     (0...PIECE_GRID_DIM).each do |v|
-      if tpfinal.nil? 
+      if tpdone == false
         if ary.all?{ |h| mtrx[h,v] == EMPTY } 
           tp += 1
-        else 
-          tpfinal = tp
+        else
+          tpdone = true
         end
       else
         if ary.all?{ |h| mtrx[h,v] == EMPTY } 
-          bp += 1
-        else 
-          bpfinal = tp
+          bp = PIECE_GRID_DIM - v
+          break
         end
       end
     end
     (0...PIECE_GRID_DIM).each do |h|
-      if lpfinal.nil? 
+      if lpdone == false
         if ary.all?{ |v| mtrx[h,v] == EMPTY } 
           lp += 1
         else 
-          lpfinal = lp
+          lpdone = true
         end
       else
         if ary.all?{ |v| mtrx[h,v] == EMPTY } 
-          rp += 1
-        else 
-          rpfinal = rp
+          rp = PIECE_GRID_DIM - h
+          break
         end
       end
     end
-    rpfinal = rp
-    tpfinal ||= 0; bpfinal ||= 0
-    lpfinal ||= 0; rpfinal ||= 0
-    puts "paddings: "
-    puts [tpfinal, bpfinal, lpfinal, rpfinal].inspect 
+    puts "paddings: " + [tp, bp, lp, rp].inspect 
     @top_pad, @bottom_pad, @left_pad, @right_pad = 
-      tpfinal, bpfinal, lpfinal, rpfinal
+      tp, bp, lp, rp
     return @top_pad, @bottom_pad, @left_pad, @right_pad
   end
 
@@ -229,8 +220,7 @@ class Piece < Grid
 # puts "after : " + nmatrix.to_s
 
     @matrix = nmatrix
-    @top_pad, @bottom_pad, @left_pad, @right_pad = 
-      get_padding
+    get_padding
     return @matrix
   end
   
@@ -305,8 +295,7 @@ class LeftL < Piece
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
     # @matrix[3,3]=FALLING
-    @top_pad, @bottom_pad, @left_pad, @right_pad = 
-      get_padding
+    get_padding
     @gridy = -@top_pad
   end
 end
@@ -321,8 +310,7 @@ class RightL < Piece
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
     # @matrix[3,3]=FALLING
-    @top_pad, @bottom_pad, @left_pad, @right_pad = 
-      get_padding
+    get_padding
     @gridy = -@top_pad
   end
 end
@@ -336,8 +324,7 @@ class Cube < Piece
     @matrix[1,2]=FALLING
     @matrix[2,1]=FALLING
     @matrix[2,2]=FALLING
-    @top_pad, @bottom_pad, @left_pad, @right_pad = 
-      get_padding
+    get_padding
     @gridy = -@top_pad
   end
 end
@@ -351,8 +338,7 @@ class Bar < Piece
     @matrix[1,3]=FALLING
     @matrix[2,3]=FALLING
     @matrix[3,3]=FALLING
-    @top_pad, @bottom_pad, @left_pad, @right_pad = 
-      get_padding
+    get_padding
     @gridy = -@top_pad
   end
 end

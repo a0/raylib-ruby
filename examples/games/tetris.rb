@@ -125,7 +125,7 @@ class Piece < Grid
   def initialize(*args)
     super
     @matrix = Matrix.build(hor_size, ver_size) { INCOMING }
-puts @matrix.inspect
+# puts @matrix.inspect
 # puts (@matrix.methods-Object.methods).sort.inspect
 # [:eigen, :lup, :lup_decomposition, :row_vectors, :column_vectors, :elements_to_f, :elements_to_i, :elements_to_r, :Fail, :/, :coerce, :real?, :zero?, :round, :rectangular, :rect, :real, :imaginary, :imag, :+@, :-@, :**, :conj, :conjugate, :rows, :row, :row_count, :column_count, :trace, :column, :vstack, :hstack, :combine, :Raise, :element, :t, :to_matrix, :row_size, :column_size, :minor, :tr, :first_minor, :cofactor, :square?, :determinant, :adjugate, :laplace_expansion, :cofactor_expansion, :diagonal?, :hermitian?, :lower_triangular?, :normal?, :orthogonal?, :permutation?, :regular?, :singular?, :symmetric?, :antisymmetric?, :skew_symmetric?, :unitary?, :upper_triangular?, :inverse, :hadamard_product, :entrywise_product, :inv, :eigensystem, :det, :determinant_e, :component, :det_e, :rank, :rank_e]
 
@@ -209,7 +209,9 @@ puts @matrix.inspect
     lpfinal ||= 0; rpfinal ||= 0
     puts "paddings: "
     puts [tpfinal, bpfinal, lpfinal, rpfinal].inspect 
-    return tpfinal, bpfinal, lpfinal, rpfinal
+    @top_pad, @bottom_pad, @left_pad, @right_pad = 
+      tpfinal, bpfinal, lpfinal, rpfinal
+    return @top_pad, @bottom_pad, @left_pad, @right_pad
   end
 
   def rotate!(dir=:left)
@@ -234,7 +236,7 @@ puts @matrix.inspect
   
   def at_bottom?
     out = @gridy - @bottom_pad + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
-    puts "at_bottom? #{@bottom_pad}, #{@gridy}, #{out}"
+    # puts "at_bottom? #{@bottom_pad}, #{@gridy}, #{out}"
     return out 
   end
   
@@ -248,8 +250,8 @@ puts @matrix.inspect
     # puts "G:"+tgrid.column_vectors.inspect
     c=PIECE_GRID_DIM - 1
     # byebug if at_bottom?
-puts "P: " + pvecs.inspect
-puts "G: " + gvecs.inspect
+# puts "P: " + pvecs.inspect
+# puts "G: " + gvecs.inspect
     while c >= 0 do
       pvecs[c].each_with_index do |pv,pi|
         if pv == FALLING && gvecs[c][pi] != EMPTY
@@ -260,18 +262,22 @@ puts "G: " + gvecs.inspect
     end
   end
 
+  def can_left? 
+    return false if (@gridx-1) < @left_pad
+    return true  
+  end
   
+  def can_right?
+    return false if GRID_HORIZONTAL_SIZE  < (1 + @gridx + PIECE_GRID_DIM - @right_pad)
+    return true
+  end
+
   def update
     return if !@disposition == FALLING
     if RayKey.is_down? RayKey::LEFT
-      @gridx -= 1
-      llim =  -@left_pad
-      @gridx = llim if @gridx < llim
+      @gridx -= 1 if can_left?
     elsif RayKey.is_down? RayKey::RIGHT
-      @gridx += 1
-# puts "right_pad: "+@right_pad.to_s      
-      rlim = GRID_HORIZONTAL_SIZE - PIECE_GRID_DIM + @right_pad
-      @gridx = rlim if @gridx > rlim
+      @gridx += 1 if can_right?
     elsif RayKey.is_pressed? RayKey::UP
       @matrix = rotate!(90)
     elsif RayKey.is_down?( RayKey::DOWN )
@@ -395,6 +401,7 @@ class Game
     # klass = [Cube].sample
     out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
     out.disposition = INCOMING
+    out.get_padding
     out 
   end
 
@@ -442,7 +449,7 @@ class Game
   def run
     puts "screen_w: #{screen_w} screen_h: #{screen_h}"
     RayWindow.init screen_w, screen_h, 'ruby sample game: tetris'
-    RayWindow.target_fps = 20
+    RayWindow.target_fps = 60
 
     init
     until RayWindow.should_close?

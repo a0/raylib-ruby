@@ -21,6 +21,7 @@ SQUARE_SIZE             = 20
 PIECE_GRID_DIM          = 4
 GRID_HORIZONTAL_SIZE    = 12
 GRID_VERTICAL_SIZE      = 20
+AFTER_STOP_GRACE_PERIOD = 15
 
 LATERAL_SPEED           = 10
 TURNING_SPEED           = 12
@@ -44,19 +45,22 @@ Klunk = RaySound.load './klunk.wav'
 # fx_ogg = RaySound.load 'resources/tanatana.ogg'
 
 
-Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
-  attr_accessor :matrix
+Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
+  attr_accessor :matrix 
+  attr_reader :gmtr
   def initialize(*args)
     super
+    @gmtr=args.first[:gmtr]
     # @frozen_colors = [[nil*GRID_VERTICAL_SIZE]*GRID_HORIZONTAL_SIZE]
-    self.matrix = Matrix.build(hor_size, ver_size) { 0 }
+    # puts "Grid initialize #{@gmtr}"
+    @matrix = Matrix.build(hor_size, ver_size) { 0 }
   end
   
   def update 
   end
 
   def freeze_in!(piece)
-    return unless piece.disposition == FALLING && piece.stopped == true
+    return unless piece.disposition == FALLING && piece.stopped?
     Klunk.play
     (0...PIECE_GRID_DIM).each do |j|
       (0...PIECE_GRID_DIM).each do |i|
@@ -220,10 +224,24 @@ class Piece < Grid
     return out 
   end
   
-  def stopped?(tgrid)
-    return @stopped if @stopped
+  def grid_sub
+    # return an array of 4 horizontal arrays
+    # that are a chunk of the game grid, starting at 
+    # the piece's gridx,gridy coordinates
+    out = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM){ 0 }
+    (0...PIECE_GRID_DIM).each do |j|
+      (0...PIECE_GRID_DIM).each do |i|
+        @gridx..@gridx+PIECE_GRID_DIM
+        out[i,j] = @gmtr[@gridx+i, @gridy+j+1]
+      end
+    end
+    return out
+  end
+  
+  def stopped?
+    tgrid = grid_sub
     if at_bottom?
-      return @stopped = true 
+      return true 
     end 
     gvecs=tgrid.column_vectors
     pvecs=@matrix.column_vectors
@@ -235,7 +253,7 @@ class Piece < Grid
     while c >= 0 do
       pvecs[c].each_with_index do |pv,pi|
         if pv == FALLING && gvecs[c][pi] != EMPTY
-          return @stopped = true
+          return true
         end
       end
       c -= 1
@@ -265,6 +283,7 @@ class Piece < Grid
   def update(game_grid_matrix)
     return if !@disposition == FALLING
     @gmtr=game_grid_matrix
+    down_pressed = false
     if RayKey.is_pressed? RayKey::LEFT
       if can_left?
         @gridx -= 1 
@@ -274,14 +293,14 @@ class Piece < Grid
     elsif RayKey.is_pressed? RayKey::UP
       @matrix = rotate!(90)
     elsif RayKey.is_down?( RayKey::DOWN )
-      if !at_bottom? && !@stopped 
-        @gridy += 1 
-      end
+      down_pressed = true
     end
 
     @frames += 1
-    if !at_bottom?
-      if !@stopped
+    if !at_bottom? && !stopped?
+      if down_pressed
+        @gridy += 1
+      else  
         @gridy += 1 if @frames % 35 == 0 
       end
     end
@@ -298,14 +317,13 @@ class Game
     @over=false
     @pause=false
     @score=0
+    @after_stopped_grace=AFTER_STOP_GRACE_PERIOD
     self.screen_w = 800
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
-    
     self.falling = make_new_incoming
-    
     self.falling.disposition = FALLING
-    
+      
     self.incoming = make_new_incoming
     self.incoming.disposition = INCOMING
 
@@ -315,24 +333,10 @@ class Game
 
   def init; end
   
-  def grid_sub(matr, piece)
-    # return an array of 4 horizontal arrays
-    # that are a chunk of the game grid, starting at 
-    # the piece's gridx,gridy coordinates
-    out = Matrix.build(PIECE_GRID_DIM,PIECE_GRID_DIM){ 0 }
-    (0...PIECE_GRID_DIM).each do |j|
-      (0...PIECE_GRID_DIM).each do |i|
-        piece.gridx..piece.gridx+PIECE_GRID_DIM
-        out[i,j] = matr[piece.gridx+i,piece.gridy+j+1]
-      end
-    end
-    return out
-  end
-  
   def make_new_incoming
     klass = [LeftL, RightL, Bar, Cube, Sniggle, Piggle].sample
     # klass = [Cube].sample
-    out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
+    out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM, gmtr: self.grid.matrix
     out.disposition = INCOMING
     out 
   end
@@ -354,7 +358,7 @@ class Game
     removed_count = 0
     while crow > -1
       if (0...GRID_HORIZONTAL_SIZE).to_a.each{ |cl2| 
-        puts "handle_completed_rows col, row: #{cl2}, #{crow} => #{@grid.matrix[cl2,crow]}"
+        # puts "handle_completed_rows col, row: #{cl2}, #{crow} => #{@grid.matrix[cl2,crow]}"
         if @grid.matrix[cl2,crow] == EMPTY
           break
         end 
@@ -372,19 +376,27 @@ class Game
 
   def update
     @grid.update 
-
     if @falling.disposition == FALLING &&
-    @falling.stopped?( grid_sub(@grid.matrix, @falling) )
-      @grid.freeze_in!(@falling)
-      @falling.disposition = FROZEN
-      @falling = @incoming
-      @falling.disposition = FALLING
-      @incoming = make_new_incoming
-      handle_completed_rows
+    @falling.stopped?
+      if @after_stopped_grace == 0
+        @grid.freeze_in!(@falling)
+        @falling.disposition = FROZEN
+        @falling = @incoming
+        @falling.disposition = FALLING
+        @incoming = make_new_incoming
+        handle_completed_rows
+        @after_stopped_grace = AFTER_STOP_GRACE_PERIOD
+      else
+        if !@falling.can_left? && !@falling.can_right?
+          @after_stopped_grace = 0
+        else
+          @after_stopped_grace -= 1
+        end
+        @falling.update(@grid.matrix)
+      end
     else
       @falling.update(@grid.matrix)
     end
-
   end
 
   def draw

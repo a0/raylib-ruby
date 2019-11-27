@@ -1,3 +1,18 @@
+# /*******************************************************************************************
+# *
+# *   raylib - sample game: tetris
+# *
+# *   Sample game Marc Palau and Ramon Santamaria
+# *
+# *   This game has been created using raylib v1.3 (www.raylib.com)
+# *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+# *
+# *   Copyright (c) 2015 Ramon Santamaria (@raysan5)
+# *
+# ********************************************************************************************/
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq)
+# ruby port contributor: David Heitzman daveheitzman@github.com
+
 class Piece < Grid
   attr_accessor :falling_color, :disposition, :gridy
   attr_reader :gridx, :stopped

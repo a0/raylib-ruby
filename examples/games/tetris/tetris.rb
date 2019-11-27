@@ -11,6 +11,7 @@
 # *
 # ********************************************************************************************/
 # Ported to ruby by Aldrin Martoq (@aldrinmartoq)
+# ruby port contributor: David Heitzman daveheitzman@github.com
 
 # FIXME: WIP, not fully ported yet
 require 'raylib'
@@ -38,11 +39,9 @@ FROZEN                  = 16
 RayAudioDevice.init # Initialize audio device
 RayAudioDevice.master_volume=0.2
 
-Plonk = RaySound.load './plonk.wav'
-Pling = RaySound.load './pling.wav'
-Schmock = RaySound.load './schmock.wav'
+Pling = RaySound.load './pling.ogg'
 Klunk = RaySound.load './klunk.wav'
-Gameover = RaySound.load './gameover.wav'
+Gameover = RaySound.load './gameover.ogg'
 # fx_ogg = RaySound.load 'resources/tanatana.ogg'
 
 require_relative 'tetris-grid'

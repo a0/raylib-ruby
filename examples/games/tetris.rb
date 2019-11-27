@@ -131,7 +131,7 @@ class Piece < Grid
 
     # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
     @frames = 0
-    @gridx=0;  @gridy = -2;
+    @gridx=0;  @gridy = 0;
   end 
 
   def draw(x, y)
@@ -253,7 +253,7 @@ class Piece < Grid
   end
 
   def can_left? 
-    return false if (@gridx-1) < @left_pad
+    return false if @gridx + @left_pad < 1
     return true  
   end
   
@@ -356,7 +356,6 @@ class Game
     
     self.falling = make_new_incoming
     
-    # pp = *@falling.get_padding()
     self.falling.disposition = FALLING
     
     self.incoming = make_new_incoming
@@ -387,7 +386,6 @@ class Game
     # klass = [Cube].sample
     out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
     out.disposition = INCOMING
-    out.get_padding
     out 
   end
 

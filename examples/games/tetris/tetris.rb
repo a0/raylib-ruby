@@ -13,6 +13,11 @@
 # Ported to ruby by Aldrin Martoq (@aldrinmartoq), David Heitzman daveheitzman@github.com
 
 # FIXME: WIP, not fully ported yet
+# todo: make difficulty get progressively harder the longer you play (add levels)
+# todo: when rotating some shapes at side of board, sometimes they protrude outside the well
+# todo: holding down left/right should auto-slide the pieces 
+# todo: visual bling
+
 require 'raylib'
 require 'matrix'
 require 'byebug'

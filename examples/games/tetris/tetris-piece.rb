@@ -29,14 +29,17 @@ class Piece < Grid
 
     drawx = x || @x; drawy=y || @y
     x=drawx; y = drawy
-    if @disposition == FALLING || @disposition == INCOMING
+    if @disposition == FALLING  || @disposition == INCOMING
       (0...PIECE_GRID_DIM).each do |j|
         (0...PIECE_GRID_DIM).each do |i|
           if matrix[i, j] == EMPTY
-            RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::GOLD
-            RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::GOLD
-            RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
-            RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
+            if stopped?
+              
+              RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::GOLD
+              RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::GOLD
+              RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
+              RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
+            end
             x += SQUARE_SIZE
           else
             RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color

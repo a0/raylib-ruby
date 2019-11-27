@@ -336,36 +336,34 @@ class Game
     out 
   end
   
-  def remove_row(row, quant)
+  def remove_row(row)
     puts "remove row!"
-    (1..row-quant).to_a.reverse.each do |srow|
-      (0...GRID_HORIZONTAL_SIZE).to_a.each{ |col| 
-        @grid.matrix[col,srow] = @grid.matrix[col,srow-quant]
+    (1..row).to_a.reverse.each do |srow|
+      (0...GRID_HORIZONTAL_SIZE).each{ |col| 
+        @grid.matrix[col,srow] = @grid.matrix[col,srow-1]
       }
     end
-    (0...GRID_HORIZONTAL_SIZE).to_a.each{ |col| 
+    (0...GRID_HORIZONTAL_SIZE).each{ |col| 
       @grid.matrix[col,0] = EMPTY
     }
   end
   
   def handle_completed_rows
-    rrow=nil; quant=0
-    (0...GRID_VERTICAL_SIZE).to_a.reverse.each do |row|
+    crow=GRID_VERTICAL_SIZE-1
+    while crow > -1
       if (0...GRID_HORIZONTAL_SIZE).to_a.each{ |cl2| 
-        puts "handle_completed_rows col, row: #{cl2}, #{row} => #{@grid.matrix[cl2,row]}"
-        if @grid.matrix[cl2,row] == EMPTY
+        puts "handle_completed_rows col, row: #{cl2}, #{crow} => #{@grid.matrix[cl2,crow]}"
+        if @grid.matrix[cl2,crow] == EMPTY
           break
         end 
       }
         Pling.play
-        rrow ||= row
-        quant += 1
+        remove_row(crow) 
+        @lines += 1
+      else 
+        crow -= 1
       end 
-    end
-    if rrow
-      remove_row(rrow, quant) 
-      @lines += quant
-    end
+    end 
   end
 
   def update

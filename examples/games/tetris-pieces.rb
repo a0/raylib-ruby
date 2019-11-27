@@ -16,7 +16,7 @@ end
 class RightL < Piece 
   def initialize(*args)
     super
-    @falling_color = RayColor.new 167,241,142,255
+    @falling_color = RayColor.new 225,225,25,255
     @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
     @matrix[2,1]=FALLING
     @matrix[0,2]=FALLING
@@ -73,7 +73,7 @@ end
 class Piggle < Piece 
   def initialize(*args)
     super
-    @falling_color = RayColor.new 176,214,99,255
+    @falling_color = RayColor.new 146,224,94,255
     @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
     @matrix[1,1]=FALLING
     @matrix[2,1]=FALLING

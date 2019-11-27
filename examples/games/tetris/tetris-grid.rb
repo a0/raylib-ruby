@@ -1,11 +1,23 @@
+# /*******************************************************************************************
+# *
+# *   raylib - sample game: tetris
+# *
+# *   Sample game Marc Palau and Ramon Santamaria
+# *
+# *   This game has been created using raylib v1.3 (www.raylib.com)
+# *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+# *
+# *   Copyright (c) 2015 Ramon Santamaria (@raysan5)
+# *
+# ********************************************************************************************/
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq), David Heitzman daveheitzman@github.com
+
 Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
   attr_accessor :matrix 
   attr_reader :gmtr
   def initialize(*args)
     super
     @gmtr=args.first[:gmtr]
-    # @frozen_colors = [[nil*GRID_VERTICAL_SIZE]*GRID_HORIZONTAL_SIZE]
-    # puts "Grid initialize #{@gmtr}"
     @matrix = Matrix.build(hor_size, ver_size) { 0 }
   end
   
@@ -14,11 +26,8 @@ Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
 
   def freeze_in!(piece)
     return unless piece.disposition == FALLING && piece.stopped?
-    # Klunk.play
     (0...PIECE_GRID_DIM).each do |j|
       (0...PIECE_GRID_DIM).each do |i|
-# puts "f G: " + @matrix.to_s
-# puts "f P: " + piece.matrix.to_s
         if @matrix[ i+piece.gridx, j+piece.gridy ] == EMPTY &&
           piece.matrix[i,j] == FALLING
           @matrix[i+piece.gridx,j+piece.gridy] = piece.falling_color 
@@ -39,7 +48,6 @@ Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
           RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::LIGHTGRAY
           RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
           RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
-          # RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
           x += SQUARE_SIZE
         elsif matrix[i, j] == :full
           RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GRAY
@@ -57,7 +65,6 @@ Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
           RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, matrix[i, j]
           x += SQUARE_SIZE
         elsif matrix[i, j] == FALLING
-          # RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
           x += SQUARE_SIZE
         end
       end

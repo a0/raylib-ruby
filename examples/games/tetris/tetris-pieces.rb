@@ -1,3 +1,17 @@
+# /*******************************************************************************************
+# *
+# *   raylib - sample game: tetris
+# *
+# *   Sample game Marc Palau and Ramon Santamaria
+# *
+# *   This game has been created using raylib v1.3 (www.raylib.com)
+# *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+# *
+# *   Copyright (c) 2015 Ramon Santamaria (@raysan5)
+# *
+# ********************************************************************************************/
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq), David Heitzman daveheitzman@github.com
+
 class LeftL < Piece 
   def initialize(*args)
     super
@@ -7,7 +21,6 @@ class LeftL < Piece
     @matrix[0,2]=FALLING
     @matrix[1,2]=FALLING
     @matrix[2,2]=FALLING
-    # @matrix[3,3]=FALLING
     get_padding
     @gridy = -@top_pad
   end
@@ -22,7 +35,6 @@ class RightL < Piece
     @matrix[0,2]=FALLING
     @matrix[1,2]=FALLING
     @matrix[2,2]=FALLING
-    # @matrix[3,3]=FALLING
     get_padding
     @gridy = -@top_pad
   end

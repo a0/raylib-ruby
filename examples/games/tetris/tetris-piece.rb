@@ -10,8 +10,7 @@
 # *   Copyright (c) 2015 Ramon Santamaria (@raysan5)
 # *
 # ********************************************************************************************/
-# Ported to ruby by Aldrin Martoq (@aldrinmartoq)
-# ruby port contributor: David Heitzman daveheitzman@github.com
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq), David Heitzman daveheitzman@github.com
 
 class Piece < Grid
   attr_accessor :falling_color, :disposition, :gridy
@@ -89,25 +88,20 @@ class Piece < Grid
         end
       end
     end
-    # puts "paddings: " + [tp, bp, lp, rp].inspect 
     @top_pad, @bottom_pad, @left_pad, @right_pad = 
       tp, bp, lp, rp
     return @top_pad, @bottom_pad, @left_pad, @right_pad
   end
 
   def rotate!(dir=:left)
-    # remember update @pad_blanks
     return @matrix unless disposition==FALLING
     nmatrix = Matrix.build(PIECE_GRID_DIM, PIECE_GRID_DIM) { EMPTY }
 
-# puts "before: " + @matrix.to_s
     (0...PIECE_GRID_DIM).each do |v|
       (0...PIECE_GRID_DIM).each do |h|
-        # nmatrix[h,v]=EMPTY
         nmatrix[h,v]=@matrix[v,PIECE_GRID_DIM-h-1]
       end
     end
-# puts "after : " + nmatrix.to_s
 
     @matrix = nmatrix
     get_padding
@@ -116,7 +110,6 @@ class Piece < Grid
   
   def at_bottom?
     out = @gridy - @bottom_pad + PIECE_GRID_DIM >= GRID_VERTICAL_SIZE
-    # puts "at_bottom? #{@bottom_pad}, #{@gridy}, #{out}"
     return out 
   end
   
@@ -141,11 +134,7 @@ class Piece < Grid
     end 
     gvecs=tgrid.column_vectors
     pvecs=@matrix.column_vectors
-    # puts "G:"+tgrid.column_vectors.inspect
     c=PIECE_GRID_DIM - 1
-    # byebug if at_bottom?
-# puts "P: " + pvecs.inspect
-# puts "G: " + gvecs.inspect
     while c >= 0 do
       pvecs[c].each_with_index do |pv,pi|
         if pv == FALLING && gvecs[c][pi] != EMPTY

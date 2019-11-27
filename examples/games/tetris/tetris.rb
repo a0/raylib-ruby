@@ -10,8 +10,7 @@
 # *   Copyright (c) 2015 Ramon Santamaria (@raysan5)
 # *
 # ********************************************************************************************/
-# Ported to ruby by Aldrin Martoq (@aldrinmartoq)
-# ruby port contributor: David Heitzman daveheitzman@github.com
+# Ported to ruby by Aldrin Martoq (@aldrinmartoq), David Heitzman daveheitzman@github.com
 
 # FIXME: WIP, not fully ported yet
 require 'raylib'
@@ -42,7 +41,6 @@ RayAudioDevice.master_volume=0.2
 Pling = RaySound.load './pling.ogg'
 Klunk = RaySound.load './klunk.wav'
 Gameover = RaySound.load './gameover.ogg'
-# fx_ogg = RaySound.load 'resources/tanatana.ogg'
 
 require_relative 'tetris-grid'
 require_relative 'tetris-piece'
@@ -74,7 +72,6 @@ class Game
   
   def make_new_incoming
     klass = [LeftL, RightL, Bar, Cube, Sniggle, Piggle].sample
-    # klass = [Cube].sample
     out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM, gmtr: self.grid.matrix
     out.disposition = INCOMING
     out 
@@ -97,7 +94,6 @@ class Game
     removed_count = 0
     while crow > -1
       if (0...GRID_HORIZONTAL_SIZE).to_a.each{ |cl2| 
-        # puts "handle_completed_rows col, row: #{cl2}, #{crow} => #{@grid.matrix[cl2,crow]}"
         if @grid.matrix[cl2,crow] == EMPTY
           break
         end 

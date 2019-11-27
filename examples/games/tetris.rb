@@ -42,6 +42,7 @@ Plonk = RaySound.load './plonk.wav'
 Pling = RaySound.load './pling.wav'
 Schmock = RaySound.load './schmock.wav'
 Klunk = RaySound.load './klunk.wav'
+Gameover = RaySound.load './gameover.wav'
 # fx_ogg = RaySound.load 'resources/tanatana.ogg'
 
 
@@ -314,7 +315,7 @@ class Game
     :incoming, :falling, :lines, :score
 
   def initialize
-    @over=false
+    @game_over=false
     @pause=false
     @score=0
     @after_stopped_grace=AFTER_STOP_GRACE_PERIOD
@@ -381,8 +382,14 @@ class Game
       Klunk.play if @after_stopped_grace==AFTER_STOP_GRACE_PERIOD
       if @after_stopped_grace == 0
         @grid.freeze_in!(@falling)
+        @score += 10
         @falling.disposition = FROZEN
         @falling = @incoming
+        if @falling.stopped?
+          Gameover.play          
+          puts "game over!!"
+          @game_over = true
+        end
         @falling.disposition = FALLING
         @incoming = make_new_incoming
         handle_completed_rows
@@ -421,6 +428,10 @@ class Game
         RayDraw.text format('LINES:     %05i', lines), x, y , 10, RayColor::GRAY
         x = 500 ;y = 145
         RayDraw.text format('SCORE:    %05i', @score), x, y , 10, RayColor::BLACK
+        if @game_over 
+          x = 265 ;y = 200
+          RayDraw.text format('GAME OVER', @score), x, y , 40, RayColor::BLACK
+        end
       end
     end
   end
@@ -434,7 +445,7 @@ class Game
 
     init
     until RayWindow.should_close?
-      update
+      update unless @game_over
       draw
     end
     unload

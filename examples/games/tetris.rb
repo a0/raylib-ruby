@@ -34,6 +34,16 @@ INCOMING                = 4
 FALLING                 = 8
 FROZEN                  = 16
 
+RayAudioDevice.init # Initialize audio device
+RayAudioDevice.master_volume=0.2
+
+Plonk = RaySound.load './plonk.wav'
+Pling = RaySound.load './pling.wav'
+Schmock = RaySound.load './schmock.wav'
+Klunk = RaySound.load './klunk.wav'
+# fx_ogg = RaySound.load 'resources/tanatana.ogg'
+
+
 Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
   attr_accessor :matrix
   def initialize(*args)
@@ -47,6 +57,7 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
 
   def freeze_in!(piece)
     return unless piece.disposition == FALLING && piece.stopped == true
+    Klunk.play
     (0...PIECE_GRID_DIM).each do |j|
       (0...PIECE_GRID_DIM).each do |i|
 # puts "f G: " + @matrix.to_s
@@ -57,22 +68,6 @@ Grid = Struct.new :hor_size, :ver_size, keyword_init: true do
         end
       end
     end
-    # (0...PIECE_GRID_DIM).each do |j|
-    #   (0...PIECE_GRID_DIM).each do |i|
-    #     if matrix[i, j] == EMPTY
-    #       RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::GOLD
-    #       RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::GOLD
-    #       RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
-    #       RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
-    #       x += SQUARE_SIZE
-    #     else
-    #       RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
-    #       x += SQUARE_SIZE
-    #     end
-    #   end
-    #   x=drawx
-    #   y += SQUARE_SIZE
-    # end
 
     piece.disposition = FROZEN
     return piece
@@ -125,11 +120,6 @@ class Piece < Grid
   def initialize(*args)
     super
     @matrix = Matrix.build(hor_size, ver_size) { INCOMING }
-# puts @matrix.inspect
-# puts (@matrix.methods-Object.methods).sort.inspect
-# [:eigen, :lup, :lup_decomposition, :row_vectors, :column_vectors, :elements_to_f, :elements_to_i, :elements_to_r, :Fail, :/, :coerce, :real?, :zero?, :round, :rectangular, :rect, :real, :imaginary, :imag, :+@, :-@, :**, :conj, :conjugate, :rows, :row, :row_count, :column_count, :trace, :column, :vstack, :hstack, :combine, :Raise, :element, :t, :to_matrix, :row_size, :column_size, :minor, :tr, :first_minor, :cofactor, :square?, :determinant, :adjugate, :laplace_expansion, :cofactor_expansion, :diagonal?, :hermitian?, :lower_triangular?, :normal?, :orthogonal?, :permutation?, :regular?, :singular?, :symmetric?, :antisymmetric?, :skew_symmetric?, :unitary?, :upper_triangular?, :inverse, :hadamard_product, :entrywise_product, :inv, :eigensystem, :det, :determinant_e, :component, :det_e, :rank, :rank_e]
-
-    # @gridx=GRID_HORIZONTAL_SIZE/2;  @gridy = 0;
     @frames = 0
     @gridx=0;  @gridy = 0;
   end 
@@ -276,7 +266,9 @@ class Piece < Grid
     return if !@disposition == FALLING
     @gmtr=game_grid_matrix
     if RayKey.is_pressed? RayKey::LEFT
-      @gridx -= 1 if can_left?
+      if can_left?
+        @gridx -= 1 
+      end
     elsif RayKey.is_pressed? RayKey::RIGHT
       @gridx += 1 if can_right?
     elsif RayKey.is_pressed? RayKey::UP
@@ -296,63 +288,7 @@ class Piece < Grid
   end
 end
 
-class LeftL < Piece 
-  def initialize(*args)
-    super
-    @falling_color = RayColor.new 213,41,176,255
-    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
-    @matrix[0,2]=FALLING
-    @matrix[0,3]=FALLING
-    @matrix[1,3]=FALLING
-    @matrix[2,3]=FALLING
-    # @matrix[3,3]=FALLING
-    get_padding
-    @gridy = -@top_pad
-  end
-end
-
-class RightL < Piece 
-  def initialize(*args)
-    super
-    @falling_color = RayColor.new 167,241,142,255
-    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
-    @matrix[2,2]=FALLING
-    @matrix[0,3]=FALLING
-    @matrix[1,3]=FALLING
-    @matrix[2,3]=FALLING
-    # @matrix[3,3]=FALLING
-    get_padding
-    @gridy = -@top_pad
-  end
-end
-
-class Cube < Piece 
-  def initialize(*args)
-    super
-    @falling_color = RayColor.new 204,115,88,255
-    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
-    @matrix[1,1]=FALLING
-    @matrix[1,2]=FALLING
-    @matrix[2,1]=FALLING
-    @matrix[2,2]=FALLING
-    get_padding
-    @gridy = -@top_pad
-  end
-end
-
-class Bar < Piece 
-  def initialize(*args)
-    super
-    @falling_color = RayColor.new 114,188,202,255
-    @matrix = Matrix.build(hor_size, ver_size) { EMPTY }
-    @matrix[0,3]=FALLING
-    @matrix[1,3]=FALLING
-    @matrix[2,3]=FALLING
-    @matrix[3,3]=FALLING
-    get_padding
-    @gridy = -@top_pad
-  end
-end
+require_relative 'tetris-pieces'
 
 class Game
   attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, 
@@ -393,7 +329,7 @@ class Game
   end
   
   def make_new_incoming
-    klass = [LeftL, RightL, Bar, Cube].sample
+    klass = [LeftL, RightL, Bar, Cube, Sniggle, Piggle].sample
     # klass = [Cube].sample
     out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM
     out.disposition = INCOMING

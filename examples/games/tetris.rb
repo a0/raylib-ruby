@@ -254,19 +254,30 @@ class Piece < Grid
 
   def can_left? 
     return false if @gridx + @left_pad < 1
+    lefti = @gridx-1+@left_pad
+    (0...PIECE_GRID_DIM).each do |vi|
+      return false if @matrix[@left_pad,vi] == FALLING && 
+      @gmtr[lefti,@gridy + vi] != EMPTY
+    end
     return true  
   end
   
   def can_right?
     return false if GRID_HORIZONTAL_SIZE  < (1 + @gridx + PIECE_GRID_DIM - @right_pad)
+    righti = @gridx+PIECE_GRID_DIM-@right_pad
+    (0...PIECE_GRID_DIM).each do |vi|
+      return false if @matrix[PIECE_GRID_DIM-@right_pad-1,vi] == FALLING && 
+      @gmtr[righti,@gridy + vi] != EMPTY
+    end
     return true
   end
 
-  def update
+  def update(game_grid_matrix)
     return if !@disposition == FALLING
-    if RayKey.is_down? RayKey::LEFT
+    @gmtr=game_grid_matrix
+    if RayKey.is_pressed? RayKey::LEFT
       @gridx -= 1 if can_left?
-    elsif RayKey.is_down? RayKey::RIGHT
+    elsif RayKey.is_pressed? RayKey::RIGHT
       @gridx += 1 if can_right?
     elsif RayKey.is_pressed? RayKey::UP
       @matrix = rotate!(90)
@@ -388,6 +399,10 @@ class Game
     out.disposition = INCOMING
     out 
   end
+  
+  def get_left_right_liberties(falling)
+
+  end
 
   def update
     @grid.update 
@@ -400,7 +415,7 @@ class Game
       @falling.disposition = FALLING
       @incoming = make_new_incoming
     else
-      @falling.update
+      @falling.update(@grid.matrix)
     end
 
   end

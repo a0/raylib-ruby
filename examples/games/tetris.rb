@@ -121,7 +121,7 @@ class Piece < Grid
     super
     @matrix = Matrix.build(hor_size, ver_size) { INCOMING }
     @frames = 0
-    @gridx=0;  @gridy = 0;
+    @gridx=GRID_HORIZONTAL_SIZE/2-2 ;  @gridy = 0;
   end 
 
   def draw(x, y)
@@ -292,11 +292,12 @@ require_relative 'tetris-pieces'
 
 class Game
   attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, 
-    :incoming, :falling, :lines
+    :incoming, :falling, :lines, :score
 
   def initialize
     @over=false
     @pause=false
+    @score=0
     self.screen_w = 800
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
@@ -350,6 +351,7 @@ class Game
   
   def handle_completed_rows
     crow=GRID_VERTICAL_SIZE-1
+    removed_count = 0
     while crow > -1
       if (0...GRID_HORIZONTAL_SIZE).to_a.each{ |cl2| 
         puts "handle_completed_rows col, row: #{cl2}, #{crow} => #{@grid.matrix[cl2,crow]}"
@@ -357,10 +359,12 @@ class Game
           break
         end 
       }
-        Pling.play
         remove_row(crow) 
+        Pling.play
+        @score += 100*(2**removed_count)      
+        removed_count += 1
         @lines += 1
-      else 
+      else
         crow -= 1
       end 
     end 
@@ -401,7 +405,9 @@ class Game
         x = 500 ;y = 20
         RayDraw.text 'INCOMING:', x, y , 10, RayColor::GRAY
         x = 500 ;y = 135
-        RayDraw.text format('LINES:    %04i', lines), x, y , 10, RayColor::GRAY
+        RayDraw.text format('LINES:     %05i', lines), x, y , 10, RayColor::GRAY
+        x = 500 ;y = 145
+        RayDraw.text format('SCORE:    %05i', @score), x, y , 10, RayColor::BLACK
       end
     end
   end

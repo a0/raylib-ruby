@@ -189,7 +189,7 @@ class Piece < Grid
         end
       end
     end
-    puts "paddings: " + [tp, bp, lp, rp].inspect 
+    # puts "paddings: " + [tp, bp, lp, rp].inspect 
     @top_pad, @bottom_pad, @left_pad, @right_pad = 
       tp, bp, lp, rp
     return @top_pad, @bottom_pad, @left_pad, @right_pad
@@ -336,8 +336,36 @@ class Game
     out 
   end
   
-  def get_left_right_liberties(falling)
-
+  def remove_row(row, quant)
+    puts "remove row!"
+    (1..row-quant).to_a.reverse.each do |srow|
+      (0...GRID_HORIZONTAL_SIZE).to_a.each{ |col| 
+        @grid.matrix[col,srow] = @grid.matrix[col,srow-quant]
+      }
+    end
+    (0...GRID_HORIZONTAL_SIZE).to_a.each{ |col| 
+      @grid.matrix[col,0] = EMPTY
+    }
+  end
+  
+  def handle_completed_rows
+    rrow=nil; quant=0
+    (0...GRID_VERTICAL_SIZE).to_a.reverse.each do |row|
+      if (0...GRID_HORIZONTAL_SIZE).to_a.each{ |cl2| 
+        puts "handle_completed_rows col, row: #{cl2}, #{row} => #{@grid.matrix[cl2,row]}"
+        if @grid.matrix[cl2,row] == EMPTY
+          break
+        end 
+      }
+        Pling.play
+        rrow ||= row
+        quant += 1
+      end 
+    end
+    if rrow
+      remove_row(rrow, quant) 
+      @lines += quant
+    end
   end
 
   def update
@@ -350,6 +378,7 @@ class Game
       @falling = @incoming
       @falling.disposition = FALLING
       @incoming = make_new_incoming
+      handle_completed_rows
     else
       @falling.update(@grid.matrix)
     end

@@ -61,7 +61,7 @@ Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
 
   def freeze_in!(piece)
     return unless piece.disposition == FALLING && piece.stopped?
-    Klunk.play
+    # Klunk.play
     (0...PIECE_GRID_DIM).each do |j|
       (0...PIECE_GRID_DIM).each do |i|
 # puts "f G: " + @matrix.to_s
@@ -378,6 +378,7 @@ class Game
     @grid.update 
     if @falling.disposition == FALLING &&
     @falling.stopped?
+      Klunk.play if @after_stopped_grace==AFTER_STOP_GRACE_PERIOD
       if @after_stopped_grace == 0
         @grid.freeze_in!(@falling)
         @falling.disposition = FROZEN

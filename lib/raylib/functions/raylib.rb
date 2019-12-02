@@ -273,7 +273,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   # Font loading/unloading functions
   attach_function :GetFontDefault, [], Font.by_value                                          # Font#default
   attach_function :LoadFont, %i[string], Font.by_value                                        # Font#load
-  attach_function :LoadFontEx, %i[string int int pointer], Font.by_value                      # Font#load_ex
+  attach_function :LoadFontEx, %i[string int pointer int], Font.by_value                      # Font#load_ex
   attach_function :LoadFontData, %i[string int pointer int bool], :pointer                    # Font#load_data
   attach_function :GenImageFontAtlas, %i[pointer int int int int], Image.by_value             # Font#gen_image_atlas
   attach_function :UnloadFont, [Font.by_value], :void                                         # Font#unload

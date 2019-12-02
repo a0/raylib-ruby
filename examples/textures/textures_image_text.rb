@@ -19,7 +19,7 @@ screen_h = 450
 RayWindow.init screen_w, screen_h, 'ruby raylib [texture] example - image text drawing'
 
 # TTF Font loading with custom generation parameters
-font = RayFont.load_ex 'resources/KAISG.ttf', 64, 95, nil
+font = RayFont.load_ex 'resources/KAISG.ttf', 64, nil, 0
 
 image = RayImage.load 'resources/parrots.png' # Loaded in CPU memory (RAM)
 

@@ -13,37 +13,37 @@
 # Ported to ruby by Aldrin Martoq (@aldrinmartoq), David Heitzman daveheitzman@github.com
 
 Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
-  attr_accessor :matrix 
+  attr_accessor :matrix
   attr_reader :gmtr
+
   def initialize(*args)
     super
-    @gmtr=args.first[:gmtr]
+    @gmtr = args.first[:gmtr]
     @matrix = Matrix.build(hor_size, ver_size) { 0 }
   end
-  
-  def update 
-  end
+
+  def update; end
 
   def freeze_in!(piece)
     return unless piece.disposition == FALLING && piece.stopped?
+
     (0...PIECE_GRID_DIM).each do |j|
       (0...PIECE_GRID_DIM).each do |i|
-        if @matrix[ i+piece.gridx, j+piece.gridy ] == EMPTY &&
-          piece.matrix[i,j] == FALLING
-          @matrix[i+piece.gridx,j+piece.gridy] = piece.falling_color 
+        if @matrix[i + piece.gridx, j + piece.gridy] == EMPTY && piece.matrix[i, j] == FALLING
+          @matrix[i + piece.gridx, j + piece.gridy] = piece.falling_color
         end
       end
     end
 
     piece.disposition = FROZEN
-    return piece
+    piece
   end
 
   def draw(x, y)
     controller = x
     (0...ver_size).each do |j|
       (0...hor_size).each do |i|
-        if matrix[i, j] == EMPTY || matrix[i, j] == FALLING 
+        if matrix[i, j] == EMPTY || matrix[i, j] == FALLING
           RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::LIGHTGRAY
           RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::LIGHTGRAY
           RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY

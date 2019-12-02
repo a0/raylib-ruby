@@ -15,7 +15,7 @@
 # FIXME: WIP, not fully ported yet
 # todo: make difficulty get progressively harder the longer you play (add levels)
 # todo: when rotating some shapes at side of board, sometimes they protrude outside the well
-# todo: holding down left/right should auto-slide the pieces 
+# todo: holding down left/right should auto-slide the pieces
 # todo: visual bling
 
 require 'raylib'
@@ -40,92 +40,83 @@ FALLING                 = 8
 FROZEN                  = 16
 
 RayAudioDevice.init # Initialize audio device
-RayAudioDevice.master_volume=0.2
+RayAudioDevice.master_volume = 0.2
 
 Pling = RaySound.load './pling.ogg'
 Klunk = RaySound.load './klunk.wav'
 Gameover = RaySound.load './gameover.ogg'
 
-require_relative 'tetris-grid'
-require_relative 'tetris-piece'
-require_relative 'tetris-pieces'
+require_relative 'tetris_grid'
+require_relative 'tetris_piece'
+require_relative 'tetris_pieces'
 
 class Game
-  attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, 
-    :incoming, :falling, :lines, :score
+  attr_accessor :screen_w, :screen_h, :over, :pause, :level, :grid, :incoming, :falling, :lines, :score
 
   def initialize
-    @game_over=false
-    @pause=false
-    @score=0
-    @after_stopped_grace=AFTER_STOP_GRACE_PERIOD
+    @game_over = false
+    @pause = false
+    @score = 0
+    @after_stopped_grace = AFTER_STOP_GRACE_PERIOD
     self.screen_w = 800
     self.screen_h = 450
     self.grid = Grid.new hor_size: GRID_HORIZONTAL_SIZE, ver_size: GRID_VERTICAL_SIZE
-    self.falling = make_new_incoming
-    self.falling.disposition = FALLING
-      
+    self.falling = make_new_incoming FALLING
     self.incoming = make_new_incoming
-    self.incoming.disposition = INCOMING
 
     self.lines = 0
     self.level = 1
   end
 
   def init; end
-  
-  def make_new_incoming
+
+  def make_new_incoming(disposition = INCOMING)
     klass = [LeftL, RightL, Bar, Cube, Sniggle, Piggle, Nipple].sample
-    out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM, gmtr: self.grid.matrix
-    out.disposition = INCOMING
-    out 
+    out = klass.new hor_size: PIECE_GRID_DIM, ver_size: PIECE_GRID_DIM, gmtr: grid.matrix
+    out.disposition = disposition
+    out
   end
-  
+
   def remove_row(row)
-    puts "remove row!"
+    puts 'remove row!'
     (1..row).to_a.reverse.each do |srow|
-      (0...GRID_HORIZONTAL_SIZE).each{ |col| 
-        @grid.matrix[col,srow] = @grid.matrix[col,srow-1]
-      }
+      (0...GRID_HORIZONTAL_SIZE).each do |col|
+        @grid.matrix[col, srow] = @grid.matrix[col, srow - 1]
+      end
     end
-    (0...GRID_HORIZONTAL_SIZE).each{ |col| 
-      @grid.matrix[col,0] = EMPTY
-    }
+    (0...GRID_HORIZONTAL_SIZE).each do |col|
+      @grid.matrix[col, 0] = EMPTY
+    end
   end
-  
+
   def handle_completed_rows
-    crow=GRID_VERTICAL_SIZE-1
+    crow = GRID_VERTICAL_SIZE - 1
     removed_count = 0
     while crow > -1
-      if (0...GRID_HORIZONTAL_SIZE).to_a.each{ |cl2| 
-        if @grid.matrix[cl2,crow] == EMPTY
-          break
-        end 
-      }
-        remove_row(crow) 
+      if (0...GRID_HORIZONTAL_SIZE).to_a.each { |cl2| break if @grid.matrix[cl2, crow] == EMPTY }
+        remove_row(crow)
         Pling.play
-        @score += 100*(2**removed_count)      
+        @score += 100 * (2**removed_count)
         removed_count += 1
         @lines += 1
       else
         crow -= 1
-      end 
-    end 
+      end
+    end
   end
 
   def update
-    @grid.update 
-    if @falling.disposition == FALLING &&
-    @falling.stopped?
-      Klunk.play if @after_stopped_grace==AFTER_STOP_GRACE_PERIOD
+    @grid.update
+    if @falling.disposition == FALLING && @falling.stopped?
+      Klunk.play if @after_stopped_grace == AFTER_STOP_GRACE_PERIOD
       if @after_stopped_grace == 0
         @grid.freeze_in!(@falling)
         @score += 10
         @falling.disposition = FROZEN
         @falling = @incoming
         if @falling.stopped?
-          Gameover.play          
-          puts "game over!!"
+          Gameover.play
+          puts 'game over!!'
           @game_over = true
         end
         @falling.disposition = FALLING
@@ -152,24 +143,18 @@ class Game
       elsif pause
       else
         x = screen_w / 2 - GRID_HORIZONTAL_SIZE * SQUARE_SIZE / 2 - 50
-        y = screen_h / 2 - (GRID_VERTICAL_SIZE - 1)* SQUARE_SIZE / 2 + SQUARE_SIZE * 2 - 50
+        y = screen_h / 2 - (GRID_VERTICAL_SIZE - 1) * SQUARE_SIZE / 2 + SQUARE_SIZE * 2 - 50
 
         grid.draw x, y
-        fallx, fally = falling.draw(nil,nil)
+        falling.draw(nil, nil)
 
-        # show incoming piece 
-        x = 500 ;y = 45
-        incoming.draw(x,y)
-        x = 500 ;y = 20
-        RayDraw.text 'INCOMING:', x, y , 10, RayColor::GRAY
-        x = 500 ;y = 135
-        RayDraw.text format('LINES:     %05i', lines), x, y , 10, RayColor::GRAY
-        x = 500 ;y = 145
-        RayDraw.text format('SCORE:    %05i', @score), x, y , 10, RayColor::BLACK
-        if @game_over 
-          x = 265 ;y = 200
-          RayDraw.text format('GAME OVER', @score), x, y , 40, RayColor::BLACK
-        end
+        # show incoming piece
+        incoming.draw(500, 45)
+        RayDraw.text 'INCOMING:', 500, 20, 10, RayColor::GRAY
+        RayDraw.text format('LINES:     %<lines>05i', lines: lines), 500, 135, 10, RayColor::GRAY
+        RayDraw.text format('SCORE:    %<score>05i', score: @score), 500, 145, 10, RayColor::BLACK
+
+        RayDraw.text 'GAME OVER', 265, 200, 40, RayColor::BLACK if @game_over
       end
     end
   end

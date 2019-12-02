@@ -33,11 +33,11 @@ Gem::Specification.new do |spec|
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features|examples)/}) }
   end
 
-  spec.add_development_dependency 'bundler', '~> 1.16'
-  spec.add_development_dependency 'pry'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'bundler', '~> 1.17'
+  spec.add_development_dependency 'pry', '~> 0.12'
+  spec.add_development_dependency 'rake', '~> 12.3'
+  spec.add_development_dependency 'rspec', '~> 3.9'
+  spec.add_development_dependency 'rubocop', '~> 0.77'
 
-  spec.add_runtime_dependency 'ffi'
+  spec.add_runtime_dependency 'ffi', '~> 1.11'
 end

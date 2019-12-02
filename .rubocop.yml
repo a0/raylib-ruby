@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
 Style/FrozenStringLiteralComment:
   Enabled: false
 Style/ConditionalAssignment:
@@ -18,5 +18,5 @@ Metrics/BlockLength:
   Max: 50
 Metrics/LineLength:
   Max: 240
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false

@@ -4,16 +4,19 @@ This is a more ruby-like interface for the great [raylib](https://www.raylib.com
 
 ## Compile raylib
 
-Raspbian:
-
+Recommended Ubuntu, Raspbian install:
 ```bash
-$ sudo apt install build-essential git cmake cmake-curses-ui
+$ sudo apt install build-essential
+$ sudo apt install cmake
 $ sudo apt install libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev
-$ git clone https://github.com/raysan5/raylib.git raylib
-$ cd raylib/src/
-# comment SUPPORT_BUSY_WAIT_LOOP in config.h
-$ make -j 4 PLATFORM=PLATFORM_DESKTOP GRAPHICS=GRAPHICS_API_OPENGL_21 RAYLIB_LIBTYPE=SHARED
-$ sudo make -j 4 PLATFORM=PLATFORM_DESKTOP GRAPHICS=GRAPHICS_API_OPENGL_21 RAYLIB_LIBTYPE=SHARED install
+$ wget https://github.com/raysan5/raylib/archive/2.5.0.tar.gz
+$ tar xvfz 2.5.0.tar.gz
+$ cd raylib-2.5.0
+$ mkdir build
+$ cd build
+$ cmake -DSHARED=ON -DSTATIC=ON ..    # note the two dots
+$ make -j 4
+$ sudo make -j4 install
 ```
 
 ## Installation

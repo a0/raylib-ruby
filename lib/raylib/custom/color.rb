@@ -9,6 +9,7 @@ module Raylib
 
     # Some Basic Colors
     # NOTE: Custom raylib color palette for amazing visuals on WHITE background
+    # rubocop:disable Layout/ExtraSpacing, Layout/SpaceBeforeFirstArg
     LIGHTGRAY   = Color.new 200, 200, 200, 255    # Light Gray
     GRAY        = Color.new 130, 130, 130, 255    # Gray
     DARKGRAY    = Color.new  80,  80,  80, 255    # Dark Gray
@@ -36,5 +37,6 @@ module Raylib
     BLANK       = Color.new   0,   0,   0,   0    # Blank (Transparent)
     MAGENTA     = Color.new 255,   0, 255, 255    # Magenta
     RAYWHITE    = Color.new 245, 245, 245, 255    # My own White (raylib logo)
+    # rubocop:enable Layout/ExtraSpacing, Layout/SpaceBeforeFirstArg
   end
 end

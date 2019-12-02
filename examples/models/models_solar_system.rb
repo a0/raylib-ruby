@@ -73,7 +73,6 @@ camera = RayCamera.new  RayVector3.new(16.0, 16.0, 16.0),
 camera.mode = RayCamera::MODE_FREE
 
 sun     = Body.new radius: 0.2, name: 'sun', texture: '2k_sun'
-
 moon    = Body.new radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      name: 'moon',     texture: '2k_moon'
 mercury = Body.new radius: 0.05, orbit_radius: 0.396,  orbit_period: 90,      name: 'mercury',  texture: '2k_mercury'
 venus   = Body.new radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     name: 'venus',    texture: '2k_venus_atmosphere'

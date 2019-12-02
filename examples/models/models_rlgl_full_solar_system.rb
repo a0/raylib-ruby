@@ -95,7 +95,6 @@ camera = RayCamera.new  RayVector3.new(8.0, 8.0, 8.0),
 camera.mode = RayCamera::MODE_FREE
 
 sun     = Body.new radius: 0.2, color: RayColor::GOLD, name: 'sun'
-
 moon    = Body.new radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      color: RayColor::GRAY,       name: 'moon'
 mercury = Body.new radius: 0.05, orbit_radius: 0.396,  orbit_period: 90,      color: RayColor::GRAY,       name: 'mercury'
 venus   = Body.new radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     color: RayColor::MAGENTA,    name: 'venus'

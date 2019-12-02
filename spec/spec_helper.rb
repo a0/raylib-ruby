@@ -1,5 +1,5 @@
-require "bundler/setup"
-require "raylib"
+require 'bundler/setup'
+require 'raylib'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

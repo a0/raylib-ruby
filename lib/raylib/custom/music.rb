@@ -13,6 +13,6 @@ module Raylib
     ray_alias_object :SetMusicPitch,      :pitch=         # Set pitch for a music (1.0 is base level)
     ray_alias_object :SetMusicLoopCount,  :loop_count=    # Set music loop count (loop repeats)
     ray_alias_object :GetMusicTimeLength, :time_length    # Get music time length (in seconds)
-    ray_alias_object :GetMusicTimePlayed, :time_played    # Get current music time played (in seconds)  
+    ray_alias_object :GetMusicTimePlayed, :time_played    # Get current music time played (in seconds)
   end
 end

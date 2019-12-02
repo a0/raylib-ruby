@@ -97,7 +97,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
     RayDraw.rectangle 0, 0, screen_w, 5, RayColor::RED
     RayDraw.rectangle 0, 5, 5, screen_h - 10, RayColor::RED
     RayDraw.rectangle screen_w - 5, 5, 5, screen_h - 10, RayColor::RED
-    RayDraw.rectangle 0, screen_h - 5, screen_w, 5 , RayColor::RED
+    RayDraw.rectangle 0, screen_h - 5, screen_w, 5, RayColor::RED
 
     RayDraw.rectangle 10, 10, 250, 113, RayColor::SKYBLUE.fade(0.5)
     RayDraw.rectangle_lines 10, 10, 250, 113, RayColor::BLUE

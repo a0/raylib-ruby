@@ -61,7 +61,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
     RayDraw.rectangle_lines 15 + frame_rec.x, 40 + frame_rec.y, frame_rec.width, frame_rec.height, RayColor::RED
 
     RayDraw.text 'FRAME SPEED: ', 165, 210, 10, RayColor::DARKGRAY
-    RayDraw.text format('%02i FPS', frames_speed), 575, 210, 10, RayColor::DARKGRAY
+    RayDraw.text format('%<frames_speed>02i FPS', frames_speed: frames_speed), 575, 210, 10, RayColor::DARKGRAY
     RayDraw.text 'PRESS RIGHT/LEFT KEYS to CHANGE SPEED!', 290, 240, 10, RayColor::DARKGRAY
 
     (1..MAX_FRAME_SPEED).each do |i|

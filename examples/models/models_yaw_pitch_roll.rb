@@ -19,7 +19,7 @@ def draw_angle_gauge(angle_gauge, x, y, angle, title, color)
   dst_rec = RayRectangle.new x, y, angle_gauge.width, angle_gauge.height
   origin = RayVector2.new angle_gauge.width / 2, angle_gauge.height / 2
   text_size = 20
-  text = format('%5.1f', angle)
+  text = format('%<angle>5.1f', angle: angle)
 
   angle_gauge.draw_pro src_rec, dst_rec, origin, angle, color
 

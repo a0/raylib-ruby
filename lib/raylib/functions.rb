@@ -1,4 +1,4 @@
-module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
+module Raylib
   extend FFI::Library
 
   ffi_lib 'raylib'

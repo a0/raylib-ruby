@@ -54,9 +54,9 @@ until RayWindow.should_close? # Detect window close button or ESC key
 
     camera.begin_mode3d do
       RayDraw.plane RayVector3.new(0.0, 0.0, 0.0), RayVector2.new(32.0, 32.0), RayColor::LIGHTGRAY  # Draw ground
-      RayDraw.cube RayVector3.new(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, RayColor::BLUE  # Draw a blue wall
-      RayDraw.cube RayVector3.new(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, RayColor::LIME   # Draw a green wall
-      RayDraw.cube RayVector3.new(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, RayColor::GOLD   # Draw a yellow yall
+      RayDraw.cube RayVector3.new(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, RayColor::BLUE                  # Draw a blue wall
+      RayDraw.cube RayVector3.new(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, RayColor::LIME                   # Draw a green wall
+      RayDraw.cube RayVector3.new(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, RayColor::GOLD                   # Draw a yellow yall
 
       # Draw some cubes around
       columns.each do |column|

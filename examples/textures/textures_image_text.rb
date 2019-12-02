@@ -44,14 +44,14 @@ until RayWindow.should_close? # Detect window close button or ESC key
   RayDraw.begin_drawing do
     RayDraw.clear_background RayColor::WHITE
 
-    unless show_font
+    if show_font
+      font.texture.draw screen_w / 2 - font.texture.width / 2, 50, RayColor::BLACK
+    else
       # Draw texture with text already drawn inside
       texture.draw_v position, RayColor::WHITE
 
       # Draw text directly using sprite font
       RayDraw.text_ex font, '[Parrots font drawing]', RayVector2.new(position.x + 20, position.y + 20 + 280), font.base_size, 0, RayColor::WHITE
-    else
-      font.texture.draw screen_w / 2 - font.texture.width / 2, 50, RayColor::BLACK
     end
 
     RayDraw.text 'PRESS SPACE to SEE USED SPRITEFONT', 290, 420, 10, RayColor::DARKGRAY

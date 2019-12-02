@@ -13,8 +13,7 @@
 # Ported to ruby by Aldrin Martoq (@aldrinmartoq)
 
 require 'raylib'
-# require 'ostruct'
-
+require 'ostruct'
 
 PLAYER_BASE_SIZE    = 20.0
 PLAYER_SPEED        = 6.0
@@ -268,8 +267,8 @@ class Game
   attr_accessor :screen_w, :screen_h, :over, :player, :shoots, :big_meteors, :medium_meteors, :small_meteors, :destroyed_meteors_count
 
   def initialize
-    @screen_w = 600
-    @screen_h = 400
+    @screen_w = 1600
+    @screen_h = 900
 
     @player = Player.new self
     @shoots = Array.new(PLAYER_MAX_SHOOTS) { Shoot.new game: self }
@@ -285,12 +284,15 @@ class Game
       initialize if RayKey.is_pressed? RayKey::ENTER
     else
       @paused = !@paused if RayKey.is_pressed? RayKey::P
+
       return if @paused
+
       player.update
       shoots.each(&:update)
       big_meteors.each(&:update)
       medium_meteors.each(&:update)
       small_meteors.each(&:update)
+
       @victory = [big_meteors, medium_meteors, small_meteors].all?(&:empty?)
     end
   end
@@ -298,24 +300,6 @@ class Game
   def draw
     RayDraw.begin_drawing do
       RayDraw.clear_background RayColor::WHITE
-
-      (0..1000).to_a.each{ |b|
-        avail=RayGamepad.is_available?(0)
-        break if !avail
-        name=RayGamepad.name(0)
-        puts "#{name}"
-        puts "#{b}!!!!!" if RayGamepad.is_button_down?(0, b)
-      }
-
-      # [0].each do |n|
-      #   name=RayGamepad.name(n)
-      #   axiscount=RayGamepad.axis_count(n) 
-      #   # puts "#{n}, #{name} => #{avail},  axis: #{axiscount}"
-      #   # axes = RayGamepad.axis_movement(0, 5)
-      #   bpressed=RayGamepad.button_pressed
-      #   # puts "#{n}, #{name} => axes: #{axes}"
-      #   # puts "=> buttons: #{buttons} button: #{bpressed}"
-      # end
 
       player.draw
       shoots.each(&:draw)

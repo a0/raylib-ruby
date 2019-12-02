@@ -123,7 +123,7 @@ end
 class Shoot < Item
   attr_accessor :ttl
 
-  def initialize(game: )
+  def initialize(game:)
     super game: game, color: RayColor::BLACK, size: 2
 
     @ttl = 0

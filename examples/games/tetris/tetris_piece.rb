@@ -174,9 +174,9 @@ class Piece < Grid
 
     @gmtr = game_grid_matrix
     down_pressed = false
-    if RayKey.is_pressed? RayKey::LEFT
+    if RayKey.is_pressed? :left
       @gridx -= 1 if can_left?
-    elsif RayKey.is_pressed? RayKey::RIGHT
+    elsif RayKey.is_pressed? :right
       @gridx += 1 if can_right?
     elsif RayKey.is_pressed? RayKey::UP
       @matrix = rotate!(90)

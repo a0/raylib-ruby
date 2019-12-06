@@ -7,6 +7,7 @@ module Raylib
   class Camera3D < FFI::Struct; end
   Camera = Camera3D # Camera type fallback, defaults to Camera3D
   class CharInfo < FFI::Struct; end
+  class Clipboard; end
   class Collision; end
   class Color < FFI::Struct; end
   class Cursor; end
@@ -19,13 +20,14 @@ module Raylib
   class Gamepad; end
   class Image < FFI::Struct; end
   class IntPtr < FFI::Struct; end
-  class Key; end
+  # FFI::Enum Key
   class Material < FFI::Struct; end
   class MaterialMap < FFI::Struct; end
   class Matrix < FFI::Struct; end
   class Mesh < FFI::Struct; end
   class Model < FFI::Struct; end
   class ModelAnimation < FFI::Struct; end
+  class Monitor; end
   class Mouse; end
   class Music < FFI::Struct; end
   class NPatchInfo < FFI::Struct; end
@@ -35,6 +37,7 @@ module Raylib
   class RenderTexture2D < FFI::Struct; end
   RenderTexture = RenderTexture2D # RenderTexture type, same as RenderTexture2D
   class RlGL; end
+  class Screen; end
   class Shader < FFI::Struct; end
   class Sound < FFI::Struct; end
   class Texture2D < FFI::Struct; end
@@ -50,50 +53,3 @@ module Raylib
   class Wave < FFI::Struct; end
   class Window; end
 end
-
-RayAudioDevice = Raylib::AudioDevice
-RayAudioStream = Raylib::AudioStream
-RayBoundingBox = Raylib::BoundingBox
-RayCamera = Raylib::Camera
-RayCamera2D = Raylib::Camera2D
-RayCamera3D = Raylib::Camera3D
-RayCharInfo = Raylib::CharInfo
-RayCollision = Raylib::Collision
-RayColor = Raylib::Color
-RayCursor = Raylib::Cursor
-RayDraw = Raylib::Draw
-RayFont = Raylib::Font
-RayFloat16 = Raylib::Float16
-RayFloat3 = Raylib::Float3
-RayFloatPtr = Raylib::FloatPtr
-RayGamepad = Raylib::Gamepad
-RayImage = Raylib::Image
-RayIntPtr = Raylib::IntPtr
-RayKey = Raylib::Key
-RayMaterial = Raylib::Material
-RayMaterialMap = Raylib::MaterialMap
-RayMatrix = Raylib::Matrix
-RayMesh = Raylib::Mesh
-RayModel = Raylib::Model
-RayModelAnimation = Raylib::ModelAnimation
-RayMouse = Raylib::Mouse
-RayMusic = Raylib::Music
-RayRay = Raylib::Ray
-RayRayHitInfo = Raylib::RayHitInfo
-RayRectangle = Raylib::Rectangle
-RayRenderTexture = Raylib::RenderTexture
-RayRenderTexture2D = Raylib::RenderTexture2D
-RayGL = Raylib::RlGL
-RayShader = Raylib::Shader
-RaySound = Raylib::Sound
-RaySpriteFont = Raylib::SpriteFont
-RayTexture = Raylib::Texture
-RayTexture2D = Raylib::Texture2D
-RayTextureCubemap = Raylib::TextureCubemap
-RayVector2 = Raylib::Vector2
-RayVector3 = Raylib::Vector3
-RayVector4 = Raylib::Vector4
-RayQuaternion = Raylib::Quaternion
-RayVrDeviceInfo = Raylib::VrDeviceInfo
-RayWave = Raylib::Wave
-RayWindow = Raylib::Window

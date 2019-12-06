@@ -1,15 +1,21 @@
 module Raylib
   class Gamepad
+    extend FFIAttach
+
+    #------------------------------------------------------------------------------------
+    # Input Handling Functions (Module: core)
+    #------------------------------------------------------------------------------------
+
     # Input-related functions: gamepads
-    ray_alias_static :IsGamepadAvailable,       :is_available?        # Detect if a gamepad is available
-    ray_alias_static :IsGamepadName,            :is_name?             # Check gamepad name (if available)
-    ray_alias_static :GetGamepadName,           :name                 # Return gamepad internal name id
-    ray_alias_static :IsGamepadButtonPressed,   :is_button_pressed?   # Detect if a gamepad button has been pressed once
-    ray_alias_static :IsGamepadButtonDown,      :is_button_down?      # Detect if a gamepad button is being pressed
-    ray_alias_static :IsGamepadButtonReleased,  :is_button_released?  # Detect if a gamepad button has been released once
-    ray_alias_static :IsGamepadButtonUp,        :is_button_up?        # Detect if a gamepad button is NOT being pressed
-    ray_alias_static :GetGamepadButtonPressed,  :button_pressed       # Get the last gamepad button pressed
-    ray_alias_static :GetGamepadAxisCount,      :axis_count           # Return gamepad axis count for a gamepad
-    ray_alias_static :GetGamepadAxisMovement,   :axis_movement        # Return axis movement value for a gamepad axis
+    ray_static :IsGamepadAvailable,       :available?,        [GamepadNumber], :bool                  # Detect if a gamepad is available
+    ray_static :IsGamepadName,            :name?,             [GamepadNumber, :string], :bool         # Check gamepad name (if available)
+    ray_static :GetGamepadName,           :name,              [GamepadNumber], :string                # Return gamepad internal name id
+    ray_static :IsGamepadButtonPressed,   :button_pressed?,   [GamepadNumber, GamepadButton], :bool   # Detect if a gamepad button has been pressed once
+    ray_static :IsGamepadButtonDown,      :button_down?,      [GamepadNumber, GamepadButton], :bool   # Detect if a gamepad button is being pressed
+    ray_static :IsGamepadButtonReleased,  :button_released?,  [GamepadNumber, GamepadButton], :bool   # Detect if a gamepad button has been released once
+    ray_static :IsGamepadButtonUp,        :button_up?,        [GamepadNumber, GamepadButton], :bool   # Detect if a gamepad button is NOT being pressed
+    ray_static :GetGamepadButtonPressed,  :last_button,       [:void], GamepadButton                  # Get the last gamepad button pressed
+    ray_static :GetGamepadAxisCount,      :axis_count,        [GamepadNumber], :int                   # Return gamepad axis count for a gamepad
+    ray_static :GetGamepadAxisMovement,   :axis_movement,     [GamepadNumber, GamepadAxis], :float    # Return axis movement value for a gamepad axis
   end
 end

@@ -69,7 +69,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
     tail.rotation += 5.0
   end
 
-  if RayKey.is_pressed? RayKey::SPACE
+  if RayKey.is_pressed? :sPACE
     blending = blending == RayDraw::BLEND_ALPHA ? RayDraw::BLEND_ADDITIVE : RayDraw::BLEND_ALPHA
   end
 

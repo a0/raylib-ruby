@@ -44,10 +44,10 @@ RayWindow.target_fps = 60
 until RayWindow.should_close? # Detect window close button or ESC key
 
   # Update
-  if RayKey.is_down? RayKey::RIGHT
+  if RayKey.is_down? :right
     player.x += 2             # Player movement
     camera.offset.x -= 2      # Camera displacement with player movement
-  elsif RayKey.is_down? RayKey::LEFT
+  elsif RayKey.is_down? :left
     player.x -= 2             # Player movement
     camera.offset.x += 2      # Camera displacement with player movement
   end
@@ -57,8 +57,8 @@ until RayWindow.should_close? # Detect window close button or ESC key
   camera.target.y = player.y + 20
 
   # Camera rotation controls
-  camera.rotation -= 1 if RayKey.is_down? RayKey::A
-  camera.rotation += 1 if RayKey.is_down? RayKey::S
+  camera.rotation -= 1 if RayKey.is_down? :a
+  camera.rotation += 1 if RayKey.is_down? :s
 
   # Limit camera rotation to 80 degrees (-40 to 40)
   camera.rotation = 40 if camera.rotation > 40
@@ -70,7 +70,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
   camera.zoom = 0.1 if camera.zoom < 0.1
 
   # Camera reset (zoom and rotation)
-  if RayKey.is_pressed? RayKey::R
+  if RayKey.is_pressed? :r
     camera.zoom = 1.0
     camera.rotation = 0.0
   end

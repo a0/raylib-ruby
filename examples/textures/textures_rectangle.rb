@@ -46,8 +46,8 @@ until RayWindow.should_close? # Detect window close button or ESC key
     frame_rec.x = current_frame.to_f * scarfy.width / 6
   end
 
-  frames_speed += 1 if RayKey.is_pressed? RayKey::RIGHT
-  frames_speed -= 1 if RayKey.is_pressed? RayKey::LEFT
+  frames_speed += 1 if RayKey.is_pressed? :right
+  frames_speed -= 1 if RayKey.is_pressed? :left
 
   frames_speed = MAX_FRAME_SPEED if frames_speed > MAX_FRAME_SPEED
   frames_speed = MIN_FRAME_SPEED if frames_speed < MIN_FRAME_SPEED

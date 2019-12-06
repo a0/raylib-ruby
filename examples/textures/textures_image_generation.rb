@@ -39,7 +39,7 @@ RayWindow.target_fps = 60
 # Main game loop
 until RayWindow.should_close?
   # Update
-  current_texture = (current_texture + 1) % NUM_TEXTURES if RayMouse.is_button_pressed?(RayMouse::LEFT_BUTTON) || RayKey.is_pressed?(RayKey::RIGHT)
+  current_texture = (current_texture + 1) % NUM_TEXTURES if RayMouse.is_button_pressed?(RayMouse::LEFT_BUTTON) || RayKey.is_pressed?(:right)
 
   # Draw
   RayDraw.begin_drawing do

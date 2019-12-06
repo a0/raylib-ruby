@@ -56,9 +56,9 @@ pitch = roll = yaw = 0.0
 RayWindow.target_fps = 30
 
 until RayWindow.should_close?
-  if RayKey.is_down? RayKey::LEFT
+  if RayKey.is_down? :left
     roll += 1.0
-  elsif RayKey.is_down? RayKey::RIGHT
+  elsif RayKey.is_down? :right
     roll -= 1.0
   else
     roll -= 0.5 if roll > 0.0
@@ -69,7 +69,7 @@ until RayWindow.should_close?
 
   if RayKey.is_down? RayKey::D
     yaw += 1.0
-  elsif RayKey.is_down? RayKey::A
+  elsif RayKey.is_down? :a
     yaw -= 1.0
   else
     yaw -= 0.5 if yaw > 0.0

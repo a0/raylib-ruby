@@ -1,15 +1,22 @@
 module Raylib
   class Mouse
+    extend FFIAttach
+
+    #------------------------------------------------------------------------------------
+    # Input Handling Functions (Module: core)
+    #------------------------------------------------------------------------------------
+
     # Input-related functions: mouse
-    ray_alias_static :IsMouseButtonPressed,   :is_button_pressed?   # Detect if a mouse button has been pressed once
-    ray_alias_static :IsMouseButtonDown,      :is_button_down?      # Detect if a mouse button is being pressed
-    ray_alias_static :IsMouseButtonReleased,  :is_button_released?  # Detect if a mouse button has been released once
-    ray_alias_static :IsMouseButtonUp,        :is_button_up?        # Detect if a mouse button is NOT being pressed
-    ray_alias_static :GetMouseX,              :x                    # Returns mouse position X
-    ray_alias_static :GetMouseY,              :y                    # Returns mouse position Y
-    ray_alias_static :GetMousePosition,       :position             # Returns mouse position XY
-    ray_alias_static :SetMousePosition,       :position=            # Set mouse position XY
-    ray_alias_static :SetMouseScale,          :scale=               # Set mouse scaling
-    ray_alias_static :GetMouseWheelMove,      :wheel_move           # Returns mouse wheel movement Y
+    ray_static  :IsMouseButtonPressed,  :button_pressed?,   [MouseButton], :bool      # Detect if a mouse button has been pressed once
+    ray_static  :IsMouseButtonDown,     :button_down?,      [MouseButton], :bool      # Detect if a mouse button is being pressed
+    ray_static  :IsMouseButtonReleased, :button_released?,  [MouseButton], :bool      # Detect if a mouse button has been released once
+    ray_static  :IsMouseButtonUp,       :button_up?,        [MouseButton], :bool      # Detect if a mouse button is NOT being pressed
+    ray_static  :GetMouseX,             :x,                 [], :int                  # Returns mouse position X
+    ray_static  :GetMouseY,             :y,                 [], :int                  # Returns mouse position Y
+    ray_static  :GetMousePosition,      :position,          [], Vector2.by_value      # Returns mouse position XY
+    ray_static  :SetMousePosition,      :set_position,      %i[int int], :void        # Set mouse position XY
+    ray_static  :SetMouseOffset,        :set_offset,        %i[int int], :void        # Set mouse offset
+    ray_static  :SetMouseScale,         :set_scale,         %i[float float], :void    # Set mouse scaling
+    ray_static  :GetMouseWheelMove,     :wheel_move,        [], :int                  # Returns mouse wheel movement Y
   end
 end

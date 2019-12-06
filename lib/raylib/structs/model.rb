@@ -14,6 +14,6 @@ module Raylib
             :bones, :pointer,               # Bones information (skeleton)
             :bind_pose, :pointer            # Bones base transformation (pose)
 
-    ray_struct_accessor :transform, :mesh_count, :material_count, :bone_count
+    ray_struct_accessor :transform, :mesh_count, :meshes, :material_count, :materials, :bone_count, :bones, :bind_pose
   end
 end

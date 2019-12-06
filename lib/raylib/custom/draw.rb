@@ -1,17 +1,18 @@
 module Raylib
   class Draw
+    extend FFIAttach
+
+    #------------------------------------------------------------------------------------
+    # Window and Graphics Device Functions (Module: core)
+    #------------------------------------------------------------------------------------
+
     # Drawing-related functions
-    ray_alias_static :ClearBackground,  :clear_background   # Set background color (framebuffer clear color)
-    ray_alias_static :EndDrawing,       :end_drawing        # End canvas drawing and swap buffers (double buffering)
+    ray_static :ClearBackground,  :clear_background,    [Color.by_value], :void       # Set background color (framebuffer clear color)
+    ray_static :BeginDrawing,     :begin_drawing,       [], :void                     # Setup canvas (framebuffer) to start drawing
+    ray_static :EndDrawing,       :end_drawing,         [], :void                     # End canvas drawing and swap buffers (double buffering)
 
-    # Setup canvas (framebuffer) to start drawing
-    def self.begin_drawing
-      Raylib.BeginDrawing
-      return unless block_given?
-
-      yield
-      end_drawing
-    end
+    ray_static :BeginScissorMode, :begin_scissor_mode,  %i[int int int int], :void    # Begin scissor mode (define screen area for following drawing)
+    ray_static :EndScissorMode,   :end_scissor_mode,    [], :void                     # End scissor mode
 
     # Basic shapes drawing functions
     ray_alias_static :DrawPixel,                :pixel                  # Draw a pixel
@@ -59,6 +60,26 @@ module Raylib
     # Model drawing functions
     ray_alias_static :DrawBillboard,            :billboard              # Draw a billboard texture
     ray_alias_static :DrawBillboardRec,         :billboard_rec          # Draw a billboard texture defined by sourceRec
+
+    # ensures begin_drawing/end_drawing using a block
+    def self.drawing
+      begin_drawing
+      begin
+        yield
+      ensure
+        end_drawing
+      end
+    end
+
+    # ensures bing_scissor_mode/end_scissor_mode using a block
+    def self.scissor_mode(x, y, width, height)
+      begin_scissor_mode(x, y, width, height)
+      begin
+        yield
+      ensure
+        end_scissor_mode
+      end
+    end
 
     # Shading begin/end functions
     # Begin blending mode (alpha, additive, multiplied)

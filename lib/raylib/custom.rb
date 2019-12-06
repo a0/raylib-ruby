@@ -3,6 +3,7 @@ require_relative 'custom/audio_stream'
 require_relative 'custom/bounding_box'
 require_relative 'custom/camera2d'
 require_relative 'custom/camera3d'
+require_relative 'custom/clipboard'
 require_relative 'custom/collision'
 require_relative 'custom/color'
 require_relative 'custom/cursor'
@@ -15,6 +16,7 @@ require_relative 'custom/material'
 require_relative 'custom/matrix'
 require_relative 'custom/mesh'
 require_relative 'custom/model'
+require_relative 'custom/monitor'
 require_relative 'custom/mouse'
 require_relative 'custom/music'
 require_relative 'custom/ray'
@@ -31,34 +33,59 @@ require_relative 'custom/wave'
 require_relative 'custom/window'
 
 module Raylib
-  #
-  # raylib.h
-  #
+  extend FFIAttach
+
+  # Callbacks to be implemented by users
+  # raylib-ruby NOTE: Not implemented because FFI can't accept varargs in callbacks
+  # callback :trace_log_callback, [TraceLogType, :string, :varargs], :void
+
+  #------------------------------------------------------------------------------------
+  # Window and Graphics Device Functions (Module: core)
+  #------------------------------------------------------------------------------------
 
   # Misc. functions
-  Raylib.singleton_class.send :alias_method, :config_flags=,          :SetConfigFlags       # Setup window configuration flags (view FLAGS)
-  Raylib.singleton_class.send :alias_method, :trace_log_level=,       :SetTraceLogLevel     # Set the current threshold (minimum) log level
-  Raylib.singleton_class.send :alias_method, :trace_log_exit=,        :SetTraceLogExit      # Set the exit threshold (minimum) log level
-  # Raylib.singleton_class.send :alias_method, :trace_log_callback=,  :SetTraceLogCallback  # FIXME: Set a trace log callback to enable custom logging
-  Raylib.singleton_class.send :alias_method, :trace_log,              :TraceLog             # Show trace log messages (LOG_INFO, LOG_WARNING, LOG_ERROR, LOG_DEBUG)
-  Raylib.singleton_class.send :alias_method, :take_screenshot,        :TakeScreenshot       # Takes a screenshot of current screen (saved a .png)
-  Raylib.singleton_class.send :alias_method, :random_value,           :GetRandomValue       # Returns a random value between min and max (both included)
+  ray_static :SetConfigFlags,       :config_flags=,       %i[uchar], :void                            # Setup window configuration flags (view FLAGS)
+  ray_static :SetTraceLogLevel,     :trace_log_level=,    [TraceLogType], :void                       # Set the current threshold (minimum) log level
+  ray_static :SetTraceLogExit,      :trace_log_exit=,     [TraceLogType], :void                       # Set the exit threshold (minimum) log level
+  # ray_static :SetTraceLogCallback,  :trace_log_callback=, %i[trace_log_callback], :void             # Set a trace log callback to enable custom logging
+  ray_static :TraceLog,             :trace_log,           [TraceLogType, :string, :varargs], :void    # Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR)
+  ray_static :TakeScreenshot,       :take_screenshot,     %i[string], :void                           # Takes a screenshot of current screen (saved a .png)
+  ray_static :GetRandomValue,       :random_value,        %i[int int], :int                           # Returns a random value between min and max (both included)
 
   # Files management functions
-  Raylib.singleton_class.send :alias_method, :is_file_extension?,     :IsFileExtension      # Check file extension
-  Raylib.singleton_class.send :alias_method, :get_extension,          :GetExtension         # Get pointer to extension for a filename string
-  Raylib.singleton_class.send :alias_method, :get_file_name,          :GetFileName          # Get pointer to filename for a path string
-  Raylib.singleton_class.send :alias_method, :get_directory_path,     :GetDirectoryPath     # Get full path for a given fileName (uses static string)
-  Raylib.singleton_class.send :alias_method, :get_working_directory,  :GetWorkingDirectory  # Get current working directory (uses static string)
-  Raylib.singleton_class.send :alias_method, :change_directory,       :ChangeDirectory      # Change working directory, returns true if success
-  Raylib.singleton_class.send :alias_method, :is_file_dropped?,       :IsFileDropped        # Check if a file has been dropped into window
-  Raylib.singleton_class.send :alias_method, :get_dropped_files,      :GetDroppedFiles      # Get dropped files names
-  Raylib.singleton_class.send :alias_method, :clear_dropped_files,    :ClearDroppedFiles    # Clear dropped files paths buffer
+  ray_static :FileExists,             :file_exists?,          %i[string], :bool               # Check if file exists
+  ray_static :IsFileExtension,        :file_extension?,       %i[string string], :bool        # Check file extension
+  ray_static :DirectoryExists,        :directory_exists?,     %i[string], :bool               # Check if a directory path exists
+  ray_static :GetExtension,           :extension,             %i[string], :string             # Get pointer to extension for a filename string
+  ray_static :GetFileName,            :file_name,             %i[string], :string             # Get pointer to filename for a path string
+  ray_static :GetFileNameWithoutExt,  :file_name_without_ext, %i[string], :string             # Get filename string without extension (uses static string)
+  ray_static :GetDirectoryPath,       :directory_path,        %i[string], :string             # Get full path for a given fileName with path (uses static string)
+  ray_static :GetPrevDirectoryPath,   :prev_directory_path,   %i[string], :string             # Get previous directory path for a given path (uses static string)
+  ray_static :GetWorkingDirectory,    :working_directory,     %i[void], :string               # Get current working directory (uses static string)
+  ray_static :GetDirectoryFiles,      :directory_files,       %i[string pointer], :pointer    # Get filenames in a directory path (memory should be freed)
+  ray_static :ClearDirectoryFiles,    :clear_directory_files, %i[void], :void                 # Clear directory files paths buffers (free memory)
+  ray_static :ChangeDirectory,        :change_directory,      %i[string], :bool               # Change working directory, returns true if success
+  ray_static :IsFileDropped,          :file_dropped?,         %i[void], :bool                 # Check if a file has been dropped into window
+  ray_static :GetDroppedFiles,        :dropped_files,         %i[pointer], :pointer           # Get dropped files names (memory should be freed)
+  ray_static :ClearDroppedFiles,      :clear_dropped_files,   %i[void], :void                 # Clear dropped files paths buffer (free memory)
+  ray_static :GetFileModTime,         :file_mod_time,         %i[string], :long               # Get file modification time (last write time)
+
+  ray_static :CompressData,           :compress_data,         %i[string int pointer], :string   # Compress data (DEFLATE algorythm)
+  ray_static :DecompressData,         :decompress_data,       %i[string int pointer], :string   # Decompress data (DEFLATE algorythm)
 
   # Persistent storage management
-  Raylib.singleton_class.send :alias_method, :storage_save_value,     :StorageSaveValue     # Save integer value to storage file (to defined position)
-  Raylib.singleton_class.send :alias_method, :storage_load_value,     :StorageLoadValue     # Load integer value from storage file (from defined position)
+  ray_static :StorageSaveValue,       :storage_save_value,    %i[int int], :void              # Save integer value to storage file (to defined position)
+  ray_static :StorageLoadValue,       :storage_load_value,    %i[int], :int                   # Load integer value from storage file (from defined position)
 
+  ray_static :OpenURL,                :open_url,              %i[string], :void               # Open URL with default system browser (if available)
+
+
+
+
+
+
+
+  
   # Shader loading/unloading functions
   Raylib.singleton_class.send :alias_method, :load_text,              :LoadText # Load chars array from text file
 

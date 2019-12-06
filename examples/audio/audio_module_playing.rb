@@ -58,7 +58,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # Update
   xm.update # Update music buffer with new stream data
 
-  if RayKey.is_pressed? RayKey::SPACE
+  if RayKey.is_pressed? :sPACE
     xm.stop
     xm.play
   end

@@ -7,5 +7,7 @@ module Raylib
     layout  :translation, Vector3.by_value,   # Translation
             :rotation, Quaternion.by_value,   # Rotation
             :scale, Vector3.by_value          # Scale
+
+    ray_struct_init_accessor :translation, :rotation, :scale
   end
 end

@@ -7,136 +7,170 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   # Window and Graphics Device Functions (Module: core)
   #------------------------------------------------------------------------------------
 
-  # Window-related functions
-  attach_function :InitWindow, %i[int int string], :void                  # Window#init
-  attach_function :WindowShouldClose, [], :bool                           # Window#should_close?
-  attach_function :CloseWindow, [], :void                                 # Window#close
-  attach_function :IsWindowReady, [], :bool                               # Window#is_ready?
-  attach_function :IsWindowMinimized, [], :bool                           # Window#is_minimized?
-  attach_function :ToggleFullscreen, [], :bool                            # Window#toggle_fullscreen
-  attach_function :SetWindowIcon, [Image.by_value], :void                 # Window#icon=
-  attach_function :SetWindowTitle, %i[string], :void                      # Window#title=
-  attach_function :SetWindowPosition, %i[int int], :void                  # Window#set_position
-  attach_function :SetWindowMonitor, %i[int], :void                       # Window#monitor=
-  attach_function :SetWindowMinSize, %i[int int], :void                   # Window#set_min_size
-  attach_function :SetWindowSize, %i[int int], :void                      # Window#set_size
-  attach_function :GetScreenWidth, [], :int                               # Window#width
-  attach_function :GetScreenHeight, [], :int                              # Window#height
+  # // Window-related functions
+  # RayWindow.init                          // Initialize window and OpenGL context
+  # RayWindow.should_close?                 // Check if KEY_ESCAPE pressed or Close icon pressed
+  # RayWindow.close                         // Close window and unload OpenGL context
+  # RayWindow.ready?                        // Check if window has been initialized successfully
+  # RayWindow.minimized?                    // Check if window has been minimized (or lost focus)
+  # RayWindow.resized?                      // Check if window has been resized
+  # RayWindow.hidden?                       // Check if window is currently hidden
+  # RayWindow.toggle_fullscreen             // Toggle fullscreen mode (only PLATFORM_DESKTOP)
+  # RayWindow.unhide                        // Show the window
+  # RayWindow.hide                          // Hide the window
+  # RayWindow.icon=                         // Set icon for window (only PLATFORM_DESKTOP)
+  # RayWindow.title=                        // Set title for window (only PLATFORM_DESKTOP)
+  # RayWindow.set_position                  // Set window position on screen (only PLATFORM_DESKTOP)
+  # RayWindow.monitor=                      // Set monitor for the current window (fullscreen mode)
+  # RayWindow.set_min_size                  // Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
+  # RayWindow.set_size                      // Set window dimensions
+  # RayWindow.handle                        // Get native window handle
+  # RayWindow.width                         // Get current screen width
+  # RayWindow.height                        // Get current screen height
+  # RayMonitor.count                        // Get number of connected monitors
+  # RayMonitor.width                        // Get primary monitor width
+  # RayMonitor.height                       // Get primary monitor height
+  # RayMonitor.physical_width               // Get primary monitor physical width in millimetres
+  # RayMonitor.physycal_height              // Get primary monitor physical height in millimetres
+  # RayWindow.position                      // Get window position XY on monitor
+  # RayMonitor.name                         // Get the human-readable, UTF-8 encoded name of the primary monitor
+  # RayClipboard.text                       // Get clipboard text content
+  # RayClipboard.text=                      // Set clipboard text content
 
-  # Cursor-related functions
-  attach_function :ShowCursor, [], :void                                  # Cursor#show
-  attach_function :HideCursor, [], :void                                  # Cursor#hide
-  attach_function :IsCursorHidden, [], :bool                              # Cursor#is_hidden?
-  attach_function :EnableCursor, [], :void                                # Cursor#enable
-  attach_function :DisableCursor, [], :void                               # Cursor#disable
+  # // Cursor-related functions
+  # RayCursor.show                          // Shows cursor
+  # RayCursor.hide                          // Hides cursor
+  # RayCursor.hidden?                       // Check if cursor is not visible
+  # RayCursor.enable                        // Enables cursor (unlock cursor)
+  # RayCursor.disable                       // Disables cursor (lock cursor)
 
-  # Drawing-related functions
-  attach_function :ClearBackground, [Color.by_value], :void               # Draw#clear_background
-  attach_function :BeginDrawing, [], :void                                # Draw#begin_drawing
-  attach_function :EndDrawing, [], :void                                  # Draw#end_drawing
-  attach_function :BeginMode2D, [Camera2D.by_value], :void                # Camera2D#begin_mode2d
-  attach_function :EndMode2D, [], :void                                   # Camera2D#end_mode2d
-  attach_function :BeginMode3D, [Camera.by_value], :void                  # Camera3D#begin_mode3d
-  attach_function :EndMode3D, [], :void                                   # Camera3D#end_mode3d
-  attach_function :BeginTextureMode, [RenderTexture2D.by_value], :void    # RenderTexture2D#begin_texture_mode
-  attach_function :EndTextureMode, [], :void                              # RenderTexture2D#end_texture_mode
+  # // Drawing-related functions
+  # RayDraw.clear_background                // Set background color (framebuffer clear color)
+  # RayDraw.begin_drawing                   // Setup canvas (framebuffer) to start drawing
+  # RayDraw.end_drawing                     // End canvas drawing and swap buffers (double buffering)
+  # RayCamera2D#begin_mode2d                // Initialize 2D mode with custom camera (2D)
+  # RayCamera2D#end_mode2d                  // Ends 2D mode with custom camera
+  # RayCamera#begin_mode3d                  // Initializes 3D mode with custom camera (3D)
+  # RayCamera#end_mode3d                    // Ends 3D mode and returns to default 2D orthographic mode
+  # RayRenderTexture2D#begin_texture_mode   // Initializes render texture for drawing
+  # RayRenderTexture2D#end_texture_mode     // Ends drawing to render texture
+  # RayDraw.begin_scissor_mode              // Begin scissor mode (define screen area for following drawing)
+  # RayDraw.end_scissor_mode                // End scissor mode
 
-  # Screen-space-related functions
-  attach_function :GetMouseRay, [Vector2.by_value, Camera.by_value], Ray.by_value           # Camera3D#ray
-  attach_function :GetWorldToScreen, [Vector3.by_value, Camera.by_value], Vector2.by_value  # Camera3D#world_to_screen
-  attach_function :GetCameraMatrix, [Camera.by_value], Matrix.by_value                      # Camera3D#matrix
+  # // Screen-space-related functions
+  # RayCamera#ray                           // Returns a ray trace from mouse position
+  # RayCamera#matrix                        // Returns camera transform matrix (view matrix)
+  # RayCamera2D#matrix                      // Returns camera 2d transform matrix
+  # RayCamera#world_to_screen               // Returns the screen space position for a 3d world space position
+  # RayCamera2D#world_to_screen             // Returns the screen space position for a 2d camera world space position
+  # RayCamera2D#screen_to_world             // Returns the world space position for a 2d camera screen space position
 
-  # Timming-related functions
-  attach_function :SetTargetFPS, [:int], :void                            # Window#target_fps=
-  attach_function :GetFPS, [], :int                                       # Window#fps
-  attach_function :GetFrameTime, [], :float                               # Window#time_since_frame
-  attach_function :GetTime, [], :double                                   # Window#time_since_init
+  # // Timming-related functions
+  # RayWindow.target_fps=                   // Set target FPS (maximum)
+  # RayWindow.fps                           // Returns current FPS
+  # RayWindow.time_since_frame              // Returns time in seconds for last frame drawn
+  # RayWindow.time_since_init               // Returns elapsed time in seconds since InitWindow()
 
-  # Color-related functions
-  attach_function :ColorToInt, [Color.by_value], :int                     # Color#to_i
-  attach_function :ColorNormalize, [Color.by_value], Vector4.by_value     # Color#to_normalize
-  attach_function :ColorToHSV, [Color.by_value], Vector3.by_value         # Color#to_hsv
-  attach_function :GetColor, %i[int], Color.by_value                      # Color#from_i
-  attach_function :Fade, [Color.by_value, :float], Color.by_value         # Color#fade
+  # // Color-related functions
+  # RayColor#to_i                           // Returns hexadecimal value for a Color
+  # RayColor#to_normalize                   // Returns color normalized as float [0..1]
+  # RayColor.from_normalize                 // Returns color from normalized values [0..1]
+  # RayColor.to_hsv                         // Returns HSV values for a Color
+  # RayColor.from_hsv                       // Returns a Color from HSV values
+  # RayColor.from_i                         // Returns a Color struct from hexadecimal value
+  # RayColor.fade                           // Color fade-in or fade-out, alpha goes from 0.0f to 1.0f
 
-  # Misc. functions
-  attach_function :SetConfigFlags, %i[uchar], :void                       # Raylib#config_flags=
-  attach_function :SetTraceLogLevel, %i[int], :void                       # Raylib#trace_log_level=
-  attach_function :SetTraceLogExit, %i[int], :void                        # Raylib#trace_log_exit=
-  attach_function :SetTraceLogCallback, %i[int], :void                    # Raylib#trace_log_exit=
-  attach_function :TraceLog, %i[int string varargs], :void                # Raylib#trace_log
-  attach_function :TakeScreenshot, %i[string], :void                      # Raylib#take_screenshot
-  attach_function :GetRandomValue, %i[int int], :int                      # Raylib#random_value
+  # // Misc. functions
+  # Raylib.config_flags=                    // Setup window configuration flags (view FLAGS)
+  # Raylib.trace_log_level=                 // Set the current threshold (minimum) log level
+  # Raylib.trace_log_exit=                  // Set the exit threshold (minimum) log level
+  # Raylib.trace_log_callback=              // Set a trace log callback to enable custom logging
+  # Raylib.trace_log                        // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR)
+  # Raylib.take_screenshot                  // Takes a screenshot of current screen (saved a .png)
+  # Raylib.random_value                     // Returns a random value between min and max (both included)
 
-  # Files management functions
-  attach_function :IsFileExtension, %i[string string], :bool              # Raylib#is_file_extension?
-  attach_function :GetExtension, %i[string], :string                      # Raylib#get_extension
-  attach_function :GetFileName, %i[string], :string                       # Raylib#get_file_name
-  attach_function :GetDirectoryPath, %i[string], :string                  # Raylib#get_directory_path
-  attach_function :GetWorkingDirectory, [], :string                       # Raylib#get_working_directory
-  attach_function :ChangeDirectory, %i[string], :bool                     # Raylib#change_directory
-  attach_function :IsFileDropped, [], :bool                               # Raylib#is_file_dropped?
-  attach_function :GetDroppedFiles, [], :pointer                          # Raylib#get_dropped_files
-  attach_function :ClearDroppedFiles, [], :void                           # Raylib#clear_dropped_files
+  # // Files management functions
+  # Raylib.file_exists?                 ,   // Check if file exists
+  # Raylib.file_extension?                 ,// Check file extension
+  # Raylib.directory_exists?                // Check if a directory path exists
+  # Raylib.extension                        // Get pointer to extension for a filename string
+  # Raylib.file_name                        // Get pointer to filename for a path string
+  # Raylib.file_name_without_ext            // Get filename string without extension (uses static string)
+  # Raylib.directory_path                   // Get full path for a given fileName with path (uses static string)
+  # Raylib.prev_directory_path              // Get previous directory path for a given path (uses static string)
+  # Raylib.working_directory                // Get current working directory (uses static string)
+  # Raylib.directory_files                  // Get filenames in a directory path (memory should be freed)
+  # Raylib.clear_directory_files            // Clear directory files paths buffers (free memory)
+  # Raylib.change_directory                 // Change working directory, returns true if success
+  # Raylib.file_dropped?                 ,  // Check if a file has been dropped into window
+  # Raylib.dropped_files                    // Get dropped files names (memory should be freed)
+  # Raylib.clear_dropped_files              // Clear dropped files paths buffer (free memory)
+  # Raylib.file_mod_time                    // Get file modification time (last write time)
 
-  # Persistent storage management
-  attach_function :StorageSaveValue, %i[int int], :void                   # Raylib#storage_save_value
-  attach_function :StorageLoadValue, %i[int], :int                        # Raylib#storage_load_value
+  # Raylib.compress_data                    // Compress data (DEFLATE algorythm)
+  # Raylib.decompress_data                  // Decompress data (DEFLATE algorythm)
+
+  # // Persistent storage management
+  # Raylib.storage_save_value               // Save integer value to storage file (to defined position)
+  # Raylib.storage_load_value               // Load integer value from storage file (from defined position)
+
+  # Raylib.open_url                         // Open URL with default system browser (if available)
 
   #------------------------------------------------------------------------------------
   # Input Handling Functions (Module: core)
   #------------------------------------------------------------------------------------
 
-  # Input-related functions: keyboard
-  attach_function :IsKeyPressed, [:int], :bool                            # Key#is_pressed?
-  attach_function :IsKeyDown, [:int], :bool                               # Key#is_down?
-  attach_function :IsKeyReleased, [:int], :bool                           # Key#is_released?
-  attach_function :IsKeyUp, [:int], :bool                                 # Key#is_up?
-  attach_function :GetKeyPressed, [], :int                                # Key#key_pressed
-  attach_function :SetExitKey, [:int], :void                              # Key#exit_key=
+  # // Input-related functions: keyboard
+  # RayKey.is_pressed?,                     // Detect if a key has been pressed once
+  # RayKey.is_down?,                        // Detect if a key is being pressed
+  # RayKey.is_released?,                    // Detect if a key has been released once
+  # RayKey.is_up?,                          // Detect if a key is NOT being pressed
+  # RayKey.exit_key=,                       // Set a custom key to exit program (default is ESC)
+  # RayKey.key_pressed,                     // Get key pressed, call it multiple times for chars queued
 
-  # Input-related functions: gamepads
-  attach_function :IsGamepadAvailable, %i[int], :bool                     # Gamepad#is_available?
-  attach_function :IsGamepadName, %i[int string], :bool                   # Gamepad#is_name?
-  attach_function :GetGamepadName, %i[int], :string                       # Gamepad#name
-  attach_function :IsGamepadButtonPressed, %i[int int], :bool             # Gamepad#is_button_pressed?
-  attach_function :IsGamepadButtonDown, %i[int int], :bool                # Gamepad#is_button_down?
-  attach_function :IsGamepadButtonReleased, %i[int int], :bool            # Gamepad#is_button_released?
-  attach_function :IsGamepadButtonUp, %i[int int], :bool                  # Gamepad#is_button_up?
-  attach_function :GetGamepadButtonPressed, [], :int                      # Gamepad#button_pressed
-  attach_function :GetGamepadAxisCount, %i[int], :int                     # Gamepad#axis_count
-  attach_function :GetGamepadAxisMovement, %i[int int], :float            # Gamepad#axis_movement
+  # // Input-related functions: gamepads
+  # RayGamepad.available?                   // Detect if a gamepad is available
+  # RayGamepad.name?                        // Check gamepad name (if available)
+  # RayGamepad.name                         // Return gamepad internal name id
+  # RayGamepad.button_pressed?              // Detect if a gamepad button has been pressed once
+  # RayGamepad.button_down?                 // Detect if a gamepad button is being pressed
+  # RayGamepad.button_released?             // Detect if a gamepad button has been released once
+  # RayGamepad.button_up?                   // Detect if a gamepad button is NOT being pressed
+  # RayGamepad.last_button                  // Get the last gamepad button pressed
+  # RayGamepad.axis_count                   // Return gamepad axis count for a gamepad
+  # RayGamepad.axis_movement                // Return axis movement value for a gamepad axis
 
-  # Input-related functions: mouse
-  attach_function :IsMouseButtonPressed, [:int], :bool                    # Mouse#is_button_presed?
-  attach_function :IsMouseButtonDown, [:int], :bool                       # Mouse#is_button_down?
-  attach_function :IsMouseButtonReleased, [:int], :bool                   # Mouse#is_button_released?
-  attach_function :IsMouseButtonUp, [:int], :bool                         # Mouse#is_button_up?
-  attach_function :GetMouseX, [], :int                                    # Mouse#x
-  attach_function :GetMouseY, [], :int                                    # Mouse#y
-  attach_function :GetMousePosition, [], Vector2.by_value                 # Mouse#position
-  attach_function :SetMousePosition, [Vector2.by_value], :void            # Mouse#position=
-  attach_function :SetMouseScale, [:float], :void                         # Mouse#scale=
-  attach_function :GetMouseWheelMove, [], :int                            # Mouse#wheel_move
+  # // Input-related functions: mouse
+  # RayMouse.button_pressed?                // Detect if a mouse button has been pressed once
+  # RayMouse.button_down?                   // Detect if a mouse button is being pressed
+  # RayMouse.button_released?               // Detect if a mouse button has been released once
+  # RayMouse.button_up?                     // Detect if a mouse button is NOT being pressed
+  # RayMouse.x                              // Returns mouse position X
+  # RayMouse.y                              // Returns mouse position Y
+  # RayMouse.position                       // Returns mouse position XY
+  # RayMouse.set_position                   // Set mouse position XY
+  # RayMouse.set_offset                     // Set mouse offset
+  # RayMouse.set_scale                      // Set mouse scaling
+  # RayMouse.wheel_move                     // Returns mouse wheel movement Y
 
-  # Input-related functions: touch
-  attach_function :GetTouchX, [], :int                                    # Touch#x
-  attach_function :GetTouchY, [], :int                                    # Touch#y
-  attach_function :GetTouchPosition, %i[int], Vector2.by_value            # Touch#position
+  # // Input-related functions: touch
+  # RayTouch.x                              // Returns touch position X for touch point 0 (relative to screen size)
+  # RayTouch.y                              // Returns touch position Y for touch point 0 (relative to screen size)
+  # RayTouch.position                       // Returns touch position XY for a touch point index (relative to screen size)
 
   #------------------------------------------------------------------------------------
   # Gestures and Touch Handling Functions (Module: gestures)
   #------------------------------------------------------------------------------------
 
-  attach_function :SetGesturesEnabled, %i[uint], :void                    # Touch#gestures=
-  attach_function :IsGestureDetected, %i[int], :bool                      # Touch#is_gesture?
-  attach_function :GetGestureDetected, [], :int                           # Touch#gesture
-  attach_function :GetTouchPointsCount, [], :int                          # Touch#points_count
-  attach_function :GetGestureHoldDuration, [], :float                     # Touch#hold_duration
-  attach_function :GetGestureDragVector, [], Vector2.by_value             # Touch#drag_vector
-  attach_function :GetGestureDragAngle, [], :float                        # Touch#drag_angle
-  attach_function :GetGesturePinchVector, [], Vector2.by_value            # Touch#pinch_vector
-  attach_function :GetGesturePinchAngle, [], :float                       # Touch#pinch_angle
+  # RayTouch.gestures=
+  # RayTouch.is_gesture?
+  # RayTouch.gesture
+  # RayTouch.points_count
+  # RayTouch.hold_duration
+  # RayTouch.drag_vector
+  # RayTouch.drag_angle
+  # RayTouch.pinch_vector
+  # RayTouch.pinch_angle
 
   #------------------------------------------------------------------------------------
   # Camera System Functions (Module: camera)
@@ -427,7 +461,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
 
   # Wave/Sound loading/unloading functions
   attach_function :LoadWave, %i[string], Wave.by_value                                # Wave#load
-  attach_function :LoadWaveEx, %i[pointer int int int int], Wave.by_value             # Wave#load_ex
+  #attach_function :LoadWaveEx, %i[pointer int int int int], Wave.by_value             # Wave#load_ex
   attach_function :LoadSound, [:string], Sound.by_value                               # Sound#load
   attach_function :LoadSoundFromWave, [Wave.by_value], Sound.by_value                 # Wave#to_sound
   attach_function :UpdateSound, [Sound.by_value, :pointer, :int], :void               # Sound#update
@@ -466,7 +500,7 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   attach_function :InitAudioStream, %i[uint uint uint], AudioStream.by_value          # AudioStream#create
   attach_function :UpdateAudioStream, [AudioStream.by_value, :pointer, :int], :void   # AudioStream#update
   attach_function :CloseAudioStream, [AudioStream.by_value], :void                    # AudioStream#close
-  attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # AudioStream#is_buffer_processed?
+#  attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # AudioStream#is_buffer_processed?
   attach_function :PlayAudioStream, [AudioStream.by_value], :void                     # AudioStream#play
   attach_function :PauseAudioStream, [AudioStream.by_value], :void                    # AudioStream#pause
   attach_function :ResumeAudioStream, [AudioStream.by_value], :void                   # AudioStream#resume

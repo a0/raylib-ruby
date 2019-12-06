@@ -1,10 +1,16 @@
 module Raylib
   class Cursor
+    extend FFIAttach
+
+    #------------------------------------------------------------------------------------
+    # Window and Graphics Device Functions (Module: core)
+    #------------------------------------------------------------------------------------
+
     # Cursor-related functions
-    ray_alias_static :ShowCursor,     :show         # Shows cursor
-    ray_alias_static :HideCursor,     :hide         # Hides cursor
-    ray_alias_static :IsCursorHidden, :is_hidden?   # Check if cursor is not visible
-    ray_alias_static :EnableCursor,   :enable       # Enables cursor (unlock cursor)
-    ray_alias_static :DisableCursor,  :disable      # Disables cursor (lock cursor)
+    ray_static :ShowCursor,     :show,    [], :void   # Shows cursor
+    ray_static :HideCursor,     :hide,    [], :void   # Hides cursor
+    ray_static :IsCursorHidden, :hidden?, [], :bool   # Check if cursor is not visible
+    ray_static :EnableCursor,   :enable,  [], :void   # Enables cursor (unlock cursor)
+    ray_static :DisableCursor,  :disable, [], :void   # Disables cursor (lock cursor)
   end
 end

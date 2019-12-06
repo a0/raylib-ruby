@@ -38,7 +38,7 @@ RayWindow.target_fps = 60
 # Main game loop
 until RayWindow.should_close? # Detect window close button or ESC key
   # Update
-  show_font = RayKey.is_down? RayKey::SPACE
+  show_font = RayKey.is_down? :sPACE
 
   # Draw
   RayDraw.begin_drawing do

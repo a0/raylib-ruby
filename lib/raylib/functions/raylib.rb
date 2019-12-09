@@ -1,4 +1,4 @@
-module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
+module Raylib
   #####################################################################################
   # raylib.h
   #####################################################################################
@@ -82,11 +82,11 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
 
   # // Misc. functions
   # Raylib.config_flags=                    // Setup window configuration flags (view FLAGS)
-  # Raylib.trace_log_level=                 // Set the current threshold (minimum) log level
-  # Raylib.trace_log_exit=                  // Set the exit threshold (minimum) log level
-  # Raylib.trace_log_callback=              // Set a trace log callback to enable custom logging
-  # Raylib.trace_log                        // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR)
-  # Raylib.take_screenshot                  // Takes a screenshot of current screen (saved a .png)
+  # Raylib.log_level=                       // Set the current threshold (minimum) log level
+  # Raylib.log_exit=                        // Set the exit threshold (minimum) log level
+  # Raylib.log_callback=                    // Set a trace log callback to enable custom logging
+  # Raylib.log                              // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR)
+  # Raylib.screenshot                       // Takes a screenshot of current screen (saved a .png)
   # Raylib.random_value                     // Returns a random value between min and max (both included)
 
   # // Files management functions
@@ -121,10 +121,10 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   #------------------------------------------------------------------------------------
 
   # // Input-related functions: keyboard
-  # RayKey.is_pressed?,                     // Detect if a key has been pressed once
-  # RayKey.is_down?,                        // Detect if a key is being pressed
-  # RayKey.is_released?,                    // Detect if a key has been released once
-  # RayKey.is_up?,                          // Detect if a key is NOT being pressed
+  # RayKey.pressed?,                        // Detect if a key has been pressed once
+  # RayKey.down?,                           // Detect if a key is being pressed
+  # RayKey.released?,                       // Detect if a key has been released once
+  # RayKey.up?,                             // Detect if a key is NOT being pressed
   # RayKey.exit_key=,                       // Set a custom key to exit program (default is ESC)
   # RayKey.key_pressed,                     // Get key pressed, call it multiple times for chars queued
 
@@ -162,225 +162,257 @@ module Raylib # rubocop:disable Metrics/ModuleLength Metrics/LineLength
   # Gestures and Touch Handling Functions (Module: gestures)
   #------------------------------------------------------------------------------------
 
-  # RayTouch.gestures=
-  # RayTouch.is_gesture?
-  # RayTouch.gesture
-  # RayTouch.points_count
-  # RayTouch.hold_duration
-  # RayTouch.drag_vector
-  # RayTouch.drag_angle
-  # RayTouch.pinch_vector
-  # RayTouch.pinch_angle
+  # RayTouch.gestures_enabled=              // Enable a set of gestures using flags
+  # RayTouch.gesture?                       // Check if a gesture have been detected
+  # RayTouch.last_gesture                   // Get latest detected gesture
+  # RayTouch.points_count                   // Get touch points count
+  # RayTouch.hold_duration                  // Get gesture hold time in milliseconds
+  # RayTouch.drag_vector                    // Get gesture drag vector
+  # RayTouch.drag_angle                     // Get gesture drag angle
+  # RayTouch.pinch_vector                   // Get gesture pinch delta
+  # RayTouch.pinch_angle                    // Get gesture pinch angle
 
   #------------------------------------------------------------------------------------
   # Camera System Functions (Module: camera)
   #------------------------------------------------------------------------------------
 
-  attach_function :SetCameraMode, [Camera.by_value, :int], :void              # Camera3D#mode=
-  attach_function :UpdateCamera, [Camera.ptr], :void                          # Camera3D#update
+  # RayCamera#mode=                             // Set camera mode (multiple camera modes available)
+  # RayCamera#update                            // Update camera position for selected mode
 
-  attach_function :SetCameraPanControl, %i[int], :void                        # Camera3D#pan_control=
-  attach_function :SetCameraAltControl, %i[int], :void                        # Camera3D#alt_control=
-  attach_function :SetCameraSmoothZoomControl, %i[int], :void                 # Camera3D#smooth_zoom_control=
-  attach_function :SetCameraMoveControls, %i[int int int int int int], :void  # Camera3D#set_move_controls
+  # RayCamera.pan_control=                      // Set camera pan key to combine with mouse movement (free camera)
+  # RayCamera.alt_control=                      // Set camera alt key to combine with mouse movement (free camera)
+  # RayCamera.smooth_zoom_control=              // Set camera smooth zoom key to combine with mouse (free camera)
+  # RayCamera.set_move_controls                 // Set camera move controls (1st person and 3rd person cameras)
 
   #------------------------------------------------------------------------------------
   # Basic Shapes Drawing Functions (Module: shapes)
   #------------------------------------------------------------------------------------
 
-  # Basic shapes drawing functions
-  # Ruby note: All functions in Raylib::Draw type.
-  attach_function :DrawPixel, [:int, :int, Color.by_value], :void
-  attach_function :DrawPixelV, [Vector2.by_value, Color.by_value], :void
-  attach_function :DrawLine, [:int, :int, :int, :int, Color.by_value], :void
-  attach_function :DrawLineV, [Vector2.by_value, Vector2.by_value, Color.by_value], :void
-  attach_function :DrawLineEx, [Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
-  attach_function :DrawLineBezier, [Vector2.by_value, Vector2.by_value, :float, Color.by_value], :void
-  attach_function :DrawCircle, [:int, :int, :float, Color.by_value], :void
-  attach_function :DrawCircleGradient, [:int, :int, :float, Color.by_value, Color.by_value], :void
-  attach_function :DrawCircleV, [Vector2.by_value, :float, Color.by_value], :void
-  attach_function :DrawCircleLines, [:int, :int, :float, Color.by_value], :void
-  attach_function :DrawRectangle, [:int, :int, :int, :int, Color.by_value], :void
-  attach_function :DrawRectangleV, [Vector2.by_value, Vector2.by_value, Color.by_value], :void
-  attach_function :DrawRectangleRec, [Rectangle.by_value, Color.by_value], :void
-  attach_function :DrawRectanglePro, [Rectangle.by_value, Vector2.by_value, :float, Color.by_value], :void
-  attach_function :DrawRectangleGradientV, [:int, :int, :int, :int, Color.by_value, Color.by_value], :void
-  attach_function :DrawRectangleGradientH, [:int, :int, :int, :int, Color.by_value, Color.by_value], :void
-  attach_function :DrawRectangleGradientEx, [Rectangle.by_value, Color.by_value, Color.by_value, Color.by_value, Color.by_value], :void
-  attach_function :DrawRectangleLines, [:int, :int, :int, :int, Color.by_value], :void
-  attach_function :DrawRectangleLinesEx, [Rectangle.by_value, :float, Color.by_value], :void
-  attach_function :DrawTriangle, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void
-  attach_function :DrawTriangleLines, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void
-  attach_function :DrawPoly, [Vector2.by_value, :int, :float, :float, Color.by_value], :void
+  # // Basic shapes drawing functions
+  # RayDraw.pixel                               // Draw a pixel
+  # RayDraw.pixel_v                             // Draw a pixel (Vector version)
+  # RayDraw.line                                // Draw a line
+  # RayDraw.line_v                              // Draw a line (Vector version)
+  # RayDraw.line_ex                             // Draw a line defining thickness
+  # RayDraw.line_bezier                         // Draw a line using cubic-bezier curves in-out
+  # RayDraw.line_strip                          // Draw lines sequence
+  # RayDraw.circle                              // Draw a color-filled circle
+  # RayDraw.circle_sector                       // Draw a piece of a circle
+  # RayDraw.circle_sector_lines                 // Draw circle sector outline
+  # RayDraw.circle_gradient                     // Draw a gradient-filled circle
+  # RayDraw.circle_v                            // Draw a color-filled circle (Vector version)
+  # RayDraw.circle_lines                        // Draw circle outline
+  # RayDraw.ring                                // Draw ring
+  # RayDraw.ring_lines                          // Draw ring outline
+  # RayDraw.rectangle                           // Draw a color-filled rectangle
+  # RayDraw.rectangle_v                         // Draw a color-filled rectangle (Vector version)
+  # RayDraw.rectangle_rec                       // Draw a color-filled rectangle
+  # RayDraw.rectangle_pro                       // Draw a color-filled rectangle with pro parameters
+  # RayDraw.rectangle_gradient_v                // Draw a vertical-gradient-filled rectangle
+  # RayDraw.rectangle_gradient_h                // Draw a horizontal-gradient-filled rectangle
+  # RayDraw.rectangle_gradient_ex               // Draw a gradient-filled rectangle with custom vertex colors
+  # RayDraw.rectangle_lines                     // Draw rectangle outline
+  # RayDraw.rectangle_lines_ex                  // Draw rectangle outline with extended parameters
+  # RayDraw.rectangle_bounded                   // Draw rectangle with rounded edges
+  # RayDraw.rectangle_bounded_lines             // Draw rectangle with rounded edges outline
+  # RayDraw.triangle                            // Draw a color-filled triangle (vertex in counter-clockwise order!)
+  # RayDraw.triangle_lines                      // Draw triangle outline (vertex in counter-clockwise order!)
+  # RayDraw.triangle_fan                        // Draw a triangle fan defined by points (first vertex is the center)
+  # RayDraw.triangle_strip                      // Draw a triangle strip defined by points
+  # RayDraw.poly                                // Draw a regular polygon (Vector version)
 
-  # Basic shapes collision detection functions
-  # Ruby note: All functions in Raylib::Collision type.
-  attach_function :CheckCollisionRecs, [Rectangle.by_value, Rectangle.by_value], :bool
-  attach_function :CheckCollisionCircles, [Vector2.by_value, :float, Vector2.by_value, :float], :bool
-  attach_function :CheckCollisionCircleRec, [Vector2.by_value, :float, Rectangle.by_value], :bool
-  attach_function :GetCollisionRec, [Rectangle.by_value, Rectangle.by_value], Rectangle.by_value
-  attach_function :CheckCollisionPointRec, [Vector2.by_value, Rectangle.by_value], :bool
-  attach_function :CheckCollisionPointCircle, [Vector2.by_value, Vector2.by_value, :float], :bool
-  attach_function :CheckCollisionPointTriangle, [Vector2.by_value, Vector2.by_value, Vector2.by_value, Vector2.by_value], :bool
+  # RayDraw.set_shapes_texture                  // Define default texture used to draw shapes
+
+  # // Basic shapes collision detection functions
+  # RayCollision.check_recs                     // Check collision between two rectangles
+  # RayCollision.check_circles                  // Check collision between two circles
+  # RayCollision.check_circle_rec               // Check collision between circle and rectangle
+  # RayCollision.rec                            // Get collision rectangle for two rectangles collision
+  # RayCollision.check_point_rec                // Check if point is inside rectangle
+  # RayCollision.check_point_circle             // Check if point is inside circle
+  # RayCollision.check_point_triangle           // Check if point is inside a triangle
 
   #------------------------------------------------------------------------------------
   # Texture Loading and Drawing Functions (Module: textures)
   #------------------------------------------------------------------------------------
 
   # Image/Texture2D data loading/unloading/saving functions
-  attach_function :LoadImage, [:string], Image.by_value                         # Image#load
-  attach_function :LoadImageEx, %i[pointer int int], Image.by_value             # Image#load_ex
-  attach_function :LoadImagePro, %i[pointer int int int], Image.by_value        # Image#load_pro
-  attach_function :LoadImageRaw, %i[string int int int int], Image.by_value     # Image#load_raw
-  attach_function :ExportImage, [:string, Image.by_value], :void                # Image#export
-  attach_function :LoadTexture, [:string], Texture2D.by_value                   # Texture2D#load
-  attach_function :LoadTextureFromImage, [Image.by_value], Texture2D.by_value   # Image#to_texture2d
-  attach_function :LoadRenderTexture, %i[int int], RenderTexture2D.by_value     # RenderTexture2D#load
-  attach_function :UnloadImage, [Image.by_value], :void                         # Image#unload
-  attach_function :UnloadTexture, [Texture2D.by_value], :void                   # Texture2D#unload
-  attach_function :UnloadRenderTexture, [RenderTexture2D.by_value], :void       # RenderTexture2D#unload
-  attach_function :GetImageData, [Image.by_value], :pointer                     # Image#to_data
-  attach_function :GetImageDataNormalized, [Image.by_value], :pointer           # Image#to_data_normalized
-  attach_function :GetPixelDataSize, %i[int int int], :int                      # Image#pixel_data_size
-  attach_function :GetTextureData, [Texture2D.by_value], Image.by_value         # Texture2D#to_image
-  attach_function :UpdateTexture, [Texture2D.by_value, :pointer], :void         # Texture2D#update
+  # RayImage.load                               // Load image from file into CPU memory (RAM)
+  # RayImage.load_ex                            // Load image from Color array data (RGBA - 32bit)
+  # RayImage.load_pro                           // Load image from raw data with parameters
+  # RayImage.load_raw                           // Load image from RAW file data
+  # RayImage#export                             // Export image data to file
+  # RayImage#export_as_code                     // Export image as code file defining an array of bytes
+  # RayTexture2D#load                           // Load texture from file into GPU memory (VRAM)
+  # RayImage#to_texture2d                       // Load texture from image data
+  # RayImage#to_texture_cubemap                 // Load cubemap from image, multiple image cubemap layouts supported
+  # RayRenderTexture2D.load                     // Load texture for rendering (framebuffer)
+  # RayImage#unload                             // Unload image from CPU memory (RAM)
+  # RayTexture2D#unload                         // Unload texture from GPU memory (VRAM)
+  # RayRenderTexture2D#unload                   // Unload render texture from GPU memory (VRAM)
+  # RayImage#to_data                            // Get pixel data from image as a Color struct array
+  # RayImage#to_data_normalized                 // Get pixel data from image as Vector4 array (float normalized)
+  # RayImage#alpha_border                       // Get image alpha border rectangle
+  # RayImage.pixel_data_size                    // Get pixel data size in bytes (image or texture)
+  # RayTexture2D#to_image                       // Get pixel data from GPU texture and return an Image
+  # RayImage.screenshot                         // Get pixel data from screen buffer and return an Image (screenshot)
+  # RayTexture2D#update                         // Update GPU texture with new data
 
-  # Image manipulation functions
-  # Ruby note: All functions in Raylib::Image type.
-  attach_function :ImageCopy, [Image.by_value], Image.by_value
-  attach_function :ImageToPOT, [Image.ptr, Color.by_value], :void
-  attach_function :ImageFormat, [Image.ptr, :int], :void
-  attach_function :ImageAlphaMask, [Image.ptr, Image.by_value], :void
-  attach_function :ImageAlphaClear, [Image.ptr, Color.by_value, :float], :void
-  attach_function :ImageAlphaCrop, [Image.ptr, :float], :void
-  attach_function :ImageAlphaPremultiply, [Image.ptr], :void
-  attach_function :ImageCrop, [Image.ptr, Rectangle.by_value], :void
-  attach_function :ImageResize, [Image.ptr, :int, :int], :void
-  attach_function :ImageResizeNN, [Image.ptr, :int, :int], :void
-  attach_function :ImageResizeCanvas, [Image.ptr, :int, :int, :int, :int, Color.by_value], :void
-  attach_function :ImageMipmaps, [Image.ptr], :void
-  attach_function :ImageDither, [Image.ptr, :int, :int, :int, :int], :void
-  attach_function :ImageText, [:string, :int, Color.by_value], Image.by_value
-  attach_function :ImageTextEx, [Font.by_value, :string, :float, :float, Color.by_value], Image.by_value
-  attach_function :ImageDraw, [Image.ptr, Image.by_value, Rectangle.by_value, Rectangle.by_value], :void
-  attach_function :ImageDrawRectangle, [Image.ptr, Vector2.by_value, Rectangle.by_value, Color.by_value], :void
-  attach_function :ImageDrawText, [Image.ptr, Vector2.by_value, :string, :int, Color.by_value], :void
-  attach_function :ImageDrawTextEx, [Image.ptr, Vector2.by_value, Font.by_value, :string, :float, :float, Color.by_value], :void
-  attach_function :ImageFlipVertical, [Image.ptr], :void
-  attach_function :ImageFlipHorizontal, [Image.ptr], :void
-  attach_function :ImageRotateCW, [Image.ptr], :void
-  attach_function :ImageRotateCCW, [Image.ptr], :void
-  attach_function :ImageColorTint, [Image.ptr, Color.by_value], :void
-  attach_function :ImageColorInvert, [Image.ptr], :void
-  attach_function :ImageColorGrayscale, [Image.ptr], :void
-  attach_function :ImageColorContrast, [Image.ptr, :float], :void
-  attach_function :ImageColorBrightness, [Image.ptr, :int], :void
-  attach_function :ImageColorReplace, [Image.ptr, Color.by_value, Color.by_value], :void
+  # // Image manipulation functions
+  # RayImage#copy                               // Create an image duplicate (useful for transformations)
+  # RayImage#image_rect                         // Create an image from another image piece
+  # RayImage#pot!                               // Convert image to POT (power-of-two)
+  # RayImage#format!                            // Convert image data to desired format
+  # RayImage#alpha_mask!                        // Apply alpha mask to image
+  # RayImage#alpha_clear!                       // Clear alpha channel to desired color
+  # RayImage#alpha_crop!                        // Crop image depending on alpha value
+  # RayImage#alpha_premultiply!                 // Premultiply alpha channel
+  # RayImage#crop!                              // Crop an image to a defined rectangle
+  # RayImage#resize!                            // Resize image (Bicubic scaling algorithm)
+  # RayImage#resize_nn!                         // Resize image (Nearest-Neighbor scaling algorithm)
+  # RayImage#resize_canvas!                     // Resize canvas and fill with color
+  # RayImage#mipmaps!                           // Generate all mipmap levels for a provided image
+  # RayImage#dither!                            // Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
+  # RayImage#palette                            // Extract color palette from image to maximum size (memory should be freed)
+  # RayImage.from_text                          // Create an image from text (default font)
+  # RayImage.from_text_ex                       // Create an image from text (custom sprite font)
+  # RayImage#draw!                              // Draw a source image within a destination image (tint applied to source)
+  # RayImage#draw_rectangle!                    // Draw rectangle within an image
+  # RayImage#draw_rectangle_lines!              // Draw rectangle lines within an image
+  # RayImage#draw_text!                         // Draw text (default font) within an image (destination)
+  # RayImage#draw_text_ex!                      // Draw text (custom sprite font) within an image (destination)
+  # RayImage#flip_vertical!                     // Flip image vertically
+  # RayImage#flip_horizontal!                   // Flip image horizontally
+  # RayImage#rotate_cw!                         // Rotate image clockwise 90deg
+  # RayImage#rotate_ccw!                        // Rotate image counter-clockwise 90deg
+  # RayImage#color_tint!                        // Modify image color: tint
+  # RayImage#color_invert!                      // Modify image color: invert
+  # RayImage#color_grayscale!                   // Modify image color: grayscale
+  # RayImage#color_contrast!                    // Modify image color: contrast (-100 to 100)
+  # RayImage#color_brightness!                  // Modify image color: brightness (-255 to 255)
+  # RayImage#color_replace!                     // Modify image color: replace color
 
-  # Image generation functions
-  attach_function :GenImageColor, [:int, :int, Color.by_value], Image.by_value                                    # Image#gen_color.by_value
-  attach_function :GenImageGradientV, [:int, :int, Color.by_value, Color.by_value], Image.by_value                # Image#gen_gradient_v
-  attach_function :GenImageGradientH, [:int, :int, Color.by_value, Color.by_value], Image.by_value                # Image#gen_gradient_h
-  attach_function :GenImageGradientRadial, [:int, :int, :float, Color.by_value, Color.by_value], Image.by_value   # Image#gen_gradient_radial
-  attach_function :GenImageChecked, [:int, :int, :int, :int, Color.by_value, Color.by_value], Image.by_value      # Image#gen_checked
-  attach_function :GenImageWhiteNoise, %i[int int float], Image.by_value                                          # Image#gen_white_noise
-  attach_function :GenImagePerlinNoise, %i[int int int int float], Image.by_value                                 # Image#gen_perlin_noise
-  attach_function :GenImageCellular, %i[int int int], Image.by_value                                              # Image#gen_cellular
+  # // Image generation functions
+  # RayImage.gen_color                          // Generate image: plain color
+  # RayImage.gen_gradient_v                     // Generate image: vertical gradient
+  # RayImage.gen_gradient_h                     // Generate image: horizontal gradient
+  # RayImage.gen_gradient_radial                // Generate image: radial gradient
+  # RayImage.gen_checked                        // Generate image: checked
+  # RayImage.gen_white_noise                    // Generate image: white noise
+  # RayImage.gen_perlin_noise                   // Generate image: perlin noise
+  # RayImage.gen_cellular                       // Generate image: cellular algorithm. Bigger tileSize means bigger cells
 
-  # Texture2D configuration functions
-  attach_function :GenTextureMipmaps, [Texture2D.ptr], :void                                    # Texture2D#gen_mipmaps
-  attach_function :SetTextureFilter, [Texture2D.by_value, :int], :void                          # Texture2D#filter=
-  attach_function :SetTextureWrap, [Texture2D.by_value, :int], :void                            # Texture2D#wrap=
+  # // Texture2D configuration functions
+  # RayTexture2D.mipmaps!                       // Generate GPU mipmaps for a texture
+  # RayTexture2D.filter=                        // Set texture scaling filter mode
+  # RayTexture2D.wrap=                          // Set texture wrapping mode
 
-  # Texture2D drawing functions
-  attach_function :DrawTexture, [Texture2D.by_value, :int, :int, Color.by_value], :void                                 # Texture2d#draw
-  attach_function :DrawTextureV, [Texture2D.by_value, Vector2.by_value, Color.by_value], :void                          # Texture2d#draw_v
-  attach_function :DrawTextureEx, [Texture2D.by_value, Vector2.by_value, :float, :float, Color.by_value], :void         # Texture2d#draw_ex
-  attach_function :DrawTextureRec, [Texture2D.by_value, Rectangle.by_value, Vector2.by_value, Color.by_value], :void    # Texture2d#draw_rec
-  attach_function :DrawTexturePro, [Texture2D.by_value, Rectangle.by_value, Rectangle.by_value, Vector2.by_value, :float, Color.by_value], :void
-  # ^ Texture2d#draw_pro
+  # // Texture2D drawing functions
+  # RayTexture2D#draw                           // Draw a Texture2D
+  # RayTexture2D#draw_v                         // Draw a Texture2D with position defined as Vector2
+  # RayTexture2D#draw_ex                        // Draw a Texture2D with extended parameters
+  # RayTexture2D#draw_rec                       // Draw a part of a texture defined by a rectangle
+  # RayTexture2D#draw_quad                      // Draw texture quad with tiling and offset parameters
+  # RayTexture2D#draw_pro                       // Draw a part of a texture defined by a rectangle with 'pro' parameters
+  # RayTexture2D#draw_n_patch                   // Draws a texture (or part of it) that stretches or shrinks nicely
 
   #------------------------------------------------------------------------------------
   # Font Loading and Text Drawing Functions (Module: text)
   #------------------------------------------------------------------------------------
+  
+  # // Font loading/unloading functions
+  # RayFont.default                             // Get the default Font
+  # RayFont.load                                // Load font from file into GPU memory (VRAM)
+  # RayFont.load_ex                             // Load font from file with extended parameters
+  # RayImage.to_font                            // Load font from Image (XNA style)
+  # RayFont.load_data                           // Load font data for further use
+  # RayFont.image_atlas                         // Generate image font atlas using chars info
+  # RayFont#unload                              // Unload Font from GPU memory (VRAM)
 
-  # Font loading/unloading functions
-  attach_function :GetFontDefault, [], Font.by_value                                          # Font#default
-  attach_function :LoadFont, %i[string], Font.by_value                                        # Font#load
-  attach_function :LoadFontEx, %i[string int pointer int], Font.by_value                      # Font#load_ex
-  attach_function :LoadFontData, %i[string int pointer int bool], :pointer                    # Font#load_data
-  attach_function :GenImageFontAtlas, %i[pointer int int int int], Image.by_value             # Font#gen_image_atlas
-  attach_function :UnloadFont, [Font.by_value], :void                                         # Font#unload
+  # // Text drawing functions
+  # RayDraw.fps                                 // Shows current FPS
+  # RayDraw.text                                // Draw text (using default font)
+  # RayDraw.text_ex                             // Draw text using font and additional parameters
+  # RayDraw.text_rec                            // Draw text using font inside rectangle limits
+  # RayDraw.text_rec_ex                         // Draw text using font inside rectangle limits with support for text selection
+  # RayDraw.text_codepoint                      // Draw one character (codepoint)
 
-  # Text drawing functions
-  attach_function :DrawFPS, %i[int int], :void                                                          # Draw#fps
-  attach_function :DrawText, [:string, :int, :int, :int, Color.by_value], :void                         # Draw#text
-  attach_function :DrawTextEx, [Font.by_value, :string, Vector2.by_value, :float, :float, Color.by_value], :void # Draw#text_ex
+  # // Text misc. functions
+  # RayFont.measure_text                        // Measure string width for default font
+  # RayFont.measure_text                        // Measure string size for Font
+  # RayFont.glyph_index                         // Get index position for a unicode character on font
 
-  # Text misc. functions
-  attach_function :MeasureText, %i[string int], :int                                          # Font#measure_text
-  attach_function :MeasureTextEx, [Font.by_value, :string, :float, :float], Vector2.by_value  # Font#measure_text_ex
-  attach_function :GetGlyphIndex, [Font.by_value, :int], :int                                 # Font#glyph_index
+  # // Text strings management functions
+  # raylib-ruby NOTICE: Just use ruby code
 
-  # Text strings management functions
-  # FIXME: maybe point to ruby versions instead.
+  # // UTF8 text strings management functions
+  # raylib-ruby NOTICE: Just use ruby code
 
   #------------------------------------------------------------------------------------
   # Basic 3d Shapes Drawing Functions (Module: models)
   #------------------------------------------------------------------------------------
 
-  # Basic geometric 3D shapes drawing functions
-  attach_function :DrawLine3D, [Vector3.by_value, Vector3.by_value, Color.by_value], :void                                # Draw#line_3d
-  attach_function :DrawCircle3D, [Vector3.by_value, :float, Vector3.by_value, :float, Color.by_value], :void              # Draw#circle_3d
-  attach_function :DrawCube, [Vector3.by_value, :float, :float, :float, Color.by_value], :void                            # Draw#cube
-  attach_function :DrawCubeV, [Vector3.by_value, Vector3.by_value, Color.by_value], :void                                 # Draw#cube_v
-  attach_function :DrawCubeWires, [Vector3.by_value, :float, :float, :float, Color.by_value], :void                       # Draw#cube_wires
-  attach_function :DrawCubeTexture, [Texture2D.by_value, Vector3.by_value, :float, :float, :float, Color.by_value], :void # Draw#cube_texture
-  attach_function :DrawSphere, [Vector3.by_value, :float, Color.by_value], :void                                          # Draw#sphere
-  attach_function :DrawSphereEx, [Vector3.by_value, :float, :int, :int, Color.by_value], :void                            # Draw#sphere_ex
-  attach_function :DrawSphereWires, [Vector3.by_value, :float, :int, :int, Color.by_value], :void                         # Draw#sphere_wires
-  attach_function :DrawCylinder, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void                  # Draw#cylinder
-  attach_function :DrawCylinderWires, [Vector3.by_value, :float, :float, :float, :int, Color.by_value], :void             # Draw#cylinder_wires
-  attach_function :DrawPlane, [Vector3.by_value, Vector2.by_value, Color.by_value], :void                                 # Draw#plane
-  attach_function :DrawRay, [Ray.by_value, Color.by_value], :void                                                         # Ray#draw
-  attach_function :DrawGrid, %i[int float], :void                                                                         # Draw#grid
-  attach_function :DrawGizmo, [Vector3.by_value], :void                                                                   # Draw#gizmo
-  # DrawTorus(), DrawTeapot() could be useful?
+  # // Basic geometric 3D shapes drawing functions
+  # RayDraw.line_3d                             // Draw a line in 3D world space
+  # RayDraw.circle_3d                           // Draw a circle in 3D world space
+  # RayDraw.cube                                // Draw cube
+  # RayDraw.cube_v                              // Draw cube (Vector version)
+  # RayDraw.cube_wires                          // Draw cube wires
+  # RayDraw.cube_wires_v                        // Draw cube wires (Vector version)
+  # RayDraw.cube_texture                        // Draw cube textured
+  # RayDraw.sphere                              // Draw sphere
+  # RayDraw.sphere_ex                           // Draw sphere with extended parameters
+  # RayDraw.sphere_wires                        // Draw sphere wires
+  # RayDraw.cylinder                            // Draw a cylinder/cone
+  # RayDraw.cylinder_wires                      // Draw a cylinder/cone wires
+  # RayDraw.plane                               // Draw a plane XZ
+  # RayDraw.ray                                 // Draw a ray line
+  # RayDraw.grid                                // Draw a grid (centered at (0, 0, 0))
+  # RayDraw.gizmo                               // Draw simple gizmo
 
   #------------------------------------------------------------------------------------
   # Model 3d Loading and Drawing Functions (Module: models)
   #------------------------------------------------------------------------------------
 
-  # Model loading/unloading functions
-  attach_function :LoadModel, %i[string], Model.by_value                    # Model#load
-  attach_function :LoadModelFromMesh, [Mesh.by_value], Model.by_value       # Mesh#to_model
-  attach_function :UnloadModel, [Model.by_value], :void                     # Model#unload
+  # // Model loading/unloading functions
+  # RayModel.load                               // Load model from files (meshes and materials)
+  # RayMesh#to_model                            // Load model from generated mesh (default material)
+  # RayModel#unload                             // Unload model from memory (RAM and/or VRAM)
 
   # Mesh loading/unloading functions
-  # FIXME: LoadMeshes
-  attach_function :UnloadMesh, [Mesh.ptr], :void                            # Mesh#unload
-  attach_function :ExportMesh, [:string, Mesh.by_value], :void              # Mesh#export
+  # RayMesh.load                                // Load meshes from model file
+  # RayMesh#export                              // Export mesh data to file
+  # RayMesh#unload                              // Unload mesh from memory (RAM and/or VRAM)
+
+  # // Material loading/unloading functions
+  # RayMaterial.load                            // Load materials from model file
+  # RayMaterial.load_default                    // Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
+  # RayMaterial#unload                          // Unload material from GPU memory (VRAM)
+  # RayMaterial#set_texture                     // Set texture for a material map type (MAP_DIFFUSE, MAP_SPECULAR...)
+  # RayModel#set_mesh_material                  // Set material for a mesh
+
+  # // Model animations loading/unloading functions
+  # RayModelAnimation.load                      // Load model animations from file
+  # RayModel#update_animation                   // Update model animation pose
+  # RayModelAnimation#unload                    // Unload animation data
+  # RayModel#valid_animation?                   // Check model animation skeleton match
+
+  # // Mesh generation functions
+  # RayMesh.gen_poly                            // Generate polygonal mesh
+  # RayMesh.gen_plane                           // Generate plane mesh (with subdivisions)
+  # RayMesh.gen_cube                            // Generate cuboid mesh
+  # RayMesh.gen_sphere                          // Generate sphere mesh (standard sphere)
+  # RayMesh.gen_hemisphere                      // Generate half-sphere mesh (no bottom cap)
+  # RayMesh.gen_cylinder                        // Generate cylinder mesh
+  # RayMesh.gen_torus                           // Generate torus mesh
+  # RayMesh.gen_knot                            // Generate trefoil knot mesh
+  # RayMesh.gen_heightmap                       // Generate heightmap mesh from image data
+  # RayMesh.gen_cubicmap                        // Generate cubes-based map mesh from image data
 
   # Mesh manipulation functions
   attach_function :MeshBoundingBox, [Mesh.by_value], BoundingBox.by_value   # Mesh#
   attach_function :MeshTangents, [Mesh.ptr], :void                          # Mesh#
   attach_function :MeshBinormals, [Mesh.ptr], :void                         # Mesh#
-
-  # Mesh generation functions
-  attach_function :GenMeshPlane, %i[float float int int], Mesh.by_value                   # Mesh#gen_plane
-  attach_function :GenMeshCube, %i[float float float], Mesh.by_value                      # Mesh#gen_cube
-  attach_function :GenMeshSphere, %i[float int int], Mesh.by_value                        # Mesh#gen_sphere
-  attach_function :GenMeshHemiSphere, %i[float int int], Mesh.by_value                    # Mesh#gen_hemisphere
-  attach_function :GenMeshCylinder, %i[float float int], Mesh.by_value                    # Mesh#gen_cylinder
-  attach_function :GenMeshTorus, %i[float float int int], Mesh.by_value                   # Mesh#gen_torus
-  attach_function :GenMeshKnot, %i[float float int int], Mesh.by_value                    # Mesh#gen_knot
-  attach_function :GenMeshHeightmap, [Image.by_value, Vector3.by_value], Mesh.by_value    # Mesh#gen_heightmap
-  attach_function :GenMeshCubicmap, [Image.by_value, Vector3.by_value], Mesh.by_value     # Mesh#gen_cubicmap
-
-  # Material loading/unloading functions
-  attach_function :LoadMaterials, %i[string pointer], :pointer                            # Material#load
-  attach_function :LoadMaterialDefault, [], Material.by_value                             # Material#load_default
-  attach_function :UnloadMaterial, [Material.by_value], :void                             # Material#unload
 
   # Model drawing functions
   attach_function :DrawModel, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                                   # Model#draw

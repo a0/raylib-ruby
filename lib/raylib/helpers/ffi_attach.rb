@@ -4,7 +4,9 @@ module Raylib
       Raylib.attach_function function, params, returns
       mapping = ray_mapping params
 
-      if mapping.empty?
+      if block_given?
+        yield function, name, mapping
+      elsif mapping.empty?
         target.define_method name do |*args|
           Raylib.send(function, *args)
         end
@@ -22,10 +24,11 @@ module Raylib
       Raylib.attach_function function, params, returns
       mapping = ray_mapping params
 
-      case pos
-      when :first
+      if block_given?
+        yield function, name, mapping
+      elsif pos == :first
         ray_object_first function, name, mapping
-      when :last
+      elsif pos == :last
         ray_object_last function, name, mapping
       end
     end

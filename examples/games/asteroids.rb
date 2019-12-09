@@ -44,7 +44,7 @@ class Player < Item
   attr_accessor :collider, :ship_height
 
   def initialize(game)
-    super game: game, x: game.screen_w / 2, y: game.screen_h / 2, color: RayColor::LIGHTGRAY, size: PLAYER_BASE_SIZE
+    super game: game, x: game.screen_w / 2, y: game.screen_h / 2, color: :lightgray, size: PLAYER_BASE_SIZE
 
     @ship_height = size / 2 / Math.tan(20 * DEG2RAD)
     @collider = RayVector3.new 0, 0, 0
@@ -116,7 +116,7 @@ class Player < Item
     v2 = RayVector2.new pos.x - cos_bas, pos.y - sin_bas
     v3 = RayVector2.new pos.x + cos_bas, pos.y + sin_bas
 
-    RayDraw.triangle v1, v2, v3, RayColor::MAROON
+    RayDraw.triangle v1, v2, v3, :maroon
   end
 end
 
@@ -124,7 +124,7 @@ class Shoot < Item
   attr_accessor :ttl
 
   def initialize(game:)
-    super game: game, color: RayColor::BLACK, size: 2
+    super game: game, color: :black, size: 2
 
     @ttl = 0
   end
@@ -156,7 +156,7 @@ end
 
 class SmallMeteor < Item
   def initialize(**opts)
-    super({ size: 10, color: RayColor::BLUE }.merge opts)
+    super({ size: 10, color: :blue }.merge opts)
   end
 
   def update
@@ -244,7 +244,7 @@ class BigMeteor < SmallMeteor
       break unless vx.zero? && vy.zero?
     end
 
-    super game: game, color: RayColor::BLUE, active: true, x: x, y: y, vx: vx, vy: vy, size: 40
+    super game: game, color: :blue, active: true, x: x, y: y, vx: vx, vy: vy, size: 40
   end
 
   def split_array
@@ -298,8 +298,8 @@ class Game
   end
 
   def draw
-    RayDraw.begin_drawing do
-      RayDraw.clear_background RayColor::WHITE
+    RayDraw.drawing do
+      RayDraw.clear_background :white
 
       player.draw
       shoots.each(&:draw)
@@ -315,17 +315,17 @@ class Game
 
   def draw_paused
     text = 'PAUSED!'
-    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, RayColor::GRAY
+    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, :gray
   end
 
   def draw_victory
     text = 'VICTORY!'
-    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, RayColor::GRAY
+    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 40) / 2, screen_h / 2 - 50, 40, :gray
   end
 
   def draw_over
     text = 'GAME OVER - PRESS [ENTER] TO PLAY AGAIN'
-    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 20) / 2, screen_h / 2 - 50, 20, RayColor::GRAY
+    RayDraw.text text, screen_w / 2 - RayFont.measure_text(text, 20) / 2, screen_h / 2 - 50, 20, :gray
   end
 
   def unload_game; end

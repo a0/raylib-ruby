@@ -15,14 +15,17 @@ module Raylib
     ray_object :GetCameraMatrix,  :matrix,          [Camera.by_value], Matrix.by_value                              # Returns camera transform matrix (view matrix)
     ray_object :GetWorldToScreen, :world_to_screen, [Vector3.by_value, Camera.by_value], Vector2.by_value, :last    # Returns the screen space position for a 3d world space position
 
+    #------------------------------------------------------------------------------------
     # Camera System Functions (Module: camera)
-    ray_alias_object :SetCameraMode,              :mode=                # Set camera mode (multiple camera modes available)
-    ray_alias_object :UpdateCamera,               :update               # Update camera position for selected mode
+    #------------------------------------------------------------------------------------
 
-    ray_alias_static :SetCameraPanControl,        :pan_control=         # Set camera pan key to combine with mouse movement (free camera)
-    ray_alias_static :SetCameraAltControl,        :alt_control=         # Set camera alt key to combine with mouse movement (free camera)
-    ray_alias_static :SetCameraSmoothZoomControl, :smooth_zoom_control= # Set camera smooth zoom key to combine with mouse (free camera)
-    ray_alias_static :SetCameraMoveControls,      :set_move_controls    # Set camera move controls (1st person and 3rd person cameras)
+    ray_object :SetCameraMode,              :mode=,                 [Camera.by_value, CameraMode], :void    # Set camera mode (multiple camera modes available)
+    ray_object :UpdateCamera,               :update,                [Camera.ptr], :void                     # Update camera position for selected mode
+
+    ray_static :SetCameraPanControl,        :pan_control=,          %i[int], :void                          # Set camera pan key to combine with mouse movement (free camera)
+    ray_static :SetCameraAltControl,        :alt_control=,          %i[int], :void                          # Set camera alt key to combine with mouse movement (free camera)
+    ray_static :SetCameraSmoothZoomControl, :smooth_zoom_control=,  %i[int], :void                          # Set camera smooth zoom key to combine with mouse (free camera)
+    ray_static :SetCameraMoveControls,      :set_move_controls,     %i[int int int int int int], :void      # Set camera move controls (1st person and 3rd person cameras)
 
     # ensures begin_mode3d/end_mode3d using a block
     def mode3d

@@ -2,9 +2,25 @@ require_relative 'material'
 
 module Raylib
   class Model
+    extend FFIAttach
+
+    #------------------------------------------------------------------------------------
+    # Model 3d Loading and Drawing Functions (Module: models)
+    #------------------------------------------------------------------------------------
+
     # Model loading/unloading functions
-    ray_alias_static :LoadModel,              :load                 # Load model from files (mesh and material)
-    ray_alias_object :UnloadModel,            :unload               # Unload model from memory (RAM and/or VRAM)
+    ray_static :LoadModel,            :load,              %i[string], Model.by_value        # Load model from files (meshes and materials)
+
+    ray_object :UnloadModel,          :unload,            [Model.by_value], :void           # Unload model from memory (RAM and/or VRAM)
+
+    # Material loading/unloading functions
+    ray_object :SetModelMeshMaterial, :set_mesh_material, [Model.ptr, :int, :int], :void    # Set material for a mesh
+
+    # Model animations loading/unloading functions
+    ray_object :UpdateModelAnimation,   :update_animation,  [Model.by_value, ModelAnimation.by_value, :int], :void    # Update model animation pose
+
+    ray_static :IsModelAnimationValid,  :valid_animation?,  [Model.by_value, ModelAnimation.by_value], :bool          # Check model animation skeleton match
+
 
     # Model drawing functions
     ray_alias_object :DrawModel,              :draw                 # Draw a model (with texture if set)

@@ -21,6 +21,14 @@ module Raylib
 
     ray_static :IsModelAnimationValid,  :valid_animation?,  [Model.by_value, ModelAnimation.by_value], :bool          # Check model animation skeleton match
 
+    # Model drawing functions
+    ray_static :DrawModel,              :draw,              [Model.by_value]    
+    ray_static :DrawModelEx,            :draw_ex,                 
+    ray_static :DrawModelWires,         :draw_wires,                  
+    ray_static :DrawModelWiresEx,       :draw_wires_ex,                 
+    ray_static :DrawBoundingBox,        :draw_bounding_box,                  
+    ray_static :DrawBillboard,          :draw_billboard,                  
+    ray_static :DrawBillboardRec,       :draw_billboard_ex,                 
 
     # Model drawing functions
     ray_alias_object :DrawModel,              :draw                 # Draw a model (with texture if set)

@@ -25,10 +25,10 @@ module Raylib
     ray_static :GenMeshKnot,        :gen_knot,        %i[float float int int], Mesh.by_value              # Generate trefoil knot mesh
     ray_static :GenMeshHeightmap,   :gen_heightmap,   [Image.by_value, Vector3.by_value], Mesh.by_value   # Generate heightmap mesh from image data
     ray_static :GenMeshCubicmap,    :gen_cubicmap,    [Image.by_value, Vector3.by_value], Mesh.by_value   # Generate cubes-based map mesh from image data
-    
+
     # Mesh manipulation functions
-    ray_alias_object :MeshBoundingBox,        :bounding_box         # Compute mesh bounding box limits
-    ray_alias_object :MeshTangents,           :tangents             # Compute mesh tangents
-    ray_alias_object :MeshBinormals,          :binormals            # Compute mesh binormals
+    ray_object :MeshBoundingBox,    :bounding_box,    [Mesh.by_value], BoundingBox                        # Compute mesh bounding box limits
+    ray_object :MeshTangents,       :tangents,        [Mesh.ptr], :void                                   # Compute mesh tangents
+    ray_object :MeshBinormals,      :binormals,       [Mesh.ptr], :void                                   # Compute mesh binormals
   end
 end

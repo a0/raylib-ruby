@@ -409,10 +409,19 @@ module Raylib
   # RayMesh.gen_heightmap                       // Generate heightmap mesh from image data
   # RayMesh.gen_cubicmap                        // Generate cubes-based map mesh from image data
 
-  # Mesh manipulation functions
-  attach_function :MeshBoundingBox, [Mesh.by_value], BoundingBox.by_value   # Mesh#
-  attach_function :MeshTangents, [Mesh.ptr], :void                          # Mesh#
-  attach_function :MeshBinormals, [Mesh.ptr], :void                         # Mesh#
+  # // Mesh manipulation functions
+  # RayMesh#bounding_box                        // Compute mesh bounding box limits
+  # RayMesh#tangents                            // Compute mesh tangents
+  # RayMesh#binormals                           // Compute mesh binormals
+
+  # // Model drawing functions
+  ray_static :DrawModel,                (Model model, Vector3 position, float scale, Color tint);                           // Draw a model (with texture if set)
+  ray_static :DrawModelEx,                (Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model with extended parameters
+  ray_static :DrawModelWires,                 (Model model, Vector3 position, float scale, Color tint);                      // Draw a model wires (with texture if set)
+  ray_static :DrawModelWiresEx,                 (Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
+  ray_static :DrawBoundingBox,                (BoundingBox box, Color color);                                               // Draw bounding box (wires)
+  ray_static :DrawBillboard,                (Camera camera, Texture2D texture, Vector3 center, float size, Color tint);     // Draw a billboard texture
+  ray_static :DrawBillboardRec,                 (Camera camera, Texture2D texture, Rectangle sourceRec, Vector3 center, float size, Color tint); // Draw a billboard texture defined by sourceRec
 
   # Model drawing functions
   attach_function :DrawModel, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                                   # Model#draw

@@ -7,7 +7,7 @@ module Raylib
     #------------------------------------------------------------------------------------
 
     # Model loading/unloading functions
-    ray_object :LoadModelFromMesh,  :to_model,  [Mesh.by_value], Model.by_value   # Load model from generated mesh (default material)
+    ray_object :LoadModelFromMesh,  :to_model,  [Mesh.by_value], Model.by_value # Load model from generated mesh (default material)
 
     # Mesh loading/unloading functions
     ray_static :LoadMeshes,         :load,      %i[string int], :pointer          # Load meshes from model file

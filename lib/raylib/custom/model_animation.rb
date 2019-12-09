@@ -15,6 +15,6 @@ module Raylib
       end
     end
 
-    ray_object :UnloadModelAnimation, :unload,[ModelAnimation.by_value], :void # Unload animation data
+    ray_object :UnloadModelAnimation, :unload, [ModelAnimation.by_value], :void # Unload animation data
   end
 end

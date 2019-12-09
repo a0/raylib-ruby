@@ -40,10 +40,11 @@ module Raylib
         end
       else
         define_method name do |*args|
+          args.unshift self
           mapping.each do |index, struct_class|
             args[index] = struct_class[args[index]] || args[index]
           end
-          Raylib.send(function, self, *args)
+          Raylib.send(function, *args)
         end
       end
     end
@@ -55,10 +56,11 @@ module Raylib
         end
       else
         define_method name do |*args|
+          args.push self
           mapping.each do |index, struct_class|
             args[index] = struct_class[args[index]] || args[index]
           end
-          Raylib.send(function, *args, self)
+          Raylib.send(function, *args)
         end
       end
     end

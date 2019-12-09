@@ -206,15 +206,15 @@ module Raylib
   # RayDraw.ring_lines                          // Draw ring outline
   # RayDraw.rectangle                           // Draw a color-filled rectangle
   # RayDraw.rectangle_v                         // Draw a color-filled rectangle (Vector version)
-  # RayDraw.rectangle_rec                       // Draw a color-filled rectangle
-  # RayDraw.rectangle_pro                       // Draw a color-filled rectangle with pro parameters
+  # RayRectangle#draw                           // Draw a color-filled rectangle
+  # RayRectangle#draw_pro                       // Draw a color-filled rectangle with pro parameters
   # RayDraw.rectangle_gradient_v                // Draw a vertical-gradient-filled rectangle
   # RayDraw.rectangle_gradient_h                // Draw a horizontal-gradient-filled rectangle
   # RayDraw.rectangle_gradient_ex               // Draw a gradient-filled rectangle with custom vertex colors
-  # RayDraw.rectangle_lines                     // Draw rectangle outline
-  # RayDraw.rectangle_lines_ex                  // Draw rectangle outline with extended parameters
-  # RayDraw.rectangle_bounded                   // Draw rectangle with rounded edges
-  # RayDraw.rectangle_bounded_lines             // Draw rectangle with rounded edges outline
+  # RayRectangle#draw_lines                     // Draw rectangle outline
+  # RayRectangle#draw_lines_ex                  // Draw rectangle outline with extended parameters
+  # RayRectangle#draw_bounded                   // Draw rectangle with rounded edges
+  # RayRectangle#draw_bounded_lines             // Draw rectangle with rounded edges outline
   # RayDraw.triangle                            // Draw a color-filled triangle (vertex in counter-clockwise order!)
   # RayDraw.triangle_lines                      // Draw triangle outline (vertex in counter-clockwise order!)
   # RayDraw.triangle_fan                        // Draw a triangle fan defined by points (first vertex is the center)
@@ -319,7 +319,7 @@ module Raylib
   #------------------------------------------------------------------------------------
   # Font Loading and Text Drawing Functions (Module: text)
   #------------------------------------------------------------------------------------
-  
+
   # // Font loading/unloading functions
   # RayFont.default                             // Get the default Font
   # RayFont.load                                // Load font from file into GPU memory (VRAM)
@@ -415,22 +415,13 @@ module Raylib
   # RayMesh#binormals                           // Compute mesh binormals
 
   # // Model drawing functions
-  ray_static :DrawModel,                (Model model, Vector3 position, float scale, Color tint);                           // Draw a model (with texture if set)
-  ray_static :DrawModelEx,                (Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model with extended parameters
-  ray_static :DrawModelWires,                 (Model model, Vector3 position, float scale, Color tint);                      // Draw a model wires (with texture if set)
-  ray_static :DrawModelWiresEx,                 (Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint); // Draw a model wires (with texture if set) with extended parameters
-  ray_static :DrawBoundingBox,                (BoundingBox box, Color color);                                               // Draw bounding box (wires)
-  ray_static :DrawBillboard,                (Camera camera, Texture2D texture, Vector3 center, float size, Color tint);     // Draw a billboard texture
-  ray_static :DrawBillboardRec,                 (Camera camera, Texture2D texture, Rectangle sourceRec, Vector3 center, float size, Color tint); // Draw a billboard texture defined by sourceRec
-
-  # Model drawing functions
-  attach_function :DrawModel, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                                   # Model#draw
-  attach_function :DrawModelEx, [Model.by_value, Vector3.by_value, Vector3.by_value, :float, Vector3.by_value, Color.by_value], :void             # Model#draw_ex
-  attach_function :DrawModelWires, [Model.by_value, Vector3.by_value, :float, Color.by_value], :void                                              # Model#draw_wires
-  attach_function :DrawModelWiresEx, [Model.by_value, Vector3.by_value, Vector3.by_value, :float, Vector3.by_value, Color.by_value], :void        # Model#draw_wires_ex
-  attach_function :DrawBoundingBox, [BoundingBox.by_value, Color.by_value], :void                                                                 # BoundingBox#draw
-  attach_function :DrawBillboard, [Camera.by_value, Texture2D.by_value, Vector3.by_value, :float, Color.by_value], :void                          # Draw#billboard
-  attach_function :DrawBillboardRec, [Camera.by_value, Texture2D.by_value, Rectangle.by_value, Vector3.by_value, :float, Color.by_value], :void   # Draw#billboard_rec
+  # RayModel#draw                               // Draw a model (with texture if set)
+  # RayModel#draw_ex                            // Draw a model with extended parameters
+  # RayModel#draw_wires                         // Draw a model wires (with texture if set)
+  # RayModel#draw_wires_ex                      // Draw a model wires (with texture if set) with extended parameters
+  # RayBoundingBox#draw                         // Draw bounding box (wires)
+  # RayDraw.billboard                           // Draw a billboard texture
+  # RayDraw.billboard_ex                        // Draw a billboard texture defined by sourceRec
 
   # Collision detection functions
   attach_function :CheckCollisionSpheres, [Vector3.by_value, :float, Vector3.by_value, :float], :bool                                   # Collision#check_spheres
@@ -502,7 +493,7 @@ module Raylib
 
   # Wave/Sound loading/unloading functions
   attach_function :LoadWave, %i[string], Wave.by_value                                # Wave#load
-  #attach_function :LoadWaveEx, %i[pointer int int int int], Wave.by_value             # Wave#load_ex
+  # attach_function :LoadWaveEx, %i[pointer int int int int], Wave.by_value           # Wave#load_ex
   attach_function :LoadSound, [:string], Sound.by_value                               # Sound#load
   attach_function :LoadSoundFromWave, [Wave.by_value], Sound.by_value                 # Wave#to_sound
   attach_function :UpdateSound, [Sound.by_value, :pointer, :int], :void               # Sound#update
@@ -541,7 +532,7 @@ module Raylib
   attach_function :InitAudioStream, %i[uint uint uint], AudioStream.by_value          # AudioStream#create
   attach_function :UpdateAudioStream, [AudioStream.by_value, :pointer, :int], :void   # AudioStream#update
   attach_function :CloseAudioStream, [AudioStream.by_value], :void                    # AudioStream#close
-#  attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # AudioStream#is_buffer_processed?
+  # attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # AudioStream#is_buffer_processed?
   attach_function :PlayAudioStream, [AudioStream.by_value], :void                     # AudioStream#play
   attach_function :PauseAudioStream, [AudioStream.by_value], :void                    # AudioStream#pause
   attach_function :ResumeAudioStream, [AudioStream.by_value], :void                   # AudioStream#resume

@@ -69,13 +69,13 @@ until RayWindow.should_close? # Detect window close button or ESC key
     tail.rotation += 5.0
   end
 
-  if RayKey.is_pressed? :sPACE
+  if RayKey.pressed? :space
     blending = blending == RayDraw::BLEND_ALPHA ? RayDraw::BLEND_ADDITIVE : RayDraw::BLEND_ALPHA
   end
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::DARKGRAY
+  RayDraw.drawing do
+    RayDraw.clear_background :darkgray
 
     RayDraw.begin_blend_mode blending do
       # Draw active particles
@@ -90,12 +90,12 @@ until RayWindow.should_close? # Detect window close button or ESC key
       end
     end
 
-    RayDraw.text 'PRESS SPACE to CHANGE BLENDING MODE', 180, 20, 20, RayColor::BLACK
+    RayDraw.text 'PRESS SPACE to CHANGE BLENDING MODE', 180, 20, 20, :black
 
     if blending == RayDraw::BLEND_ALPHA
-      RayDraw.text 'ALPHA BLENDING', 290, screen_h - 40, 20, RayColor::BLACK
+      RayDraw.text 'ALPHA BLENDING', 290, screen_h - 40, 20, :black
     else
-      RayDraw.text 'ADDITIVE BLENDING', 280, screen_h - 40, 20, RayColor::RAYWHITE
+      RayDraw.text 'ADDITIVE BLENDING', 280, screen_h - 40, 20, :raywhite
     end
   end
 end

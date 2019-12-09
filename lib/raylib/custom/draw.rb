@@ -36,15 +36,12 @@ module Raylib
     ray_static :DrawRingLines,              :ring_lines,              [Vector2.by_value, :float, :float, :int, :int, :int, Color.by_value], :void                   # Draw ring outline
     ray_static :DrawRectangle,              :rectangle,               [:int, :int, :int, :int, Color.by_value], :void                                               # Draw a color-filled rectangle
     ray_static :DrawRectangleV,             :rectangle_v,             [Vector2.by_value, Vector2.by_value, Color.by_value], :void                                   # Draw a color-filled rectangle (Vector version)
-    ray_static :DrawRectangleRec,           :rectangle_rec,           [Rectangle.by_value, Color.by_value], :void                                                   # Draw a color-filled rectangle
-    ray_static :DrawRectanglePro,           :rectangle_pro,           [Rectangle.by_value, Vector2.by_value, :float, Color.by_value], :void                         # Draw a color-filled rectangle with pro parameters
+
     ray_static :DrawRectangleGradientV,     :rectangle_gradient_v,    [:int, :int, :int, :int, Color.by_value, Color.by_value], :void                               # Draw a vertical-gradient-filled rectangle
     ray_static :DrawRectangleGradientH,     :rectangle_gradient_h,    [:int, :int, :int, :int, Color.by_value, Color.by_value], :void                               # Draw a horizontal-gradient-filled rectangle
-    ray_static :DrawRectangleGradientEx,    :rectangle_gradient_ex,   [Rectangle.by_value, Color.by_value, Color.by_value, Color.by_value, Color.by_value], :void   # Draw a gradient-filled rectangle with custom vertex colors
+
     ray_static :DrawRectangleLines,         :rectangle_lines,         [:int, :int, :int, :int, Color.by_value], :void                                               # Draw rectangle outline
-    ray_static :DrawRectangleLinesEx,       :rectangle_lines_ex,      [Rectangle.by_value, :int, Color.by_value], :void                                             # Draw rectangle outline with extended parameters
-    ray_static :DrawRectangleRounded,       :rectangle_bounded,       [Rectangle.by_value, :float, :int, Color.by_value], :void                                     # Draw rectangle with rounded edges
-    ray_static :DrawRectangleRoundedLines,  :rectangle_bounded_lines, [Rectangle.by_value, :float, :int, :int, Color.by_value], :void                               # Draw rectangle with rounded edges outline
+
     ray_static :DrawTriangle,               :triangle,                [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void                 # Draw a color-filled triangle (vertex in counter-clockwise order!)
     ray_static :DrawTriangleLines,          :triangle_lines,          [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void                 # Draw triangle outline (vertex in counter-clockwise order!)
     ray_static :DrawTriangleFan,            :triangle_fan,            [Vector2.by_value, :int, Color.by_value], :void                                               # Draw a triangle fan defined by points (first vertex is the center)
@@ -88,9 +85,13 @@ module Raylib
     ray_static :DrawGrid,                   :grid,                    %i[int float], :void                                                                          # Draw a grid (centered at (0, 0, 0))
     ray_static :DrawGizmo,                  :gizmo,                   [Vector3.by_value], :void                                                                     # Draw simple gizmo
 
+    #------------------------------------------------------------------------------------
+    # Model 3d Loading and Drawing Functions (Module: models)
+    #------------------------------------------------------------------------------------
+
     # Model drawing functions
-    ray_alias_static :DrawBillboard,            :billboard              # Draw a billboard texture
-    ray_alias_static :DrawBillboardRec,         :billboard_rec          # Draw a billboard texture defined by sourceRec
+    ray_static :DrawBillboard,    :billboard,     [Camera.by_value, Texture2D.by_value, Vector3.by_value, :float, Color.by_value], :void                        # Draw a billboard texture
+    ray_static :DrawBillboardRec, :billboard_ex,  [Camera.by_value, Texture2D.by_value, Rectangle.by_value, Vector3.by_value, :float, Color.by_value], :void    # Draw a billboard texture defined by sourceRec
 
     # ensures begin_drawing/end_drawing using a block
     def self.drawing

@@ -8,7 +8,7 @@ module Raylib
 
     # Drawing-related functions
     ray_object :BeginMode3D,  :begin_mode3d,  [Camera3D.by_value], :void    # Initializes 3D mode with custom camera (3D)
-    ray_object :EndMode3D,    :end_mode3d,    [], :void                     # Ends 3D mode and returns to default 2D orthographic mode
+    ray_static :EndMode3D,    :end_mode3d,    [], :void                     # Ends 3D mode and returns to default 2D orthographic mode
 
     # Screen-space-related functions
     ray_object :GetMouseRay,      :ray,             [Vector2.by_value, Camera.by_value], Ray.by_value, :last        # Returns a ray trace from mouse position
@@ -33,7 +33,7 @@ module Raylib
       begin
         yield
       ensure
-        end_mode3d
+        self.class.end_mode3d
       end
     end
   end

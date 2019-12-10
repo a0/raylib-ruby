@@ -37,7 +37,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
   RayDraw.drawing do
     RayDraw.clear_background :raywhite
 
-    RayDraw.text 'Congrats! You created your first window!', 190, 200, 20, RayColor[:lightgray]
+    RayDraw.text 'Congrats! You created your first window!', 190, 200, 20, :lightgray
   end
 end
 

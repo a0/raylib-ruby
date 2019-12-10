@@ -33,7 +33,7 @@ buildings = Array.new(MAX_BUILDINGS) do
   OpenStruct.new rec: rec, col: col
 end
 
-camera = RayCamera2D.new  RayVector2.new(0, 0),
+camera = RayCamera2D.new  RayVector2.new(screen_w / 2, screen_h / 2),
                           RayVector2.new(player.x + 20, player.y + 20),
                           0.0,
                           1.0
@@ -44,10 +44,10 @@ RayWindow.target_fps = 60
 until RayWindow.should_close? # Detect window close button or ESC key
 
   # Update
-  if RayKey.is_down? :right
+  if RayKey.down? :right
     player.x += 2             # Player movement
     camera.offset.x -= 2      # Camera displacement with player movement
-  elsif RayKey.is_down? :left
+  elsif RayKey.down? :left
     player.x -= 2             # Player movement
     camera.offset.x += 2      # Camera displacement with player movement
   end
@@ -57,8 +57,8 @@ until RayWindow.should_close? # Detect window close button or ESC key
   camera.target.y = player.y + 20
 
   # Camera rotation controls
-  camera.rotation -= 1 if RayKey.is_down? :a
-  camera.rotation += 1 if RayKey.is_down? :s
+  camera.rotation -= 1 if RayKey.down? :a
+  camera.rotation += 1 if RayKey.down? :s
 
   # Limit camera rotation to 80 degrees (-40 to 40)
   camera.rotation = 40 if camera.rotation > 40
@@ -70,43 +70,43 @@ until RayWindow.should_close? # Detect window close button or ESC key
   camera.zoom = 0.1 if camera.zoom < 0.1
 
   # Camera reset (zoom and rotation)
-  if RayKey.is_pressed? :r
+  if RayKey.pressed? :r
     camera.zoom = 1.0
     camera.rotation = 0.0
   end
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    camera.begin_mode2d do
-      RayDraw.rectangle(-6_000, 320, 13_000, 8_000, RayColor::DARKGRAY)
+    camera.mode2d do
+      RayDraw.rectangle(-6_000, 320, 13_000, 8_000, :darkgray)
 
       buildings.each do |building|
         building.rec.draw building.col
       end
 
-      player.draw RayColor::RED
+      player.draw :red
 
-      RayDraw.rectangle(camera.target.x, -500, 1, screen_h * 4, RayColor::GREEN)
-      RayDraw.rectangle(-500, camera.target.y, screen_w * 4, 1, RayColor::GREEN)
+      RayDraw.rectangle(camera.target.x, -500, 1, screen_h * 4, :green)
+      RayDraw.rectangle(-500, camera.target.y, screen_w * 4, 1, :green)
     end
 
-    RayDraw.text 'SCREEN AREA', 640, 10, 20, RayColor::RED
+    RayDraw.text 'SCREEN AREA', 640, 10, 20, :red
 
-    RayDraw.rectangle 0, 0, screen_w, 5, RayColor::RED
-    RayDraw.rectangle 0, 5, 5, screen_h - 10, RayColor::RED
-    RayDraw.rectangle screen_w - 5, 5, 5, screen_h - 10, RayColor::RED
-    RayDraw.rectangle 0, screen_h - 5, screen_w, 5, RayColor::RED
+    RayDraw.rectangle 0, 0, screen_w, 5, :red
+    RayDraw.rectangle 0, 5, 5, screen_h - 10, :red
+    RayDraw.rectangle screen_w - 5, 5, 5, screen_h - 10, :red
+    RayDraw.rectangle 0, screen_h - 5, screen_w, 5, :red
 
-    RayDraw.rectangle 10, 10, 250, 113, RayColor::SKYBLUE.fade(0.5)
-    RayDraw.rectangle_lines 10, 10, 250, 113, RayColor::BLUE
+    RayDraw.rectangle 10, 10, 250, 113, RayColor.fade(:skyblue, 0.5)
+    RayDraw.rectangle_lines 10, 10, 250, 113, :blue
 
-    RayDraw.text 'Free 2D camera controls:', 20, 20, 10, RayColor::BLACK
-    RayDraw.text '- Right/Left to move Offset', 40, 40, 10, RayColor::DARKGRAY
-    RayDraw.text '- Mouse Wheel to Zoom in-out', 40, 60, 10, RayColor::DARKGRAY
-    RayDraw.text '- A / S to Rotate', 40, 80, 10, RayColor::DARKGRAY
-    RayDraw.text '- R to reset ZOOM and Rotation', 40, 100, 10, RayColor::DARKGRAY
+    RayDraw.text 'Free 2D camera controls:', 20, 20, 10, :black
+    RayDraw.text '- Right/Left to move Offset', 40, 40, 10, :darkgray
+    RayDraw.text '- Mouse Wheel to Zoom in-out', 40, 60, 10, :darkgray
+    RayDraw.text '- A / S to Rotate', 40, 80, 10, :darkgray
+    RayDraw.text '- R to reset ZOOM and Rotation', 40, 100, 10, :darkgray
   end
 end
 

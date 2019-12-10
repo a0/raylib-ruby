@@ -23,12 +23,12 @@ camera = RayCamera.new  RayVector3.new(1.0, 10.0, 10.0),  # Camera position
                         RayVector3.new(0.0, 0.0, 0.0),    # Camera looking at point
                         RayVector3.new(0.0, 1.0, 0.0),    # Camera up vector (rotation towards target)
                         45.0,                             # Camera field-of-view Y
-                        RayCamera::TYPE_PERSPECTIVE       # Camera mode type
+                        :perspective                      # Camera mode type
 
 cube_position = RayVector3.new 0.0, 0.0, 0.0
 
 # Set a free camera mode
-camera.mode = RayCamera::MODE_FREE
+camera.mode = :free
 
 # Set our game to run at 60 frames-per-second
 RayWindow.target_fps = 60
@@ -38,28 +38,28 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # Update
   camera.update
 
-  camera.target = RayVector3.new 0.0, 0.0, 0.0 if RayKey.is_down? RayKey::Z
+  camera.target = RayVector3.new 0.0, 0.0, 0.0 if RayKey.down? :z
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    camera.begin_mode3d do
-      RayDraw.cube cube_position, 2.0, 2.0, 2.0, RayColor::RED
-      RayDraw.cube_wires cube_position, 2.0, 2.0, 2.0, RayColor::MAROON
+    camera.mode3d do
+      RayDraw.cube cube_position, 2.0, 2.0, 2.0, :red
+      RayDraw.cube_wires cube_position, 2.0, 2.0, 2.0, :maroon
 
       RayDraw.grid 10, 1.0
     end
 
-    RayDraw.rectangle 10, 10, 320, 133, RayColor::SKYBLUE.fade(0.5)
-    RayDraw.rectangle_lines 10, 10, 320, 133, RayColor::BLUE
+    RayDraw.rectangle 10, 10, 320, 133, RayColor.fade(:skyblue, 0.5)
+    RayDraw.rectangle_lines 10, 10, 320, 133, :blue
 
-    RayDraw.text 'Free camera default controls:', 20, 20, 10, RayColor::BLACK
-    RayDraw.text '- Mouse wheel to Zoom in-out', 40, 40, 10, RayColor::DARKGRAY
-    RayDraw.text '- Mouse wheel Pressed to Pan', 40, 60, 10, RayColor::DARKGRAY
-    RayDraw.text '- Alt + Mouse Wheel Pressed to Rotate', 40, 80, 10, RayColor::DARKGRAY
-    RayDraw.text '- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom', 40, 100, 10, RayColor::DARKGRAY
-    RayDraw.text '- Z to zoom to (0, 0, 0)', 40, 120, 10, RayColor::DARKGRAY
+    RayDraw.text 'Free camera default controls:', 20, 20, 10, :black
+    RayDraw.text '- Mouse wheel to Zoom in-out', 40, 40, 10, :darkgray
+    RayDraw.text '- Mouse wheel Pressed to Pan', 40, 60, 10, :darkgray
+    RayDraw.text '- Alt + Mouse Wheel Pressed to Rotate', 40, 80, 10, :darkgray
+    RayDraw.text '- Alt + Ctrl + Mouse Wheel Pressed for Smooth Zoom', 40, 100, 10, :darkgray
+    RayDraw.text '- Z to zoom to (0, 0, 0)', 40, 120, 10, :darkgray
   end
 end
 

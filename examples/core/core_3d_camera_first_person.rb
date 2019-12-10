@@ -26,7 +26,7 @@ camera = RayCamera.new  RayVector3.new(4.0, 2.0, 4.0),
                         RayVector3.new(0.0, 1.8, 0.0),
                         RayVector3.new(0.0, 1.0, 0.0),
                         60.0,
-                        RayCamera::TYPE_PERSPECTIVE
+                        :perspective
 
 # Generates some random columns
 columns = Array.new(MAX_COLUMNS) do
@@ -38,7 +38,7 @@ columns = Array.new(MAX_COLUMNS) do
 end
 
 # Set a first person camera mode
-camera.mode = RayCamera::MODE_FIRST_PERSON
+camera.mode = :first_person
 
 # Set our game to run at 60 frames-per-second
 RayWindow.target_fps = 60
@@ -49,28 +49,28 @@ until RayWindow.should_close? # Detect window close button or ESC key
   camera.update
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    camera.begin_mode3d do
-      RayDraw.plane RayVector3.new(0.0, 0.0, 0.0), RayVector2.new(32.0, 32.0), RayColor::LIGHTGRAY  # Draw ground
-      RayDraw.cube RayVector3.new(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, RayColor::BLUE                  # Draw a blue wall
-      RayDraw.cube RayVector3.new(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, RayColor::LIME                   # Draw a green wall
-      RayDraw.cube RayVector3.new(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, RayColor::GOLD                   # Draw a yellow yall
+    camera.mode3d do
+      RayDraw.plane RayVector3.new(0.0, 0.0, 0.0), RayVector2.new(32.0, 32.0), :lightgray  # Draw ground
+      RayDraw.cube RayVector3.new(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, :blue                  # Draw a blue wall
+      RayDraw.cube RayVector3.new(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, :lime                   # Draw a green wall
+      RayDraw.cube RayVector3.new(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, :gold                   # Draw a yellow yall
 
       # Draw some cubes around
       columns.each do |column|
         RayDraw.cube column.position, 2.0, column.height, 2.0, column.color
-        RayDraw.cube_wires column.position, 2.0, column.height, 2.0, RayColor::MAROON
+        RayDraw.cube_wires column.position, 2.0, column.height, 2.0, :maroon
       end
     end
 
-    RayDraw.rectangle 10, 10, 220, 70, RayColor::SKYBLUE.fade(0.5)
-    RayDraw.rectangle_lines 10, 10, 220, 70, RayColor::BLUE
+    RayDraw.rectangle 10, 10, 220, 70, RayColor.fade(:skyblue, 0.5)
+    RayDraw.rectangle_lines 10, 10, 220, 70, :blue
 
-    RayDraw.text 'First person camera default controls:', 20, 20, 10, RayColor::BLACK
-    RayDraw.text '- Move with keys: W, A, S, D', 40, 40, 10, RayColor::DARKGRAY
-    RayDraw.text '- Mouse move to look around', 40, 60, 10, RayColor::DARKGRAY
+    RayDraw.text 'First person camera default controls:', 20, 20, 10, :black
+    RayDraw.text '- Move with keys: W, A, S, D', 40, 40, 10, :darkgray
+    RayDraw.text '- Mouse move to look around', 40, 60, 10, :darkgray
   end
 end
 

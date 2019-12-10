@@ -23,7 +23,7 @@ camera = RayCamera.new  RayVector3.new(0.0, 10.0, 10.0),  # Camera position
                         RayVector3.new(0.0, 0.0, 0.0),    # Camera looking at point
                         RayVector3.new(0.0, 1.0, 0.0),    # Camera up vector (rotation towards target)
                         45.0,                             # Camera field-of-view Y
-                        RayCamera::TYPE_PERSPECTIVE       # Camera mode type
+                        :perspective                      # Camera mode type
 
 cube_position = RayVector3.new 0.0, 0.0, 0.0
 
@@ -36,17 +36,17 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # TODO: Update your variables here
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    camera.begin_mode3d do
-      RayDraw.cube cube_position, 2.0, 2.0, 2.0, RayColor::RED
-      RayDraw.cube_wires cube_position, 2.0, 2.0, 2.0, RayColor::MAROON
+    camera.mode3d do
+      RayDraw.cube cube_position, 2.0, 2.0, 2.0, :red
+      RayDraw.cube_wires cube_position, 2.0, 2.0, 2.0, :maroon
 
       RayDraw.grid 10, 1.0
     end
 
-    RayDraw.text 'Welcome to the third dimension!', 10, 40, 20, RayColor::DARKGRAY
+    RayDraw.text 'Welcome to the third dimension!', 10, 40, 20, :darkgray
   end
 end
 

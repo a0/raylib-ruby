@@ -61,14 +61,14 @@ module Raylib
     ray_object :ImageColorReplace,        :color_replace!,        [Image.ptr, Color.by_value, Color.by_value], :void                                              # Modify image color: replace color
 
     # Image generation functions
-    ray_static :GenImageColor,            :gen_color,             [:int, :int, Color.by_value], Image.by_value                                                    # Generate image: plain color
-    ray_static :GenImageGradientV,        :gen_gradient_v,        [:int, :int, Color.by_value, Color.by_value], Image.by_value                                    # Generate image: vertical gradient
-    ray_static :GenImageGradientH,        :gen_gradient_h,        [:int, :int, Color.by_value, Color.by_value], Image.by_value                                    # Generate image: horizontal gradient
-    ray_static :GenImageGradientRadial,   :gen_gradient_radial,   [:int, :int, :float, Color.by_value, Color.by_value], Image.by_value                            # Generate image: radial gradient
-    ray_static :GenImageChecked,          :gen_checked,           [:int, :int, :int, :int, Color.by_value, Color.by_value], Image.by_value                        # Generate image: checked
-    ray_static :GenImageWhiteNoise,       :gen_white_noise,       %i[int int float], Image.by_value                                                               # Generate image: white noise
-    ray_static :GenImagePerlinNoise,      :gen_perlin_noise,      %i[int int int int float], Image.by_value                                                       # Generate image: perlin noise
-    ray_static :GenImageCellular,         :gen_cellular,          %i[int int int], Image.by_value                                                                 # Generate image: cellular algorithm. Bigger tileSize means bigger cells
+    ray_static :GenImageColor,            :color,                 [:int, :int, Color.by_value], Image.by_value                                                    # Generate image: plain color
+    ray_static :GenImageGradientV,        :gradient_v,            [:int, :int, Color.by_value, Color.by_value], Image.by_value                                    # Generate image: vertical gradient
+    ray_static :GenImageGradientH,        :gradient_h,            [:int, :int, Color.by_value, Color.by_value], Image.by_value                                    # Generate image: horizontal gradient
+    ray_static :GenImageGradientRadial,   :gradient_radial,       [:int, :int, :float, Color.by_value, Color.by_value], Image.by_value                            # Generate image: radial gradient
+    ray_static :GenImageChecked,          :checked,               [:int, :int, :int, :int, Color.by_value, Color.by_value], Image.by_value                        # Generate image: checked
+    ray_static :GenImageWhiteNoise,       :white_noise,           %i[int int float], Image.by_value                                                               # Generate image: white noise
+    ray_static :GenImagePerlinNoise,      :perlin_noise,          %i[int int int int float], Image.by_value                                                       # Generate image: perlin noise
+    ray_static :GenImageCellular,         :cellular,              %i[int int int], Image.by_value                                                                 # Generate image: cellular algorithm. Bigger tileSize means bigger cells
 
     #------------------------------------------------------------------------------------
     # Font Loading and Text Drawing Functions (Module: text)

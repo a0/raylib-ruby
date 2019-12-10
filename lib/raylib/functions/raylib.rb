@@ -293,14 +293,14 @@ module Raylib
   # RayImage#color_replace!                     // Modify image color: replace color
 
   # // Image generation functions
-  # RayImage.gen_color                          // Generate image: plain color
-  # RayImage.gen_gradient_v                     // Generate image: vertical gradient
-  # RayImage.gen_gradient_h                     // Generate image: horizontal gradient
-  # RayImage.gen_gradient_radial                // Generate image: radial gradient
-  # RayImage.gen_checked                        // Generate image: checked
-  # RayImage.gen_white_noise                    // Generate image: white noise
-  # RayImage.gen_perlin_noise                   // Generate image: perlin noise
-  # RayImage.gen_cellular                       // Generate image: cellular algorithm. Bigger tileSize means bigger cells
+  # RayImage.color                              // Generate image: plain color
+  # RayImage.gradient_v                         // Generate image: vertical gradient
+  # RayImage.gradient_h                         // Generate image: horizontal gradient
+  # RayImage.gradient_radial                    // Generate image: radial gradient
+  # RayImage.checked                            // Generate image: checked
+  # RayImage.white_noise                        // Generate image: white noise
+  # RayImage.perlin_noise                       // Generate image: perlin noise
+  # RayImage.cellular                           // Generate image: cellular algorithm. Bigger tileSize means bigger cells
 
   # // Texture2D configuration functions
   # RayTexture2D.mipmaps!                       // Generate GPU mipmaps for a texture
@@ -398,16 +398,16 @@ module Raylib
   # RayModel#valid_animation?                   // Check model animation skeleton match
 
   # // Mesh generation functions
-  # RayMesh.gen_poly                            // Generate polygonal mesh
-  # RayMesh.gen_plane                           // Generate plane mesh (with subdivisions)
-  # RayMesh.gen_cube                            // Generate cuboid mesh
-  # RayMesh.gen_sphere                          // Generate sphere mesh (standard sphere)
-  # RayMesh.gen_hemisphere                      // Generate half-sphere mesh (no bottom cap)
-  # RayMesh.gen_cylinder                        // Generate cylinder mesh
-  # RayMesh.gen_torus                           // Generate torus mesh
-  # RayMesh.gen_knot                            // Generate trefoil knot mesh
-  # RayMesh.gen_heightmap                       // Generate heightmap mesh from image data
-  # RayMesh.gen_cubicmap                        // Generate cubes-based map mesh from image data
+  # RayMesh.poly                                // Generate polygonal mesh
+  # RayMesh.plane                               // Generate plane mesh (with subdivisions)
+  # RayMesh.cube                                // Generate cuboid mesh
+  # RayMesh.sphere                              // Generate sphere mesh (standard sphere)
+  # RayMesh.hemisphere                          // Generate half-sphere mesh (no bottom cap)
+  # RayMesh.cylinder                            // Generate cylinder mesh
+  # RayMesh.torus                               // Generate torus mesh
+  # RayMesh.knot                                // Generate trefoil knot mesh
+  # RayMesh.heightmap                           // Generate heightmap mesh from image data
+  # RayMesh.cubicmap                            // Generate cubes-based map mesh from image data
 
   # // Mesh manipulation functions
   # RayMesh#bounding_box                        // Compute mesh bounding box limits

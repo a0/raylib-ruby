@@ -4,17 +4,6 @@ module Raylib
   DEG2RAD = PI / 180.0
   RAD2DEG = 180.0 / PI
 
-  class Camera3D
-    TYPE_PERSPECTIVE   = 0
-    TYPE_ORTHOGRAPHIC  = 1
-
-    MODE_CUSTOM       = 0
-    MODE_FREE         = 1
-    MODE_ORBITAL      = 2
-    MODE_FIRST_PERSON = 3
-    MODE_THIRD_PERSON = 4
-  end
-
   class Material
     MAX_MAPS = 12 # Maximum number of texture maps stored in shader struct
   end

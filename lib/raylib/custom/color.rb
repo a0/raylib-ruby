@@ -47,5 +47,10 @@ module Raylib
     ray_static :ColorFromHSV,        :from_hsv,        [Vector3.by_value], Color.by_value         # Returns a Color from HSV values
     ray_object :GetColor,            :from_i,          %i[int], Color.by_value                    # Returns a Color struct from hexadecimal value
     ray_object :Fade,                :fade,            [Color.by_value, :float], Color.by_value   # Color fade-in or fade-out, alpha goes from 0.0f to 1.0f
+
+    # Simpler RayColor.fade :raywhite, 0.5
+    def self.fade(color, alpha)
+      Raylib.send(:Fade, RayColor[color] || color, alpha)
+    end
   end
 end

@@ -13,6 +13,7 @@ class Body
 
   def initialize(**args)
     args.each { |key, val| send "#{key}=", val }
+    self.color = RayColor[color] || color
     self.orbit_pos = self.rotation_pos = 0.0
     self.children ||= []
     self.orbit_radius ||= 0.0
@@ -78,7 +79,7 @@ class Body
   end
 
   def draw_names
-    RayDraw.text name, screen_pos.x - RayFont.measure_text(name, 10) / 2, screen_pos.y, 20, RayColor::BLACK if screen_pos
+    RayDraw.text name, screen_pos.x - RayFont.measure_text(name, 10) / 2, screen_pos.y, 20, :black if screen_pos
 
     children.each(&:draw_names)
   end
@@ -90,21 +91,21 @@ camera = RayCamera.new  RayVector3.new(8.0, 8.0, 8.0),
                         RayVector3.new(0.0, 0.0, 0.0),
                         RayVector3.new(0.0, 1.0, 0.0),
                         45.0,
-                        RayCamera::TYPE_PERSPECTIVE
+                        :perspective
 
-camera.mode = RayCamera::MODE_FREE
+camera.mode = :free
 
-sun     = Body.new radius: 0.2, color: RayColor::GOLD, name: 'sun'
-moon    = Body.new radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      color: RayColor::GRAY,       name: 'moon'
-mercury = Body.new radius: 0.05, orbit_radius: 0.396,  orbit_period: 90,      color: RayColor::GRAY,       name: 'mercury'
-venus   = Body.new radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     color: RayColor::MAGENTA,    name: 'venus'
-earth   = Body.new radius: 0.05, orbit_radius: 1.000,  orbit_period: 365,     color: RayColor::BLUE,       name: 'earth'
-mars    = Body.new radius: 0.05, orbit_radius: 1.523,  orbit_period: 690,     color: RayColor::RED,        name: 'mars'
-jupiter = Body.new radius: 0.05, orbit_radius: 5.200,  orbit_period: 4_260,   color: RayColor::BROWN,      name: 'jupiter'
-saturn  = Body.new radius: 0.05, orbit_radius: 9.532,  orbit_period: 10_620,  color: RayColor::GREEN,      name: 'saturn'
-uranus  = Body.new radius: 0.05, orbit_radius: 19.180, orbit_period: 30_270,  color: RayColor::SKYBLUE,    name: 'uranus'
-neptune = Body.new radius: 0.05, orbit_radius: 30.056, orbit_period: 59_370,  color: RayColor::PURPLE,     name: 'neptune'
-pluto   = Body.new radius: 0.05, orbit_radius: 39.463, orbit_period: 89_310,  color: RayColor::DARKGREEN,  name: 'pluto'
+sun     = Body.new radius: 0.2, color: :gold, name: 'sun'
+moon    = Body.new radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      color: :gray,       name: 'moon'
+mercury = Body.new radius: 0.05, orbit_radius: 0.396,  orbit_period: 90,      color: :gray,       name: 'mercury'
+venus   = Body.new radius: 0.05, orbit_radius: 0.723,  orbit_period: 210,     color: :magenta,    name: 'venus'
+earth   = Body.new radius: 0.05, orbit_radius: 1.000,  orbit_period: 365,     color: :blue,       name: 'earth'
+mars    = Body.new radius: 0.05, orbit_radius: 1.523,  orbit_period: 690,     color: :red,        name: 'mars'
+jupiter = Body.new radius: 0.05, orbit_radius: 5.200,  orbit_period: 4_260,   color: :brown,      name: 'jupiter'
+saturn  = Body.new radius: 0.05, orbit_radius: 9.532,  orbit_period: 10_620,  color: :green,      name: 'saturn'
+uranus  = Body.new radius: 0.05, orbit_radius: 19.180, orbit_period: 30_270,  color: :skyblue,    name: 'uranus'
+neptune = Body.new radius: 0.05, orbit_radius: 30.056, orbit_period: 59_370,  color: :purple,     name: 'neptune'
+pluto   = Body.new radius: 0.05, orbit_radius: 39.463, orbit_period: 89_310,  color: :darkgreen,  name: 'pluto'
 
 earth.children += [moon]
 sun.children += [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
@@ -116,17 +117,17 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # Update
   camera.update
 
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    camera.begin_mode3d do
+    camera.mode3d do
       sun.draw camera
 
       RayDraw.grid 80, 1.0
     end
 
     sun.draw_names
-    RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, RayColor::MAROON
+    RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, :maroon
     RayDraw.fps 10, 10
   end
 end

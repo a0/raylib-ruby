@@ -19,12 +19,12 @@ screen_h = 450
 RayWindow.init screen_w, screen_h, 'ruby raylib [texture] example - image text drawing'
 
 # TTF Font loading with custom generation parameters
-font = RayFont.load_ex 'resources/KAISG.ttf', 64, nil, 0
+font = RayFont.load_ex 'resources/KAISG.ttf', 64, 0, 0
 
 image = RayImage.load 'resources/parrots.png' # Loaded in CPU memory (RAM)
 
 # Draw over image using custom font
-image.draw_text_ex! RayVector2.new(20, 20), font, '[Parrots font drawing]', font.base_size, 0, RayColor::WHITE
+image.draw_text_ex! RayVector2.new(20, 20), font, '[Parrots font drawing]', font.base_size, 0, :white
 
 texture = image.to_texture2d  # Image converted to texture, uploaded to GPU memory (VRAM)
 image.unload                  # Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
@@ -38,23 +38,23 @@ RayWindow.target_fps = 60
 # Main game loop
 until RayWindow.should_close? # Detect window close button or ESC key
   # Update
-  show_font = RayKey.is_down? :sPACE
+  show_font = RayKey.down? :space
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
     if show_font
-      font.texture.draw screen_w / 2 - font.texture.width / 2, 50, RayColor::BLACK
+      font.texture.draw screen_w / 2 - font.texture.width / 2, 50, :black
     else
       # Draw texture with text already drawn inside
-      texture.draw_v position, RayColor::WHITE
+      texture.draw_v position, :white
 
       # Draw text directly using sprite font
-      RayDraw.text_ex font, '[Parrots font drawing]', RayVector2.new(position.x + 20, position.y + 20 + 280), font.base_size, 0, RayColor::WHITE
+      RayDraw.text_ex font, '[Parrots font drawing]', RayVector2.new(position.x + 20, position.y + 20 + 280), font.base_size, 0, :white
     end
 
-    RayDraw.text 'PRESS SPACE to SEE USED SPRITEFONT', 290, 420, 10, RayColor::DARKGRAY
+    RayDraw.text 'PRESS SPACE to SEE USED SPRITEFONT', 290, 420, 10, :darkgray
   end
 end
 

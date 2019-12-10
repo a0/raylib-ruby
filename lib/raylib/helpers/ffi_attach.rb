@@ -58,7 +58,7 @@ module Raylib
         define_method name do |*args|
           args.push self
           mapping.each do |index, struct_class|
-            args[index] = struct_class[args[index]] || args[index]
+            args[index] = struct_class[args[index]] if args[index].is_a? Symbol
           end
           Raylib.send(function, *args)
         end

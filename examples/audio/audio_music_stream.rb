@@ -36,12 +36,12 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # Update
   music.update # Update music buffer with new stream data
 
-  if RayKey.is_pressed? :sPACE
+  if RayKey.pressed? :space
     music.stop
     music.play
   end
 
-  if RayKey.is_pressed? RayKey::P
+  if RayKey.pressed? :p
     pause = !pause
     pause ? music.pause : music.resume
   end
@@ -50,17 +50,17 @@ until RayWindow.should_close? # Detect window close button or ESC key
   time_played = music.time_played / music.time_length * 400
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    RayDraw.text 'MUSIC SHOULD BE PLAYING!', 255, 150, 20, RayColor::LIGHTGRAY
+    RayDraw.text 'MUSIC SHOULD BE PLAYING!', 255, 150, 20, :lightgray
 
-    RayDraw.rectangle 200, 200, 400, 12, RayColor::LIGHTGRAY
-    RayDraw.rectangle 200, 200, time_played.to_i, 12, RayColor::MAROON
-    RayDraw.rectangle_lines 200, 200, 400, 12, RayColor::GRAY
+    RayDraw.rectangle 200, 200, 400, 12, :lightgray
+    RayDraw.rectangle 200, 200, time_played.to_i, 12, :maroon
+    RayDraw.rectangle_lines 200, 200, 400, 12, :gray
 
-    RayDraw.text 'PRESS SPACE TO RESTART MUSIC', 215, 250, 20, RayColor::LIGHTGRAY
-    RayDraw.text 'PRESS P TO PAUSE/RESUME MUSIC', 208, 280, 20, RayColor::LIGHTGRAY
+    RayDraw.text 'PRESS SPACE TO RESTART MUSIC', 215, 250, 20, :lightgray
+    RayDraw.text 'PRESS P TO PAUSE/RESUME MUSIC', 208, 280, 20, :lightgray
   end
 end
 

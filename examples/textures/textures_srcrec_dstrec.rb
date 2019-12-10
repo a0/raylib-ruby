@@ -43,20 +43,20 @@ until RayWindow.should_close? # Detect window close button or ESC key
   rotation += 1
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::RAYWHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :raywhite
 
     # NOTE: Using Texture#draw_pro we can easily rotate and scale the part of the texture we draw
     # sourceRec defines the part of the texture we use for drawing
     # destRec defines the rectangle where our texture part will fit (scaling it to fit)
     # origin defines the point of the texture used as reference for rotation and scaling
     # rotation defines the texture rotation (using origin as rotation point)
-    scarfy.draw_pro source_rec, dest_rec, origin, rotation, RayColor::WHITE
+    scarfy.draw_pro source_rec, dest_rec, origin, rotation, :white
 
-    RayDraw.line dest_rec.x, 0, dest_rec.x, screen_h, RayColor::GRAY
-    RayDraw.line 0, dest_rec.y, screen_w, dest_rec.y, RayColor::GRAY
+    RayDraw.line dest_rec.x, 0, dest_rec.x, screen_h, :gray
+    RayDraw.line 0, dest_rec.y, screen_w, dest_rec.y, :gray
 
-    RayDraw.text '(c) Scarfy sprite by Eiden Marsal', screen_w - 200, screen_h - 20, 10, RayColor::GRAY
+    RayDraw.text '(c) Scarfy sprite by Eiden Marsal', screen_w - 200, screen_h - 20, 10, :gray
   end
 end
 

@@ -22,7 +22,7 @@ camera = RayCamera.new  RayVector3.new(1.0, 1.0, 1.0),
                         RayVector3.new(4.0, 1.0, 4.0),
                         RayVector3.new(0.0, 1.0, 0.0),
                         45.0,
-                        RayCamera::TYPE_PERSPECTIVE
+                        :perspective
 
 cube = RayMesh.gen_cube 1.0, 1.0, 1.0
 skybox = cube.to_model
@@ -37,7 +37,7 @@ tex_hdr = RayTexture2D.load 'resources/dresden_square.hdr'
 skybox.materials[0].maps[RayMaterial::MAP_CUBEMAP].texture = shader_cubemap.gen_texture_cubemap tex_hdr, 512
 # FIXME: Add pending code
 
-camera.mode = RayCamera::MODE_FIRST_PERSON      # Set a first person camera mode
+camera.mode = :first_person      # Set a first person camera mode
 
 RayWindow.target_fps = 60                       # Set our game to run at 60 frames-per-second
 
@@ -47,11 +47,11 @@ until RayWindow.should_close? # Detect window close button or ESC key
   camera.update # Update camera
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::RAYWHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :raywhite
 
-    camera.begin_mode3d do
-      skybox.draw RayVector3.new(0.0, 0.0, 0.0), 1.0, RayColor::WHITE
+    camera.mode3d do
+      skybox.draw RayVector3.new(0.0, 0.0, 0.0), 1.0, :white
 
       RayDraw.grid 10, 1.0
     end

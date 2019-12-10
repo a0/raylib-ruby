@@ -10,6 +10,8 @@
 # ********************************************************************************************/
 # Ported to ruby by Aldrin Martoq (@aldrinmartoq)
 
+require 'bundler/setup'
+
 require 'raylib'
 
 screen_w = 800
@@ -22,16 +24,24 @@ camera = RayCamera.new  RayVector3.new(0.2, 0.4, 0.2),
                         RayVector3.new(0.0, 0.0, 0.0),
                         RayVector3.new(0.0, 1.0, 0.0),
                         45.0,
-                        RayCamera::TYPE_PERSPECTIVE
+                        :perspective
 
 image_map = RayImage.load 'resources/cubicmap.png' # Load cubicmap image (RAM)
-cubic_map = RayTexture2D.load_from_image image_map # Convert image to texture to display (VRAM)
-mesh = RayMesh.gen_cubicmap image_map, RayVector3.new(1.0, 1.0, 1.0)
-model = mesh.to_model
+cubic_map = Raylib.LoadTextureFromImage image_map # Convert image to texture to display (VRAM)
+mesh = Raylib.GenMeshCubicmap image_map, RayVector3.new(1.0, 1.0, 1.0)
+# mesh = RayMesh.cubicmap image_map, RayVector3.new(1.0, 1.0, 1.0)
+# model = mesh.to_model
+model = Raylib.LoadModelFromMesh(mesh)
+
+$LOADED_FEATURES.each do |f|
+  warn f
+end
+
+warn "model materials: #{model.material_count}"
 
 # NOTE: By default each cube is mapped to one part of texture atlas
-texture = RayTexture2D.load 'resources/cubicmap_atlas.png'          # Load map texture
-model.materials[0].maps[RayMaterial::MAP_DIFFUSE].texture = texture # Set map diffuse texture
+texture = RayTexture2D.load 'resources/cubicmap_atlas.png' # Load map texture
+model.materials[0].maps[0].texture = texture # Set map diffuse texture
 
 # Get map image data to be used for collision detection
 map_pixels = image_map.to_data
@@ -47,7 +57,7 @@ image_map.unload # Unload image from RAM
 
 map_position = RayVector3.new(-16.0, 0.0, -8.0) # Set model position
 player_position = camera.position               # Set player position
-camera.mode = RayCamera::MODE_FIRST_PERSON      # Set camera mode
+camera.mode = :first_person                     # Set camera mode
 
 RayWindow.target_fps = 60                       # Set our game to run at 60 frames-per-second
 
@@ -80,17 +90,20 @@ until RayWindow.should_close? # Detect window close button or ESC key
     end
   end
 
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    camera.begin_mode3d do
-      model.draw map_position, 1.0, RayColor::WHITE
-    end
+    Raylib.BeginMode3D(camera)
+    Raylib.DrawModel model, map_position, 1.0, RayColor[:white]
+    Raylib.EndMode3D
+    # camera.mode3d do
+    #   model.draw map_position, 1.0, RayColor[:white]
+    # end
 
-    cubic_map.draw_ex RayVector2.new(RayWindow.width - cubic_map.width * 4 - 20, 20), 0.0, 4.0, RayColor::WHITE
-    RayDraw.rectangle_lines RayWindow.width - cubic_map.width * 4 - 20, 20, cubic_map.width * 4, cubic_map.height * 4, RayColor::GREEN
+    cubic_map.draw_ex RayVector2.new(RayWindow.width - cubic_map.width * 4 - 20, 20), 0.0, 4.0, :white
+    RayDraw.rectangle_lines RayWindow.width - cubic_map.width * 4 - 20, 20, cubic_map.width * 4, cubic_map.height * 4, :green
 
-    RayDraw.rectangle RayWindow.width - cubic_map.width * 4 - 20 + player_cell_x * 4, 20 + player_cell_y * 4, 4, 4, RayColor::RED
+    RayDraw.rectangle RayWindow.width - cubic_map.width * 4 - 20 + player_cell_x * 4, 20 + player_cell_y * 4, 4, 4, :red
     RayDraw.fps 10, 10
   end
 end

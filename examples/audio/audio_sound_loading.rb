@@ -30,15 +30,15 @@ RayWindow.target_fps = 60
 # Main game loop
 until RayWindow.should_close? # Detect window close button or ESC key
   # Update
-  fx_wav.play if RayKey.is_pressed? :sPACE   # Play WAV sound
-  fx_ogg.play if RayKey.is_pressed? RayKey::ENTER   # Play OGG sound
+  fx_wav.play if RayKey.pressed? :space   # Play WAV sound
+  fx_ogg.play if RayKey.pressed? :enter   # Play OGG sound
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    RayDraw.text 'Press SPACE to PLAY the WAV sound!', 200, 180, 20, RayColor::LIGHTGRAY
-    RayDraw.text 'Press ENTER to PLAY the OGG sound!', 200, 220, 20, RayColor::LIGHTGRAY
+    RayDraw.text 'Press SPACE to PLAY the WAV sound!', 200, 180, 20, :lightgray
+    RayDraw.text 'Press ENTER to PLAY the OGG sound!', 200, 220, 20, :lightgray
   end
 end
 

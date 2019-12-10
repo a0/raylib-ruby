@@ -23,8 +23,8 @@ def draw_angle_gauge(angle_gauge, x, y, angle, title, color)
 
   angle_gauge.draw_pro src_rec, dst_rec, origin, angle, color
 
-  RayDraw.text text, x - RayFont.measure_text(text, text_size) / 2, y + 10, text_size, RayColor::DARKGRAY
-  RayDraw.text title, x - RayFont.measure_text(title, text_size) / 2, y + 60, text_size, RayColor::DARKGRAY
+  RayDraw.text text, x - RayFont.measure_text(text, text_size) / 2, y + 10, text_size, :darkgray
+  RayDraw.text title, x - RayFont.measure_text(title, text_size) / 2, y + 60, text_size, :darkgray
 end
 
 screen_w = 800
@@ -41,44 +41,44 @@ frame_buf = RayRenderTexture2D.load 192, 192
 
 model = RayModel.load 'resources/plane.obj'
 
-plane_diffuse = model.materials[0].maps[RayMaterialMap::DIFFUSE].texture = RayTexture2D.load 'resources/plane_diffuse.png'
+plane_diffuse = model.materials[0].maps[0].texture = RayTexture2D.load 'resources/plane_diffuse.png'
 
-plane_diffuse.gen_mipmaps
+plane_diffuse.mipmaps!
 
 camera = RayCamera.new  RayVector3.new(0.0, 60.0, -120.0),
                         RayVector3.new(0.0, 12.0, 0.0),
                         RayVector3.new(0.0, 1.0, 0.0),
                         30.0,
-                        RayCamera::TYPE_PERSPECTIVE
+                        :perspective
 
 pitch = roll = yaw = 0.0
 
 RayWindow.target_fps = 30
 
 until RayWindow.should_close?
-  if RayKey.is_down? :left
+  if RayKey.down? :left
     roll += 1.0
-  elsif RayKey.is_down? :right
+  elsif RayKey.down? :right
     roll -= 1.0
   else
     roll -= 0.5 if roll > 0.0
     roll += 0.5 if roll < 0.0
   end
 
-  RayWindow.toggle_fullscreen if RayKey.is_down? RayKey::F
+  RayWindow.toggle_fullscreen if RayKey.down? :f
 
-  if RayKey.is_down? RayKey::D
+  if RayKey.down? :d
     yaw += 1.0
-  elsif RayKey.is_down? :a
+  elsif RayKey.down? :a
     yaw -= 1.0
   else
     yaw -= 0.5 if yaw > 0.0
     yaw += 0.5 if yaw < 0.0
   end
 
-  if RayKey.is_down? RayKey::DOWN
+  if RayKey.down? :down
     pitch += 0.6
-  elsif RayKey.is_down? RayKey::UP
+  elsif RayKey.down? :up
     pitch -= 0.6
   else
     pitch -= 0.3 if pitch > 0.0
@@ -97,8 +97,8 @@ until RayWindow.should_close?
 
   model.transform = transform
 
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::RAYWHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :raywhite
 
     center_x = frame_buf.texture.width / 2
     center_y = frame_buf.texture.height / 2
@@ -110,32 +110,32 @@ until RayWindow.should_close?
                             RayRectangle.new(center_x, center_y, tex_backg.width * scale_factor, tex_backg.height * scale_factor),
                             RayVector2.new(tex_backg.width / 2 * scale_factor, tex_backg.height / 2 * scale_factor + pitch_offset * scale_factor),
                             roll,
-                            RayColor::WHITE
+                            :white
         tex_pitch.draw_pro  RayRectangle.new(0, 0, tex_pitch.width, tex_pitch.height),
                             RayRectangle.new(center_x, center_y, tex_pitch.width * scale_factor, tex_pitch.height * scale_factor),
                             RayVector2.new(tex_pitch.width / 2 * scale_factor, tex_pitch.height / 2 * scale_factor + pitch_offset * scale_factor),
                             roll,
-                            RayColor::WHITE
+                            :white
         tex_plane.draw_pro  RayRectangle.new(0, 0, tex_plane.width, tex_plane.height),
                             RayRectangle.new(center_x, center_y, tex_plane.width * scale_factor, tex_plane.height * scale_factor),
                             RayVector2.new(tex_plane.width / 2 * scale_factor, tex_plane.height / 2 * scale_factor + pitch_offset * scale_factor),
                             0,
-                            RayColor::WHITE
+                            :white
       end
     end
 
-    camera.begin_mode3d do
-      model.draw RayVector3.new(0, 6.0, 0), 1.0, RayColor::WHITE
+    camera.mode3d do
+      model.draw RayVector3.new(0, 6.0, 0), 1.0, :white
       RayDraw.grid 10, 10.0
     end
 
-    draw_angle_gauge tex_angle, 80, 70, roll, 'roll', RayColor::RED
-    draw_angle_gauge tex_angle, 190, 70, pitch, 'pitch', RayColor::GREEN
-    draw_angle_gauge tex_angle, 300, 70, yaw, 'yaw', RayColor::SKYBLUE
+    draw_angle_gauge tex_angle, 80, 70, roll, 'roll', :red
+    draw_angle_gauge tex_angle, 190, 70, pitch, 'pitch', :green
+    draw_angle_gauge tex_angle, 300, 70, yaw, 'yaw', :skyblue
 
     frame_buf.texture.draw_rec  RayRectangle.new(0, 0, frame_buf.texture.width, -frame_buf.texture.height),
                                 RayVector2.new(screen_w - frame_buf.texture.width - 20, 20),
-                                RayColor::WHITE.fade(0.8)
+                                RayColor.fade(:white, 0.8)
 
     RayDraw.fps 0, 0
   end

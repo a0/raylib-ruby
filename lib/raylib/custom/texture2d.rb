@@ -11,7 +11,7 @@ module Raylib
 
     ray_object :UnloadTexture,      :unload,        [Texture2D.by_value], :void                                                                                       # Unload texture from GPU memory (VRAM)
 
-    ray_object :GetTextureData,     :to_image,      [Texture2D.by_value], :void                                                                                       # Get pixel data from GPU texture and return an Image
+    ray_object :GetTextureData,     :to_image,      [Texture2D.by_value], Image.by_value                                                                              # Get pixel data from GPU texture and return an Image
 
     ray_object :UpdateTexture,      :update,        [Texture2D.by_value, :pointer], :void                                                                             # Update GPU texture with new data
 

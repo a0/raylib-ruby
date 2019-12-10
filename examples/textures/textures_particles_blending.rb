@@ -38,7 +38,7 @@ gravity = 3.0
 
 smoke = RayTexture.load 'resources/smoke.png'
 
-blending = RayDraw::BLEND_ALPHA
+blending = :alpha
 
 RayWindow.target_fps = 60
 
@@ -70,14 +70,14 @@ until RayWindow.should_close? # Detect window close button or ESC key
   end
 
   if RayKey.pressed? :space
-    blending = blending == RayDraw::BLEND_ALPHA ? RayDraw::BLEND_ADDITIVE : RayDraw::BLEND_ALPHA
+    blending = blending == :alpha ? :additive : :alpha
   end
 
   # Draw
   RayDraw.drawing do
     RayDraw.clear_background :darkgray
 
-    RayDraw.begin_blend_mode blending do
+    RayDraw.blend_mode blending do
       # Draw active particles
       mouse_tail.each do |tail|
         next unless tail.active
@@ -92,7 +92,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
 
     RayDraw.text 'PRESS SPACE to CHANGE BLENDING MODE', 180, 20, 20, :black
 
-    if blending == RayDraw::BLEND_ALPHA
+    if blending == :alpha
       RayDraw.text 'ALPHA BLENDING', 290, screen_h - 40, 20, :black
     else
       RayDraw.text 'ADDITIVE BLENDING', 280, screen_h - 40, 20, :raywhite

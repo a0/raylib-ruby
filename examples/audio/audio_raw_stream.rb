@@ -67,17 +67,17 @@ until RayWindow.should_close? # Detect window close button or ESC key
   end
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    RayDraw.text 'SINE WAVE SHOULD BE PLAYING!', 240, 140, 20, RayColor::LIGHTGRAY
+    RayDraw.text 'SINE WAVE SHOULD BE PLAYING!', 240, 140, 20, :lightgray
 
     # Draw a part of the sine wave (only screen width, proportional values)
     (0...screen_w).each do |i|
       position.x = i
       position.y = 250 + 50 * data[i].read(:int16) / 32_000
 
-      RayDraw.pixel_v position, RayColor::RED
+      RayDraw.pixel_v position, :red
     end
   end
 end

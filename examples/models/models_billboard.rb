@@ -21,23 +21,23 @@ camera = RayCamera.new  RayVector3.new(5.0, 4.0, 5.0),
                         RayVector3.new(0.0, 2.0, 0.0),
                         RayVector3.new(0.0, 1.0, 0.0),
                         45.0,
-                        RayCamera::TYPE_PERSPECTIVE
+                        :perspective
 
 bill_tex = RayTexture2D.load 'resources/billboard.png'
 bill_pos = RayVector3.new 0.0, 2.0, 0.0
 
-camera.mode = RayCamera::MODE_ORBITAL
+camera.mode = :orbital
 RayWindow.target_fps = 60
 
 until RayWindow.should_close?
   camera.update
 
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    camera.begin_mode3d do
+    camera.mode3d do
       RayDraw.grid 10, 1.0
-      RayDraw.billboard camera, bill_tex, bill_pos, 2.0, RayColor::WHITE
+      RayDraw.billboard camera, bill_tex, bill_pos, 2.0, :white
     end
 
     RayDraw.fps 10, 10

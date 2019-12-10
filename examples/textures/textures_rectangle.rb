@@ -46,32 +46,32 @@ until RayWindow.should_close? # Detect window close button or ESC key
     frame_rec.x = current_frame.to_f * scarfy.width / 6
   end
 
-  frames_speed += 1 if RayKey.is_pressed? :right
-  frames_speed -= 1 if RayKey.is_pressed? :left
+  frames_speed += 1 if RayKey.pressed? :right
+  frames_speed -= 1 if RayKey.pressed? :left
 
   frames_speed = MAX_FRAME_SPEED if frames_speed > MAX_FRAME_SPEED
   frames_speed = MIN_FRAME_SPEED if frames_speed < MIN_FRAME_SPEED
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    scarfy.draw 15, 40, RayColor::WHITE
-    RayDraw.rectangle_lines 15, 40, scarfy.width, scarfy.height, RayColor::LIME
-    RayDraw.rectangle_lines 15 + frame_rec.x, 40 + frame_rec.y, frame_rec.width, frame_rec.height, RayColor::RED
+    scarfy.draw 15, 40, :white
+    RayDraw.rectangle_lines 15, 40, scarfy.width, scarfy.height, :lime
+    RayDraw.rectangle_lines 15 + frame_rec.x, 40 + frame_rec.y, frame_rec.width, frame_rec.height, :red
 
-    RayDraw.text 'FRAME SPEED: ', 165, 210, 10, RayColor::DARKGRAY
-    RayDraw.text format('%<frames_speed>02i FPS', frames_speed: frames_speed), 575, 210, 10, RayColor::DARKGRAY
-    RayDraw.text 'PRESS RIGHT/LEFT KEYS to CHANGE SPEED!', 290, 240, 10, RayColor::DARKGRAY
+    RayDraw.text 'FRAME SPEED: ', 165, 210, 10, :darkgray
+    RayDraw.text format('%<frames_speed>02i FPS', frames_speed: frames_speed), 575, 210, 10, :darkgray
+    RayDraw.text 'PRESS RIGHT/LEFT KEYS to CHANGE SPEED!', 290, 240, 10, :darkgray
 
     (1..MAX_FRAME_SPEED).each do |i|
-      RayDraw.rectangle 229 + 21 * i, 205, 20, 20, RayColor::RED if i <= frames_speed
-      RayDraw.rectangle_lines 229 + 21 * i, 205, 20, 20, RayColor::MAROON
+      RayDraw.rectangle 229 + 21 * i, 205, 20, 20, :red if i <= frames_speed
+      RayDraw.rectangle_lines 229 + 21 * i, 205, 20, 20, :maroon
     end
 
-    scarfy.draw_rec frame_rec, position, RayColor::WHITE
+    scarfy.draw_rec frame_rec, position, :white
 
-    RayDraw.text '(c) Scarfy sprite by Eiden Marsal', screen_w - 200, screen_h - 20, 10, RayColor::GRAY
+    RayDraw.text '(c) Scarfy sprite by Eiden Marsal', screen_w - 200, screen_h - 20, 10, :gray
   end
 end
 

@@ -36,11 +36,11 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # TODO: Update your variables here
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    texture.draw screen_w / 2 - texture.width / 2, screen_h / 2 - texture.height / 2, RayColor::WHITE
-    RayDraw.text 'this IS a texture loaded from an image!', 300, 370, 10, RayColor::GRAY
+    texture.draw screen_w / 2 - texture.width / 2, screen_h / 2 - texture.height / 2, :white
+    RayDraw.text 'this IS a texture loaded from an image!', 300, 370, 10, :gray
   end
 end
 

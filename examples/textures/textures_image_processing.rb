@@ -35,10 +35,10 @@ RayWindow.init screen_w, screen_h, 'ruby raylib [textures] example - image proce
 # NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
 
 image = RayImage.load 'resources/parrots.png'   # Loaded in CPU memory (RAM)
-image.format! RayImage::UNCOMPRESSED_R8G8B8A8   # Format image to RGBA 32bit (required for texture update) <-- ISSUE
+image.format! :uncompressed_r8g8b8a8            # Format image to RGBA 32bit (required for texture update) <-- ISSUE
 texture = image.to_texture2d                    # Image converted to texture, GPU memory (VRAM)
 
-current_process = 0
+current_process = 1
 texture_reload  = false
 
 rectangles = Array.new(NUM_PROCESSES) { |index| RayRectangle.new 40, 50 + 32 * index, 150, 30 }
@@ -48,11 +48,11 @@ RayWindow.target_fps = 60
 # Main game loop
 until RayWindow.should_close? # Detect window close button or ESC key
   # Update
-  if RayKey.is_pressed? RayKey::DOWN
+  if RayKey.pressed? :down
     current_process += 1
     current_process = 0 if current_process > 7
     texture_reload = true
-  elsif RayKey.is_pressed? RayKey::UP
+  elsif RayKey.pressed? :up
     current_process -= 1
     current_process = 7 if current_process.negative?
     texture_reload = true
@@ -71,7 +71,7 @@ until RayWindow.should_close? # Detect window close button or ESC key
     if %i[color_grayscale! color_invert! flip_vertical! flip_horizontal!].include? process
       image.send process
     elsif process == :color_tint!
-      image.color_tint! RayColor::GREEN
+      image.color_tint! :green
     elsif process == :color_contrast!
       image.color_contrast!(-40)
     elsif process == :color_brightness!
@@ -86,21 +86,21 @@ until RayWindow.should_close? # Detect window close button or ESC key
   end
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::RAYWHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :raywhite
 
-    RayDraw.text 'IMAGE PROCESSING:', 40, 30, 10, RayColor::DARKGRAY
+    RayDraw.text 'IMAGE PROCESSING:', 40, 30, 10, :darkgray
 
     # Draw Rectangles
     (0...NUM_PROCESSES).each do |index|
       rectangle = rectangles[index]
-      rectangle.draw index == current_process ? RayColor::SKYBLUE : RayColor::LIGHTGRAY
-      RayDraw.rectangle_lines rectangle.x, rectangle.y, rectangle.width, rectangle.height, index == current_process ? RayColor::BLUE : RayColor::GRAY
-      RayDraw.text texts[index], rectangle.x + rectangle.width / 2 - RayFont.measure_text(texts[index], 10) / 2, rectangle.y + 11, 10, index == current_process ? RayColor::DARKBLUE : RayColor::DARKGRAY
+      rectangle.draw index == current_process ? :skyblue : :lightgray
+      RayDraw.rectangle_lines rectangle.x, rectangle.y, rectangle.width, rectangle.height, index == current_process ? :blue : :gray
+      RayDraw.text texts[index], rectangle.x + rectangle.width / 2 - RayFont.measure_text(texts[index], 10) / 2, rectangle.y + 11, 10, index == current_process ? :darkblue : :darkgray
     end
 
-    texture.draw screen_w - texture.width - 60, screen_h / 2 - texture.height / 2, RayColor::WHITE
-    RayDraw.rectangle_lines screen_w - texture.width - 60, screen_h / 2 - texture.height / 2, texture.width, texture.height, RayColor::BLACK
+    texture.draw screen_w - texture.width - 60, screen_h / 2 - texture.height / 2, :white
+    RayDraw.rectangle_lines screen_w - texture.width - 60, screen_h / 2 - texture.height / 2, texture.width, texture.height, :black
   end
 end
 

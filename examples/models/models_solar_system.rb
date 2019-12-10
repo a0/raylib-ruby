@@ -24,7 +24,7 @@ class Body
   end
 
   def draw(camera)
-    model.draw RayVector3.new(0.0, 0.0, 0.0), radius, RayColor::WHITE
+    model.draw RayVector3.new(0.0, 0.0, 0.0), radius, :white
 
     self.screen_pos = camera.world_to_screen RayVector3.new(orbit_radius, radius, 0.0)
 
@@ -39,12 +39,12 @@ class Body
         child.draw camera
       end
 
-      RayDraw.circle_3d RayVector3.new(0.0, 0.0, 0.0), child.orbit_radius, RayVector3.new(1.0, 0.0, 0.0), 90.0, RayColor::GRAY
+      RayDraw.circle_3d RayVector3.new(0.0, 0.0, 0.0), child.orbit_radius, RayVector3.new(1.0, 0.0, 0.0), 90.0, :gray
     end
   end
 
   def draw_names
-    RayDraw.text name, screen_pos.x - RayFont.measure_text(name, 10) / 2, screen_pos.y, 20, RayColor::WHITE if screen_pos
+    RayDraw.text name, screen_pos.x - RayFont.measure_text(name, 10) / 2, screen_pos.y, 20, :white if screen_pos
 
     children.each(&:draw_names)
   end
@@ -54,7 +54,7 @@ class Body
 
     @model = RayModel.load 'resources/solar_system/sphere.obj'
     if texture
-      diffuse = @model.materials[0].maps[RayMaterialMap::DIFFUSE].texture = texture
+      diffuse = @model.materials[0].maps[0].texture = texture
       diffuse.gen_mipmaps
     end
 
@@ -68,9 +68,9 @@ camera = RayCamera.new  RayVector3.new(16.0, 16.0, 16.0),
                         RayVector3.new(0.0, 0.0, 0.0),
                         RayVector3.new(0.0, 5.0, 0.0),
                         45.0,
-                        RayCamera::TYPE_PERSPECTIVE
+                        :perspective
 
-camera.mode = RayCamera::MODE_FREE
+camera.mode = :free
 
 sun     = Body.new radius: 0.2, name: 'sun', texture: '2k_sun'
 moon    = Body.new radius: 0.05, orbit_radius: 0.200,  orbit_period: 24,      name: 'moon',     texture: '2k_moon'
@@ -94,12 +94,12 @@ RayWindow.target_fps = 60
 until RayWindow.should_close?
   camera.update
 
-  RayWindow.toggle_fullscreen if RayKey.is_down? RayKey::F
+  RayWindow.toggle_fullscreen if RayKey.down? :f
 
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::BLACK
+  RayDraw.drawing do
+    RayDraw.clear_background :black
 
-    camera.begin_mode3d do
+    camera.mode3d do
       sun.draw camera
 
       RayDraw.grid 80.0, 1.0
@@ -107,9 +107,9 @@ until RayWindow.should_close?
 
     sun.draw_names
 
-    RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, RayColor::YELLOW
+    RayDraw.text 'FULL SOLAR SYSTEM', 400, 10, 20, :yellow
     camera_str = "\nposition: #{camera.position}\ntarget: #{camera.target}\nup: #{camera.up}"
-    RayDraw.text "Camera #{camera_str}", 10, 50, 20, RayColor::WHITE
+    RayDraw.text "Camera #{camera_str}", 10, 50, 20, :white
     RayDraw.fps 10, 10
   end
 end

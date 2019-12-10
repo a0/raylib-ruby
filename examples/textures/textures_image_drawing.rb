@@ -39,7 +39,7 @@ cat.unload
 font = RayFont.load 'resources/custom_jupiter_crash.png'
 
 # Draw over image using custom font
-parrots.draw_text_ex! RayVector2.new(300, 200), font, 'PARROTS & CAT', font.base_size, -2, RayColor::WHITE
+parrots.draw_text_ex! RayVector2.new(300, 200), font, 'PARROTS & CAT', font.base_size, -2, :white
 
 # Unload custom spritefont (already drawn used on image)
 font.unload
@@ -52,15 +52,15 @@ RayWindow.target_fps = 60
 # Main game loop
 until RayWindow.should_close? # Detect window close button or ESC key
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
-    texture.draw screen_w / 2 - texture.width / 2, screen_h / 2 - texture.height / 2 - 40, RayColor::WHITE
-    RayDraw.rectangle_lines screen_w / 2 - texture.width / 2, screen_h / 2 - texture.height / 2 - 40, texture.width, texture.height, RayColor::DARKGRAY
+    texture.draw screen_w / 2 - texture.width / 2, screen_h / 2 - texture.height / 2 - 40, :white
+    RayDraw.rectangle_lines screen_w / 2 - texture.width / 2, screen_h / 2 - texture.height / 2 - 40, texture.width, texture.height, :darkgray
 
-    RayDraw.text 'We are drawing only one texture from various images composed!', 240, 350, 10, RayColor::GRAY
-    RayDraw.text 'Source images have been cropped, scaled, flipped and copied one over the other.', 190, 370, 10, RayColor::GRAY
-    RayDraw.text "Texture: #{texture.width} #{texture.height}", 190, 390, 10, RayColor::GRAY
+    RayDraw.text 'We are drawing only one texture from various images composed!', 240, 350, 10, :gray
+    RayDraw.text 'Source images have been cropped, scaled, flipped and copied one over the other.', 190, 370, 10, :gray
+    RayDraw.text "Texture: #{texture.width} #{texture.height}", 190, 390, 10, :gray
   end
 end
 

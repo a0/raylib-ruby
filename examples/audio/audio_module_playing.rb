@@ -30,9 +30,9 @@ RayWindow.init screen_w, screen_h, 'ruby raylib [audio] example - module playing
 
 RayAudioDevice.init # Initialize audio device
 
-colors = [RayColor::ORANGE, RayColor::RED, RayColor::GOLD, RayColor::LIME, RayColor::BLUE, RayColor::VIOLET,
-          RayColor::BROWN, RayColor::LIGHTGRAY, RayColor::PINK, RayColor::YELLOW, RayColor::GREEN,
-          RayColor::SKYBLUE, RayColor::PURPLE, RayColor::BEIGE]
+colors = [:orange, :red, :gold, :lime, :blue, :violet,
+          :brown, :lightgray, :pink, :yellow, :green,
+          :skyblue, :purple, :beige]
 
 # Creates [s]ome circles for visual effect
 circles = Array.new MAX_CIRCLES do
@@ -58,12 +58,12 @@ until RayWindow.should_close? # Detect window close button or ESC key
   # Update
   xm.update # Update music buffer with new stream data
 
-  if RayKey.is_pressed? :sPACE
+  if RayKey.pressed? :space
     xm.stop
     xm.play
   end
 
-  if RayKey.is_pressed? RayKey::P
+  if RayKey.pressed? :p
     pause = !pause
     pause ? xm.pause : xm.resume
   end
@@ -89,17 +89,17 @@ until RayWindow.should_close? # Detect window close button or ESC key
   end
 
   # Draw
-  RayDraw.begin_drawing do
-    RayDraw.clear_background RayColor::WHITE
+  RayDraw.drawing do
+    RayDraw.clear_background :white
 
     circles.each do |circle|
       RayDraw.circle_v circle.position, circle.radius, circle.color.fade(circle.alpha)
     end
 
     # Draw time bar
-    RayDraw.rectangle 20, screen_h - 20 - 12, screen_w - 40, 12, RayColor::LIGHTGRAY
-    RayDraw.rectangle 20, screen_h - 20 - 12, time_played, 12, RayColor::MAROON unless time_played.nan?
-    RayDraw.rectangle_lines 20, screen_h - 20 - 12, screen_w - 40, 12, RayColor::GRAY
+    RayDraw.rectangle 20, screen_h - 20 - 12, screen_w - 40, 12, :lightgray
+    RayDraw.rectangle 20, screen_h - 20 - 12, time_played, 12, :maroon unless time_played.nan?
+    RayDraw.rectangle_lines 20, screen_h - 20 - 12, screen_w - 40, 12, :gray
   end
 end
 

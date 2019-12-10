@@ -366,7 +366,7 @@ module Raylib
   # RayDraw.cylinder                            // Draw a cylinder/cone
   # RayDraw.cylinder_wires                      // Draw a cylinder/cone wires
   # RayDraw.plane                               // Draw a plane XZ
-  # RayDraw.ray                                 // Draw a ray line
+  # RayRay#draw                                 // Draw a ray line
   # RayDraw.grid                                // Draw a grid (centered at (0, 0, 0))
   # RayDraw.gizmo                               // Draw simple gizmo
 
@@ -423,63 +423,65 @@ module Raylib
   # RayDraw.billboard                           // Draw a billboard texture
   # RayDraw.billboard_ex                        // Draw a billboard texture defined by sourceRec
 
-  # Collision detection functions
-  attach_function :CheckCollisionSpheres, [Vector3.by_value, :float, Vector3.by_value, :float], :bool                                   # Collision#check_spheres
-  attach_function :CheckCollisionBoxes, [BoundingBox.by_value, BoundingBox.by_value], :bool                                             # Collision#check_boxes
-  attach_function :CheckCollisionBoxSphere, [BoundingBox.by_value, Vector3.by_value, :float], :bool                                     # Collision#check_box_sphere
-  attach_function :CheckCollisionRaySphere, [Ray.by_value, Vector3.by_value, :float], :bool                                             # Collision#check_ray_sphere
-  attach_function :CheckCollisionRaySphereEx, [Ray.by_value, Vector3.by_value, :float, Vector3.ptr], :bool                              # Collision#check_ray_sphere_ex
-  attach_function :CheckCollisionRayBox, [Ray.by_value, BoundingBox.by_value], :bool                                                    # Collision#check_ray_box
-  attach_function :GetCollisionRayModel, [Ray.by_value, Model.ptr], RayHitInfo.by_value                                                 # Collision#check_ray_model
-  attach_function :GetCollisionRayTriangle, [Ray.by_value, Vector3.by_value, Vector3.by_value, Vector3.by_value], RayHitInfo.by_value   # Collision#check_ray_triangle
-  attach_function :GetCollisionRayGround, [Ray.by_value, :float], RayHitInfo.by_value                                                   # Collision#check_ray_ground
+  # // Collision detection functions
+  # RayCollision.check_spheres                  // Detect collision between two spheres
+  # RayCollision.check_boxes                    // Detect collision between two bounding boxes
+  # RayCollision.check_box_sphere               // Detect collision between box and sphere
+  # RayCollision.check_ray_sphere               // Detect collision between ray and sphere
+  # RayCollision.check_ray_sphere_ex            // Detect collision between ray and sphere, returns collision point
+  # RayCollision.check_ray_box                  // Detect collision between ray and box
+  # RayCollision.check_ray_model                // Get collision info between ray and model
+  # RayCollision.check_ray_triangle             // Get collision info between ray and triangle
+  # RayCollision.check_ray_ground               // Get collision info between ray and ground plane (Y-normal plane)
 
   #------------------------------------------------------------------------------------
   # Shaders System Functions (Module: rlgl)
   # NOTE: This functions are useless when using OpenGL 1.1
   #------------------------------------------------------------------------------------
 
-  # Shader loading/unloading functions
-  attach_function :LoadText, [:string], :string                                                           # Raylib#load_text
-  attach_function :LoadShader, %i[string string], Shader.by_value                                         # Shader#load
-  attach_function :LoadShaderCode, %i[string string], Shader.by_value                                     # Shader#load_code
-  attach_function :UnloadShader, [Shader.by_value], :void                                                 # Shader#unload
+  # // Shader loading/unloading functions
+  # Raylib.load_text                            // Load chars array from text file
+  # RayShader.load                              // Load shader from files and bind default locations
+  # RayShader.load_code                         // Load shader from code strings and bind default locations
+  # RayShader#unload                            // Unload shader from GPU memory (VRAM)
 
-  attach_function :GetShaderDefault, [], Shader.by_value                                                  # Shader#default
-  attach_function :GetTextureDefault, [], Texture2D.by_value                                              # Texture2D#default
+  # RayShader.default                           // Get default shader
+  # RayTexture2D.default                        // Get default texture
 
-  # Shader configuration functions
-  attach_function :GetShaderLocation, [Shader.by_value, :string], :int                                    # Shader#location
-  attach_function :SetShaderValue, [Shader.by_value, :int, :pointer, :int], :void                         # Shader#set_value
-  attach_function :SetShaderValueV, [Shader.by_value, :int, :pointer, :int, :int], :void                  # Shader#set_value_v
-  attach_function :SetShaderValueTexture, [Shader.by_value, :int, Texture2D.by_value], :void              # Shader#set_value_texture
-  attach_function :SetShaderValueMatrix, [Shader.by_value, :int, Matrix.by_value], :void                  # Shader#set_value_matrix
-  attach_function :SetMatrixProjection, [Matrix.by_value], :void                                          # Shader#matrix_projection=
-  attach_function :SetMatrixModelview, [Matrix.by_value], :void                                           # Shader#matrix_modelview=
-  attach_function :GetMatrixModelview, [], Matrix.by_value                                                # Shader#matrix_modelview
+  # // Shader configuration functions
+  # RayShader.location                          // Get shader uniform location
+  # RayShader.set_value                         // Set shader uniform value
+  # RayShader.set_value_v                       // Set shader uniform value vector
+  # RayShader.set_value_matrix                  // Set shader uniform value (matrix 4x4)
+  # RayShader.set_value_texture                 // Set shader uniform value for texture
+  # RayShader.matrix_projection=                // Set a custom projection matrix (replaces internal projection matrix)
+  # RayShader.matrix_modelview=                 // Set a custom modelview matrix (replaces internal modelview matrix)
+  # RayShader.matrix_modelview                  // Get internal modelview matrix
+  # RayShader.matrix_projection                 // Get internal projection matrix
 
-  # Texture maps generation (PBR)
-  # NOTE: Required shaders should be provided
-  attach_function :GenTextureCubemap, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value     # Shader#gen_texture_cubemap
-  attach_function :GenTextureIrradiance, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value  # Shader#gen_texture_irradiance
-  attach_function :GenTexturePrefilter, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value   # Shader#gen_texture_prefilter
-  attach_function :GenTextureBRDF, [Shader.by_value, Texture2D.by_value, :int], Texture2D.by_value        # Shader#gen_texture_brdf
+  # // Texture maps generation (PBR)
+  # // NOTE: Required shaders should be provided
+  # RayShader.texture_cubemap                   // Generate cubemap texture from HDR texture
+  # RayShader.texture_irradiance                // Generate irradiance texture using cubemap data
+  # RayShader.texture_prefilter                 // Generate prefilter texture using cubemap data
+  # RayShader.texture_brdf                      // Generate BRDF texture
 
-  # Shading begin/end functions
-  attach_function :BeginShaderMode, [Shader.by_value], :void                                              # Shader#begin_shader_mode
-  attach_function :EndShaderMode, [], :void                                                               # Shader#end_shader_mode
-  attach_function :BeginBlendMode, %i[int], :void                                                         # Draw#begin_blend_mode
-  attach_function :EndBlendMode, [], :void                                                                # Draw#end_blend_mode
+  # // Shading begin/end functions
+  # RayShader#begin_shader_mode                 // Begin custom shader drawing
+  # RayShader.end_shader_mode                   // End custom shader drawing (use default shader)
+  # RayDraw.begin_blend_mode                    // Begin blending mode (alpha, additive, multiplied)
+  # RayDraw.end_blend_mode                      // End blending mode (reset to default: alpha blending)
 
-  # VR control functions
-  attach_function :InitVrSimulator, [], :void                                                             # VrDeviceInfo#init_vr_simulator
-  attach_function :CloseVrSimulator, [], :void                                                            # VrDeviceInfo#close_vr_simulator
-  attach_function :UpdateVrTracking, [Camera.ptr], :void                                                  # VrDeviceInfo#vr_tracking=
-  attach_function :SetVrConfiguration, [VrDeviceInfo.by_value, Shader.by_value], :void                    # VrDeviceInfo#distortion=
-  attach_function :IsVrSimulatorReady, [], :bool                                                          # VrDeviceInfo#is_vr_simulator_ready?
-  attach_function :ToggleVrMode, [], :void                                                                # VrDeviceInfo#toggle_vr_mode
-  attach_function :BeginVrDrawing, [], :void                                                              # VrDeviceInfo#begin_vr_drawing
-  attach_function :EndVrDrawing, [], :void                                                                # VrDeviceInfo#end_vr_drawing
+  # // VR control functions
+  # RayVR.init                                  // Init VR simulator for selected device parameters
+  # RayVR.close                                 // Close VR simulator for current device
+  # RayVR.tracking=                             // Update VR tracking (position and orientation) and camera
+  # RayVR.config=                               // Set stereo rendering configuration parameters
+  # RayVR.ready?                                // Detect if VR simulator is ready
+  # RayVR.toggle                                // Enable/Disable VR experience
+  # RayVR.begin_drawing                         // Begin VR simulator stereo rendering
+  # RayVR.end_drawing                           // End VR simulator stereo rendering
+
 
   #------------------------------------------------------------------------------------
   # Audio Loading and Playing Functions (Module: audio)

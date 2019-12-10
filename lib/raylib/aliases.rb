@@ -45,5 +45,6 @@ RayVector3 = Raylib::Vector3
 RayVector4 = Raylib::Vector4
 RayQuaternion = Raylib::Quaternion
 RayVrDeviceInfo = Raylib::VrDeviceInfo
+RayVR = Raylib::VR
 RayWave = Raylib::Wave
 RayWindow = Raylib::Window

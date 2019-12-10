@@ -29,7 +29,7 @@ require_relative 'custom/sound'
 require_relative 'custom/texture2d'
 require_relative 'custom/touch'
 require_relative 'custom/vector3'
-require_relative 'custom/vr_device_info'
+require_relative 'custom/vr'
 require_relative 'custom/wave'
 require_relative 'custom/window'
 
@@ -80,15 +80,13 @@ module Raylib
 
   ray_static :OpenURL,                :open_url,              %i[string], :void                           # Open URL with default system browser (if available)
 
+  #------------------------------------------------------------------------------------
+  # Shaders System Functions (Module: rlgl)
+  # NOTE: This functions are useless when using OpenGL 1.1
+  #------------------------------------------------------------------------------------
 
-
-
-
-
-
-  
   # Shader loading/unloading functions
-  Raylib.singleton_class.send :alias_method, :load_text,              :LoadText # Load chars array from text file
+  ray_static :LoadText,               :load_text,             %i[string], :string # Load chars array from text file
 
   #
   # raymath.h

@@ -50,6 +50,7 @@ module Raylib
   class Vector4 < FFI::Struct; end
   Quaternion = Vector4 # Quaternion type, same as Vector4
   class VrDeviceInfo < FFI::Struct; end
+  class VR; end
   class Wave < FFI::Struct; end
   class Window; end
 end

@@ -28,5 +28,13 @@ module Raylib
     ray_object :DrawTextureQuad,    :draw_quad,     [Texture2D.by_value, Vector2.by_value, Vector2.by_value, Rectangle.by_value, Color.by_value], :void               # Draw texture quad with tiling and offset parameters
     ray_object :DrawTexturePro,     :draw_pro,      [Texture2D.by_value, Rectangle.by_value, Rectangle.by_value, Vector2.by_value, :float, Color.by_value], :void     # Draw a part of a texture defined by a rectangle with 'pro' parameters
     ray_object :DrawTextureNPatch,  :draw_n_patch,  [Texture2D.by_value, NPatchInfo.by_value, Rectangle.by_value, Vector2.by_value, :float, Color.by_value], :void    # Draws a texture (or part of it) that stretches or shrinks nicely
+
+    #------------------------------------------------------------------------------------
+    # Shaders System Functions (Module: rlgl)
+    # NOTE: This functions are useless when using OpenGL 1.1
+    #------------------------------------------------------------------------------------
+
+    # Shader loading/unloading functions
+    ray_static :GetTextureDefault,  :default,       [], Texture2D.by_value # Get default texture
   end
 end

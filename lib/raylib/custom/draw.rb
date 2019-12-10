@@ -93,6 +93,15 @@ module Raylib
     ray_static :DrawBillboard,    :billboard,     [Camera.by_value, Texture2D.by_value, Vector3.by_value, :float, Color.by_value], :void                        # Draw a billboard texture
     ray_static :DrawBillboardRec, :billboard_ex,  [Camera.by_value, Texture2D.by_value, Rectangle.by_value, Vector3.by_value, :float, Color.by_value], :void    # Draw a billboard texture defined by sourceRec
 
+    #------------------------------------------------------------------------------------
+    # Shaders System Functions (Module: rlgl)
+    # NOTE: This functions are useless when using OpenGL 1.1
+    #------------------------------------------------------------------------------------
+
+    # Shading begin/end functions
+    ray_object :BeginBlendMode,   :begin_shader_mode, [BlendMode], :void    # Begin custom shader drawing
+    ray_static :EndBlendMode,     :end_shader_mode,   [], :void             # End custom shader drawing (use default shader)
+
     # ensures begin_drawing/end_drawing using a block
     def self.drawing
       begin_drawing
@@ -113,16 +122,14 @@ module Raylib
       end
     end
 
-    # Shading begin/end functions
-    # Begin blending mode (alpha, additive, multiplied)
-    def self.begin_blend_mode(mode)
-      Raylib.BeginBlendMode mode
-      return unless block_given?
-
-      yield
-      end_blend_mode
+    # ensures bing_scissor_mode/end_scissor_mode using a block
+    def self.blend_mode(blend_mode)
+      begin_blend_mode(blend_mode)
+      begin
+        yield
+      ensure
+        end_blend_mode
+      end
     end
-
-    ray_alias_static :EndBlendMode, :end_blend_mode # End blending mode (reset to default: alpha blending)
   end
 end

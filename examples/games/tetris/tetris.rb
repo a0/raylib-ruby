@@ -137,8 +137,8 @@ class Game
   end
 
   def draw
-    RayDraw.begin_drawing do
-      RayDraw.clear_background RayColor::RAYWHITE
+    RayDraw.drawing do
+      RayDraw.clear_background :raywhite
       if over
       elsif pause
       else
@@ -150,11 +150,11 @@ class Game
 
         # show incoming piece
         incoming.draw(500, 45)
-        RayDraw.text 'INCOMING:', 500, 20, 10, RayColor::GRAY
-        RayDraw.text format('LINES:     %<lines>05i', lines: lines), 500, 135, 10, RayColor::GRAY
-        RayDraw.text format('SCORE:    %<score>05i', score: @score), 500, 145, 10, RayColor::BLACK
+        RayDraw.text 'INCOMING:', 500, 20, 10, :gray
+        RayDraw.text format('LINES:     %<lines>05i', lines: lines), 500, 135, 10, :gray
+        RayDraw.text format('SCORE:    %<score>05i', score: @score), 500, 145, 10, :black
 
-        RayDraw.text 'GAME OVER', 265, 200, 40, RayColor::BLACK if @game_over
+        RayDraw.text 'GAME OVER', 265, 200, 40, :black if @game_over
       end
     end
   end

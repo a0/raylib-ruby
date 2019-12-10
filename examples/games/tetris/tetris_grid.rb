@@ -44,19 +44,19 @@ Grid = Struct.new :hor_size, :ver_size, :gmtr, keyword_init: true do
     (0...ver_size).each do |j|
       (0...hor_size).each do |i|
         if matrix[i, j] == EMPTY || matrix[i, j] == FALLING
-          RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::LIGHTGRAY
-          RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::LIGHTGRAY
-          RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
-          RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::LIGHTGRAY
+          RayDraw.line x, y, x + SQUARE_SIZE, y, :lightgray
+          RayDraw.line x, y, x, y + SQUARE_SIZE, :lightgray
+          RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, :lightgray
+          RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, :lightgray
           x += SQUARE_SIZE
         elsif matrix[i, j] == :full
-          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, RayColor::GRAY
+          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, :gray
           x += SQUARE_SIZE
         elsif matrix[i, j] == :moving
-          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, RayColor::DARKGRAY
+          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, :darkgray
           x += SQUARE_SIZE
         elsif matrix[i, j] == :block
-          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, RayColor::LIGHTGRAY
+          RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, :lightgray
           x += SQUARE_SIZE
         elsif matrix[i, j] == :fading
           RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, fading_color

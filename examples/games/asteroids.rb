@@ -53,21 +53,21 @@ class Player < Item
   def update
     # Player logic: rotation
     rot_rad = rot * DEG2RAD
-    self.rot -= 5 if RayKey.is_down? :left
-    self.rot += 5 if RayKey.is_down? :right
+    self.rot -= 5 if RayKey.down? :left
+    self.rot += 5 if RayKey.down? :right
 
     # Player logic: speed
     spd.x = Math.sin(rot_rad) * PLAYER_SPEED
     spd.y = Math.cos(rot_rad) * PLAYER_SPEED
 
     # Player logic: acceleration
-    if RayKey.is_down? :up
+    if RayKey.down? :up
       self.acc += 0.04 if acc < 1
     else
       self.acc -= 0.02 if self.acc.positive?
       self.acc = 0 if self.acc.negative?
     end
-    if RayKey.is_down? :down
+    if RayKey.down? :down
       self.acc -= 0.04 if self.acc.positive?
       self.acc = 0 if self.acc.negative?
     end
@@ -83,7 +83,7 @@ class Player < Item
     pos.y = game.screen_h + ship_height if pos.y < -ship_height
 
     # Player shoot logic
-    shoot if RayKey.is_pressed? :space
+    shoot if RayKey.pressed? :space
 
     # Collision logic: player
     @collider.x = pos.x + Math.sin(rot_rad) * ship_height / 2.5
@@ -281,9 +281,9 @@ class Game
 
   def update
     if @over || @victory
-      initialize if RayKey.is_pressed? :enter
+      initialize if RayKey.pressed? :enter
     else
-      @paused = !@paused if RayKey.is_pressed? :p
+      @paused = !@paused if RayKey.pressed? :p
 
       return if @paused
 

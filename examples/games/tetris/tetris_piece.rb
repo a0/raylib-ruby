@@ -38,10 +38,10 @@ class Piece < Grid
         (0...PIECE_GRID_DIM).each do |i|
           if matrix[i, j] == EMPTY
             if stopped?
-              RayDraw.line x, y, x + SQUARE_SIZE, y, RayColor::GOLD
-              RayDraw.line x, y, x, y + SQUARE_SIZE, RayColor::GOLD
-              RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
-              RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, RayColor::GOLD
+              RayDraw.line x, y, x + SQUARE_SIZE, y, :gold
+              RayDraw.line x, y, x, y + SQUARE_SIZE, :gold
+              RayDraw.line x + SQUARE_SIZE, y, x + SQUARE_SIZE, y + SQUARE_SIZE, :gold
+              RayDraw.line x, y + SQUARE_SIZE, x + SQUARE_SIZE, y + SQUARE_SIZE, :gold
             end
           else
             RayDraw.rectangle x, y, SQUARE_SIZE, SQUARE_SIZE, falling_color
@@ -174,13 +174,13 @@ class Piece < Grid
 
     @gmtr = game_grid_matrix
     down_pressed = false
-    if RayKey.is_pressed? :left
+    if RayKey.pressed? :left
       @gridx -= 1 if can_left?
-    elsif RayKey.is_pressed? :right
+    elsif RayKey.pressed? :right
       @gridx += 1 if can_right?
-    elsif RayKey.is_pressed? RayKey::UP
+    elsif RayKey.pressed? :up
       @matrix = rotate!(90)
-    elsif RayKey.is_down? RayKey::DOWN
+    elsif RayKey.down? :down
       down_pressed = true
     end
 

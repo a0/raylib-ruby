@@ -38,11 +38,14 @@ module Raylib
 
     # TODO: There must be a better way of doing this…
     def materials
+      puts "materials: #{@materials}" if @materials
       return @materials if @materials
 
       @materials = material_count.times.map do |i|
         Material.new(self[:materials] + i * Material.size)
       end
+      puts "materials: #{@materials} material_count: #{material_count}"
+      @materials
     end
 
     # TODO: There must be a better way of doing this…

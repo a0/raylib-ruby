@@ -99,8 +99,8 @@ module Raylib
     #------------------------------------------------------------------------------------
 
     # Shading begin/end functions
-    ray_object :BeginBlendMode,   :begin_shader_mode, [BlendMode], :void    # Begin custom shader drawing
-    ray_static :EndBlendMode,     :end_shader_mode,   [], :void             # End custom shader drawing (use default shader)
+    ray_static :BeginBlendMode,   :begin_blend_mode, [BlendMode], :void    # Begin custom shader drawing
+    ray_static :EndBlendMode,     :end_blend_mode,   [], :void             # End custom shader drawing (use default shader)
 
     # ensures begin_drawing/end_drawing using a block
     def self.drawing

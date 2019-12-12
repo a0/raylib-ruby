@@ -13,7 +13,7 @@ module Raylib
 
     ray_static :LoadFontData,       :load_data,     [:string, :int, :int, :int, FontType], :pointer               # Load font data for further use
     ray_static :GenImageFontAtlas,  :image_atlas,   %i[pointer pointer int int int int], Image.by_value           # Generate image font atlas using chars info
-    ray_object :UnloadFont,         :unload,        [], :void                                                     # Unload Font from GPU memory (VRAM)
+    ray_object :UnloadFont,         :unload,        [Font.by_value], :void                                        # Unload Font from GPU memory (VRAM)
 
     # Text misc. functions
     ray_static :MeasureText,        :measure_text,  %i[string int], :int                                          # Measure string width for default font

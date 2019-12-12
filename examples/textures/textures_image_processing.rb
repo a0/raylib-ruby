@@ -35,10 +35,10 @@ RayWindow.init screen_w, screen_h, 'ruby raylib [textures] example - image proce
 # NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
 
 image = RayImage.load 'resources/parrots.png'   # Loaded in CPU memory (RAM)
-image.format! :uncompressed_r8g8b8a8            # Format image to RGBA 32bit (required for texture update) <-- ISSUE
+image.format! 7 #:uncompressed_r8g8b8a8            # Format image to RGBA 32bit (required for texture update) <-- ISSUE
 texture = image.to_texture2d                    # Image converted to texture, GPU memory (VRAM)
 
-current_process = 1
+current_process = 0
 texture_reload  = false
 
 rectangles = Array.new(NUM_PROCESSES) { |index| RayRectangle.new 40, 50 + 32 * index, 150, 30 }

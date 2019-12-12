@@ -39,5 +39,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.9'
   spec.add_development_dependency 'rubocop', '~> 0.77'
 
-  spec.add_runtime_dependency 'ffi', '~> 1.11'
+  spec.add_runtime_dependency 'ffi', '~> 1.11.3'
 end

@@ -20,7 +20,7 @@ module Raylib
     ray_object :UnloadImage,              :unload,                [Image.by_value], :void                                                                         # Unload image from CPU memory (RAM)
 
     ray_object :GetImageData,             :to_data,               [Image.by_value], :pointer                                                                      # Get pixel data from image as a Color struct array
-    ray_object :GetImageDataNormalized,   :to_data,               [Image.by_value], :pointer                                                                      # Get pixel data from image as Vector4 array (float normalized)
+    ray_object :GetImageDataNormalized,   :to_data_normalized,    [Image.by_value], :pointer                                                                      # Get pixel data from image as Vector4 array (float normalized)
     ray_object :GetImageAlphaBorder,      :alpha_border,          [Image.by_value, :float], Rectangle.by_value                                                    # Get image alpha border rectangle
     ray_static :GetPixelDataSize,         :pixel_data_size,       %i[int int int], :int                                                                           # Get pixel data size in bytes (image or texture)
 

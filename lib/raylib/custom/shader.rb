@@ -15,7 +15,7 @@ module Raylib
     ray_static :GetShaderDefault, :default,       [], Shader.by_value                   # Get default shader
 
     # Shader configuration functions
-    ray_object :GetShaderLocation,      :location,            [Shader.by_value, :string], :void                                       # Get shader uniform location
+    ray_object :GetShaderLocation,      :location,            [Shader.by_value, :string], :int                                        # Get shader uniform location
     ray_object :SetShaderValue,         :set_value,           [Shader.by_value, :int, :pointer, ShaderUniformDataType], :void         # Set shader uniform value
     ray_object :SetShaderValueV,        :set_value_v,         [Shader.by_value, :int, :pointer, ShaderUniformDataType, :int], :void   # Set shader uniform value vector
     ray_object :SetShaderValueMatrix,   :set_value_matrix,    [Shader.by_value, :int, Matrix.by_value], :void                         # Set shader uniform value (matrix 4x4)

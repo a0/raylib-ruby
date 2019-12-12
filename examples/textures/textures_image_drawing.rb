@@ -29,7 +29,7 @@ cat.resize! 150, 200                            # Resize flipped-cropped image
 parrots = RayImage.load 'resources/parrots.png' # Load image in CPU memory (RAM)
 
 # Draw one image over the other with a scaling of 1.5f
-parrots.draw! cat, RayRectangle.new(0, 0, cat.width, cat.height), RayRectangle.new(30, 40, cat.width * 1.5, cat.height * 1.5)
+parrots.draw! cat, RayRectangle.new(0, 0, cat.width, cat.height), RayRectangle.new(30, 40, cat.width * 1.5, cat.height * 1.5), :white
 parrots.crop! RayRectangle.new(0, 50, parrots.width, parrots.height - 100) # Crop resulting image
 
 # Unload image from RAM

@@ -8,7 +8,7 @@ module Raylib
 
     # Drawing-related functions
     ray_object :BeginTextureMode, :begin_texture_mode,  [Camera2D.by_value], :void    # Initializes render texture for drawing
-    ray_object :EndTextureMode,   :end_texture_mode,    [], :void                     # Ends drawing to render texture
+    ray_static :EndTextureMode,   :end_texture_mode,    [], :void                     # Ends drawing to render texture
 
     #------------------------------------------------------------------------------------
     # Texture Loading and Drawing Functions (Module: textures)
@@ -26,7 +26,7 @@ module Raylib
       begin
         yield
       ensure
-        end_texture_mode
+        self.class.end_texture_mode
       end
     end
   end

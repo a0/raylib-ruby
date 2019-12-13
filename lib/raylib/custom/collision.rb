@@ -26,7 +26,7 @@ module Raylib
     ray_static :CheckCollisionRaySphere,      :check_ray_sphere,      [Ray.by_value, Vector3.by_value, :float], :bool                                             # Detect collision between ray and sphere
     ray_static :CheckCollisionRaySphereEx,    :check_ray_sphere_ex,   [Ray.by_value, Vector3.by_value, :float, :pointer], :bool                                   # Detect collision between ray and sphere, returns collision point
     ray_static :CheckCollisionRayBox,         :check_ray_box,         [Ray.by_value, BoundingBox.by_value], :bool                                                 # Detect collision between ray and box
-    ray_static :GetCollisionRayModel,         :check_ray_model,       [Ray.by_value, Model.by_value], RayHitInfo.by_value                                         # Get collision info between ray and model
+    ray_static :GetCollisionRayModel,         :check_ray_model,       [Ray.by_value, Model.ptr], RayHitInfo.by_value                                             # Get collision info between ray and model
     ray_static :GetCollisionRayTriangle,      :check_ray_triangle,    [Ray.by_value, Vector3.by_value, Vector3.by_value, Vector3.by_value], RayHitInfo.by_value   # Get collision info between ray and triangle
     ray_static :GetCollisionRayGround,        :check_ray_ground,      [Ray.by_value, :float], RayHitInfo.by_value                                                 # Get collision info between ray and ground plane (Y-normal plane)
   end

@@ -27,8 +27,6 @@ module Raylib
     ray_static :GetScreenWidth,     :width,             [], :int                    # Get current screen width
     ray_static :GetScreenHeight,    :height,            [], :int                    # Get current screen height
 
-    ray_static :GetWindowPosition,  :position,          [], Vector2.by_value        # Get window position XY on monitor
-
     # Timming-related functions
     ray_static :SetTargetFPS,       :target_fps=,       [:int], :void               # Set target FPS (maximum)
     ray_static :GetFPS,             :fps,               [], :int                    # Returns current FPS

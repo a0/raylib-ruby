@@ -23,7 +23,6 @@ module Raylib
     ray_object :SetMatrixProjection,    :matrix_projection=,  [Matrix.by_value], :void                                                # Set a custom projection matrix (replaces internal projection matrix)
     ray_static :SetMatrixModelview,     :matrix_modelview=,   [Matrix.by_value], :void                                                # Set a custom modelview matrix (replaces internal modelview matrix)
     ray_static :GetMatrixModelview,     :matrix_modelview,    [], Matrix.by_value                                                     # Get internal modelview matrix
-    ray_static :GetMatrixProjection,    :matrix_projection,   [], Matrix.by_value                                                     # Get internal projection matrix
 
     # Texture maps generation (PBR)
     # NOTE: Required shaders should be provided

@@ -11,9 +11,6 @@ module Raylib
     ray_static :BeginDrawing,               :begin_drawing,           [], :void                                                                                     # Setup canvas (framebuffer) to start drawing
     ray_static :EndDrawing,                 :end_drawing,             [], :void                                                                                     # End canvas drawing and swap buffers (double buffering)
 
-    ray_static :BeginScissorMode,           :begin_scissor_mode,      %i[int int int int], :void                                                                    # Begin scissor mode (define screen area for following drawing)
-    ray_static :EndScissorMode,             :end_scissor_mode,        [], :void                                                                                     # End scissor mode
-
     #------------------------------------------------------------------------------------
     # Basic Shapes Drawing Functions (Module: shapes)
     #------------------------------------------------------------------------------------
@@ -42,10 +39,9 @@ module Raylib
 
     ray_static :DrawRectangleLines,         :rectangle_lines,         [:int, :int, :int, :int, Color.by_value], :void                                               # Draw rectangle outline
 
-    ray_static :DrawTriangle,               :triangle,                [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void                 # Draw a color-filled triangle (vertex in counter-clockwise order!)
-    ray_static :DrawTriangleLines,          :triangle_lines,          [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void                 # Draw triangle outline (vertex in counter-clockwise order!)
-    ray_static :DrawTriangleFan,            :triangle_fan,            [Vector2.by_value, :int, Color.by_value], :void                                               # Draw a triangle fan defined by points (first vertex is the center)
-    ray_static :DrawTriangleStrip,          :triangle_strip,          [:pointer, :int, Color.by_value], :void                                                       # Draw a triangle strip defined by points
+    ray_static :DrawTriangle,               :triangle,                [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void                 # Draw a color-filled triangle
+    ray_static :DrawTriangleLines,          :triangle_lines,          [Vector2.by_value, Vector2.by_value, Vector2.by_value, Color.by_value], :void                 # Draw triangle outline
+    ray_static :DrawTriangleFan,            :triangle_fan,            [Vector2.by_value, :int, Color.by_value], :void                                               # Draw a triangle fan defined by points
     ray_static :DrawPoly,                   :poly,                    [Vector2.by_value, :int, :float, :float, Color.by_value], :void                               # Draw a regular polygon (Vector version)
 
     ray_static :SetShapesTexture,           :set_shapes_texture,      [Texture2D.by_value, Rectangle.by_value], :void                                               # Define default texture used to draw shapes
@@ -61,7 +57,6 @@ module Raylib
     ray_static :DrawTextRec,                :text_rec,                [Font.by_value, :string, Rectangle.by_value, :float, :float, :bool, Color.by_value], :void    # Draw text using font inside rectangle limits
     ray_static :DrawTextRecEx,              :text_rec_ex,             [Font.by_value, :string, Rectangle.by_value, :float, :float, :bool,
                                                                        Color.by_value, :int, :int, Color.by_value, Color.by_value], :void                           # Draw text using font inside rectangle limits with support for text selection
-    ray_static :DrawTextCodepoint,          :text_codepoint,          [Font.by_value, :int, Vector2.by_value, :float, Color.by_value], :void                        # Draw one character (codepoint)
 
     #------------------------------------------------------------------------------------
     # Basic 3d Shapes Drawing Functions (Module: models)
@@ -99,8 +94,10 @@ module Raylib
     #------------------------------------------------------------------------------------
 
     # Shading begin/end functions
-    ray_static :BeginBlendMode,   :begin_blend_mode, [BlendMode], :void    # Begin custom shader drawing
-    ray_static :EndBlendMode,     :end_blend_mode,   [], :void             # End custom shader drawing (use default shader)
+    ray_static :BeginBlendMode,   :begin_blend_mode,    [BlendMode], :void            # Begin custom shader drawing
+    ray_static :EndBlendMode,     :end_blend_mode,      [], :void                     # End custom shader drawing (use default shader)
+    ray_static :BeginScissorMode, :begin_scissor_mode,  %i[int int int int], :void    # Begin scissor mode (define screen area for following drawing)
+    ray_static :EndScissorMode,   :end_scissor_mode,    [], :void                     # End scissor mode
 
     # ensures begin_drawing/end_drawing using a block
     def self.drawing

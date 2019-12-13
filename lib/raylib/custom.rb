@@ -56,12 +56,10 @@ module Raylib
   # Files management functions
   ray_static :FileExists,             :file_exists?,          %i[string], :bool                           # Check if file exists
   ray_static :IsFileExtension,        :file_extension?,       %i[string string], :bool                    # Check file extension
-  ray_static :DirectoryExists,        :directory_exists?,     %i[string], :bool                           # Check if a directory path exists
   ray_static :GetExtension,           :extension,             %i[string], :string                         # Get pointer to extension for a filename string
   ray_static :GetFileName,            :file_name,             %i[string], :string                         # Get pointer to filename for a path string
-  ray_static :GetFileNameWithoutExt,  :file_name_without_ext, %i[string], :string                         # Get filename string without extension (uses static string)
+  ray_static :GetFileNameWithoutExt,  :file_name_without_ext, %i[string], :string                         # Get filename string without extension (memory should be freed)
   ray_static :GetDirectoryPath,       :directory_path,        %i[string], :string                         # Get full path for a given fileName with path (uses static string)
-  ray_static :GetPrevDirectoryPath,   :prev_directory_path,   %i[string], :string                         # Get previous directory path for a given path (uses static string)
   ray_static :GetWorkingDirectory,    :working_directory,     %i[void], :string                           # Get current working directory (uses static string)
   ray_static :GetDirectoryFiles,      :directory_files,       %i[string pointer], :pointer                # Get filenames in a directory path (memory should be freed)
   ray_static :ClearDirectoryFiles,    :clear_directory_files, %i[void], :void                             # Clear directory files paths buffers (free memory)
@@ -70,9 +68,6 @@ module Raylib
   ray_static :GetDroppedFiles,        :dropped_files,         %i[pointer], :pointer                       # Get dropped files names (memory should be freed)
   ray_static :ClearDroppedFiles,      :clear_dropped_files,   %i[void], :void                             # Clear dropped files paths buffer (free memory)
   ray_static :GetFileModTime,         :file_mod_time,         %i[string], :long                           # Get file modification time (last write time)
-
-  ray_static :CompressData,           :compress_data,         %i[string int pointer], :string             # Compress data (DEFLATE algorythm)
-  ray_static :DecompressData,         :decompress_data,       %i[string int pointer], :string             # Decompress data (DEFLATE algorythm)
 
   # Persistent storage management
   ray_static :StorageSaveValue,       :storage_save_value,    %i[int int], :void                          # Save integer value to storage file (to defined position)

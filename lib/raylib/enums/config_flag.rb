@@ -3,7 +3,7 @@ module Raylib
   # NOTE: Used for bit masks
   # rubocop:disable Layout/ExtraSpacing
   ConfigFlag = enum(
-    :reserved,              1,    # Reserved
+    :show_logo,             1,    # Set to show raylib logo at startup
     :fullscreen_mode,       2,    # Set to run program in fullscreen
     :window_resizable,      4,    # Set to allow resizable window
     :window_undecorated,    8,    # Set to disable window decoration (frame and buttons)

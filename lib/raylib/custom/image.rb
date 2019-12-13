@@ -21,14 +21,12 @@ module Raylib
 
     ray_object :GetImageData,             :to_data,               [Image.by_value], :pointer                                                                      # Get pixel data from image as a Color struct array
     ray_object :GetImageDataNormalized,   :to_data_normalized,    [Image.by_value], :pointer                                                                      # Get pixel data from image as Vector4 array (float normalized)
-    ray_object :GetImageAlphaBorder,      :alpha_border,          [Image.by_value, :float], Rectangle.by_value                                                    # Get image alpha border rectangle
     ray_static :GetPixelDataSize,         :pixel_data_size,       %i[int int int], :int                                                                           # Get pixel data size in bytes (image or texture)
 
     ray_static :GetScreenData,            :screenshot,            [], Image.by_value                                                                              # Get pixel data from screen buffer and return an Image (screenshot)
 
     # Image manipulation functions
     ray_object :ImageCopy,                :copy,                  [Image.by_value], Image.by_value                                                                # Create an image duplicate (useful for transformations)
-    ray_object :ImageFromImage,           :image_rect,            [Image.by_value, Rectangle.by_value], Image.by_value                                            # Create an image from another image piece
     ray_object :ImageToPOT,               :pot!,                  [Image.ptr, Color.by_value], :void                                                              # Convert image to POT (power-of-two)
     ray_object :ImageFormat,              :format!,               [Image.ptr, PixelFormat], :void                                                                 # Convert image data to desired format
     ray_object :ImageAlphaMask,           :alpha_mask!,           [Image.ptr, Image.by_value], :void                                                              # Apply alpha mask to image
@@ -44,7 +42,7 @@ module Raylib
     ray_object :ImageExtractPalette,      :palette,               [Image.by_value, :int, :pointer], :pointer                                                      # Extract color palette from image to maximum size (memory should be freed)
     ray_static :ImageText,                :from_text,             [:string, :int, Color.by_value], Image.by_value                                                 # Create an image from text (default font)
     ray_static :ImageTextEx,              :from_text_ex,          [Font.by_value, :string, :float, :float, Color.by_value], Image.by_value                        # Create an image from text (custom sprite font)
-    ray_object :ImageDraw,                :draw!,                 [Image.ptr, Image.by_value, Rectangle.by_value, Rectangle.by_value, Color.by_value], :void      # Draw a source image within a destination image (tint applied to source)
+    ray_object :ImageDraw,                :draw!,                 [Image.ptr, Image.by_value, Rectangle.by_value, Rectangle.by_value, Color.by_value], :void      # Draw a source image within a destination image
     ray_object :ImageDrawRectangle,       :draw_rectangle!,       [Image.ptr, Rectangle.by_value, Color.by_value], :void                                          # Draw rectangle within an image
     ray_object :ImageDrawRectangleLines,  :draw_rectangle_lines!, [Image.ptr, Rectangle.by_value, :int, Color.by_value], :void                                    # Draw rectangle lines within an image
     ray_object :ImageDrawText,            :draw_text!,            [Image.ptr, Vector2.by_value, :string, :int, Color.by_value], :void                             # Draw text (default font) within an image (destination)

@@ -27,16 +27,14 @@ camera = RayCamera.new  RayVector3.new(1.0, 1.0, 1.0),
 cube = RayMesh.cube 1.0, 1.0, 1.0
 skybox = cube.to_model
 
-#skybox.materials[0].shader = shader = RayShader.load 'resources/shaders/glsl330/skybox.vs', 'resources/shaders/glsl330/skybox.fs'
-shader = Raylib.LoadShader 'resources/shaders/glsl330/skybox.vs', 'resources/shaders/glsl330/skybox.fs'
-shader = RayShader.load 'resources/shaders/glsl330/skybox.vs', 'resources/shaders/glsl330/skybox.fs'
+skybox.materials[0].shader = shader = RayShader.load 'resources/shaders/glsl330/skybox.vs', 'resources/shaders/glsl330/skybox.fs'
 shader.set_value shader.location('environmentMap'), RayIntPtr.new(RayMaterialMapType[:cubemap]), 4
 
 shader_cubemap = RayShader.load 'resources/shaders/glsl330/cubemap.vs', 'resources/shaders/glsl330/cubemap.fs'
 shader_cubemap.set_value shader.location('equirectangularMap'), RayIntPtr.new(0), 4
 
 tex_hdr = RayTexture2D.load 'resources/dresden_square.hdr'
-skybox.materials[0].maps[RayMaterialMapType[:cubemap]].texture = shader_cubemap.gen_texture_cubemap tex_hdr, 512
+skybox.materials[0].maps[RayMaterialMapType[:cubemap]].texture = shader_cubemap.texture_cubemap tex_hdr, 512
 # FIXME: Add pending code
 
 camera.mode = :first_person      # Set a first person camera mode

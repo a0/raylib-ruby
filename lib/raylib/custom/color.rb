@@ -42,7 +42,6 @@ module Raylib
     # Color-related functions
     ray_object :ColorToInt,          :to_i,            [Color.by_value], :int                     # Returns hexadecimal value for a Color
     ray_object :ColorNormalize,      :to_normalize,    [Color.by_value], Vector4.by_value         # Returns color normalized as float [0..1]
-    ray_static :ColorFromNormalized, :from_normalize,  [Vector4.by_value], Color.by_value         # Returns color from normalized values [0..1]
     ray_object :ColorToHSV,          :to_hsv,          [Color.by_value], Vector3.by_value         # Returns HSV values for a Color
     ray_static :ColorFromHSV,        :from_hsv,        [Vector3.by_value], Color.by_value         # Returns a Color from HSV values
     ray_object :GetColor,            :from_i,          %i[int], Color.by_value                    # Returns a Color struct from hexadecimal value

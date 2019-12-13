@@ -12,8 +12,8 @@ module Raylib
 
     # Screen-space-related functions
     ray_object :GetMouseRay,      :ray,             [Vector2.by_value, Camera.by_value], Ray.by_value, :last        # Returns a ray trace from mouse position
-    ray_object :GetCameraMatrix,  :matrix,          [Camera.by_value], Matrix.by_value                              # Returns camera transform matrix (view matrix)
     ray_object :GetWorldToScreen, :world_to_screen, [Vector3.by_value, Camera.by_value], Vector2.by_value, :last    # Returns the screen space position for a 3d world space position
+    ray_object :GetCameraMatrix,  :matrix,          [Camera.by_value], Matrix.by_value                              # Returns camera transform matrix (view matrix)
 
     #------------------------------------------------------------------------------------
     # Camera System Functions (Module: camera)

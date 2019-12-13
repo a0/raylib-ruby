@@ -33,12 +33,6 @@ mesh = Raylib.GenMeshCubicmap image_map, RayVector3.new(1.0, 1.0, 1.0)
 # model = mesh.to_model
 model = Raylib.LoadModelFromMesh(mesh)
 
-$LOADED_FEATURES.each do |f|
-  warn f
-end
-
-warn "model materials: #{model.material_count}"
-
 # NOTE: By default each cube is mapped to one part of texture atlas
 texture = RayTexture2D.load 'resources/cubicmap_atlas.png' # Load map texture
 model.materials[0].maps[0].texture = texture # Set map diffuse texture

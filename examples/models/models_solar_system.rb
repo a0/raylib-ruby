@@ -55,7 +55,7 @@ class Body
     @model = RayModel.load 'resources/solar_system/sphere.obj'
     if texture
       diffuse = @model.materials[0].maps[0].texture = texture
-      diffuse.gen_mipmaps
+      diffuse.mipmaps
     end
 
     @model

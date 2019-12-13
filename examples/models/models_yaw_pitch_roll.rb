@@ -104,8 +104,8 @@ until RayWindow.should_close?
     center_y = frame_buf.texture.height / 2
     scale_factor = 0.5
 
-    frame_buf.begin_texture_mode do
-      RayDraw.begin_blend_mode RayDraw::BLEND_ALPHA do
+    frame_buf.texture_mode do
+      RayDraw.blend_mode :alpha do
         tex_backg.draw_pro  RayRectangle.new(0, 0, tex_backg.width, tex_backg.height),
                             RayRectangle.new(center_x, center_y, tex_backg.width * scale_factor, tex_backg.height * scale_factor),
                             RayVector2.new(tex_backg.width / 2 * scale_factor, tex_backg.height / 2 * scale_factor + pitch_offset * scale_factor),

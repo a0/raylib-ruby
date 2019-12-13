@@ -12,7 +12,7 @@ module Raylib
     # Mesh loading/unloading functions
     ray_static :LoadMeshes,         :load,          %i[string int], :pointer          # Load meshes from model file
     ray_object :ExportMesh,         :export,        [Mesh.by_value, :string], :void   # Export mesh data to file
-    ray_object :UnloadMesh,         :unload,        [Mesh.by_value], :void            # Unload mesh from memory (RAM and/or VRAM)
+    ray_object :UnloadMesh,         :unload,        [Mesh.ptr], :void                 # Unload mesh from memory (RAM and/or VRAM)
 
     # Mesh generation functions
     ray_static :GenMeshPoly,        :poly,          %i[int float], Mesh.by_value                        # Generate polygonal mesh

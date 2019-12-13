@@ -534,7 +534,7 @@ module Raylib
   attach_function :InitAudioStream, %i[uint uint uint], AudioStream.by_value          # AudioStream#create
   attach_function :UpdateAudioStream, [AudioStream.by_value, :pointer, :int], :void   # AudioStream#update
   attach_function :CloseAudioStream, [AudioStream.by_value], :void                    # AudioStream#close
-  # attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # AudioStream#is_buffer_processed?
+  attach_function :IsAudioBufferProcessed, [AudioStream.by_value], :bool              # AudioStream#is_buffer_processed?
   attach_function :PlayAudioStream, [AudioStream.by_value], :void                     # AudioStream#play
   attach_function :PauseAudioStream, [AudioStream.by_value], :void                    # AudioStream#pause
   attach_function :ResumeAudioStream, [AudioStream.by_value], :void                   # AudioStream#resume
